@@ -46,6 +46,18 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  /* Rent Nest Brand */
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-foreground: var(--brand-primary-foreground);
+
+  --color-brand-success: var(--brand-success);
+  --color-brand-success-foreground: var(--brand-success-foreground);
+
+  --color-brand-surface: var(--brand-surface);
+  --color-brand-muted: var(--brand-muted);
 }
 
 :root {
@@ -81,6 +93,25 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Rent Nest Brand */
+  --brand: oklch(0.62 0.19 255);
+  /* Trust Blue */
+
+  --brand-foreground: oklch(0.985 0 0);
+
+  --brand-primary: oklch(0.62 0.19 255);
+  --brand-primary-foreground: oklch(0.985 0 0);
+
+  --brand-success: oklch(0.72 0.19 145);
+  /* Available Green */
+
+  --brand-success-foreground: oklch(0.15 0.03 145);
+
+  --brand-surface: oklch(0.98 0.01 250);
+  /* Property card background */
+
+  --brand-muted: oklch(0.55 0.03 260);
 }
 
 .dark {
@@ -115,6 +146,25 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Rent Nest Brand */
+  --brand: oklch(0.7 0.18 255);
+  /* Brighter blue for dark UI */
+
+  --brand-foreground: oklch(0.985 0 0);
+
+  --brand-primary: oklch(0.7 0.18 255);
+  --brand-primary-foreground: oklch(0.145 0 0);
+
+  --brand-success: oklch(0.78 0.17 145);
+  /* Availability green */
+
+  --brand-success-foreground: oklch(0.15 0.03 145);
+
+  --brand-surface: oklch(0.2 0.03 260);
+  /* Dark property cards */
+
+  --brand-muted: oklch(0.65 0.03 260);
 }
 
 @layer base {

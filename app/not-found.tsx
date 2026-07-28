@@ -8,7 +8,7 @@ export default function NotFound() {
     <div className='flex justify-center items-center px-4 min-h-[70vh]'>
       <Card className='bg-red-50/50 dark:bg-red-950/20 shadow-lg border-red-200 dark:border-red-900 w-full max-w-md'>
         <CardHeader className='flex flex-col items-center gap-4'>
-          <Logo className='border-red-300 border-b text-red-500 italic' />
+          <Logo />
 
           <Heading4
             text='404 - Page Not Found'
