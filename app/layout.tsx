@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
-import ThemeProvider from "@/components/theme/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import "./globals.css";
-import StoreProvider from "@/components/store/store-provider";
+import Providers from "@/components/providers/providers";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -44,12 +43,8 @@ export default function RootLayout({
     >
       <head />
       <body className='h-full' cz-shortcut-listen='true'>
-        <StoreProvider>
-          <ThemeProvider>
-            {children}
-            <Toaster />
-          </ThemeProvider>
-        </StoreProvider>
+        <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );
