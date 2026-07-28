@@ -4,6 +4,7 @@ import ThemeProvider from "@/components/theme/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import "./globals.css";
+import StoreProvider from "@/components/store/store-provider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -43,10 +44,12 @@ export default function RootLayout({
     >
       <head />
       <body className='h-full' cz-shortcut-listen='true'>
-        <ThemeProvider>
-          {children}
-          <Toaster />
-        </ThemeProvider>
+        <StoreProvider>
+          <ThemeProvider>
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </StoreProvider>
       </body>
     </html>
   );
