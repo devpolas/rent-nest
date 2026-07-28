@@ -19,10 +19,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    template: "Next Shopping | %s",
-    default: "Next Shopping",
+    template: "Rent Nest | %s",
+    default: "Rent Nest",
   },
-  description: "Next Shopping Default Layout",
+  description: "Rent Nest Default Layout",
 };
 
 export default function RootLayout({
