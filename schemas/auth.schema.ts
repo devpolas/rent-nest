@@ -14,10 +14,7 @@ export const SignupSchema = z
       .min(8, "password at least 8 characters")
       .max(32, "password should be 32 characters or less"),
     confirmPassword: z.string(),
-    role: z.enum(
-      ["TENANT", "LANDLORD", "MODERATOR"],
-      "role should be 'TENANT', 'LANDLORD' or 'MODERATOR",
-    ),
+    role: z.enum(["TENANT", "LANDLORD"], "role should be 'TENANT', 'LANDLORD'"),
   })
   .refine((val) => val.password === val.confirmPassword, {
     error: "passwords are doesn't match",
