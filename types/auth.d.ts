@@ -4,7 +4,7 @@ export interface LoginResponse {
   accessToken: string;
 }
 
-export interface IAuthAccount {
+export interface AuthAccount {
   id: string;
 
   userId: string;
