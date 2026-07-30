@@ -30,5 +30,11 @@ export const SigninSchema = z.object({
     .max(32, "password should be 32 characters or less"),
 });
 
+export const VerifyEmailSchema = z.object({
+  email: z.email(),
+  token: z.string(),
+});
+
 export type SignupPayload = z.input<typeof SignupSchema>;
 export type SigninPayload = z.input<typeof SigninSchema>;
+export type VerifyEmailPayload = z.input<typeof VerifyEmailSchema>;
