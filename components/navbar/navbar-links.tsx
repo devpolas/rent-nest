@@ -8,7 +8,7 @@ export default function NavbarLinks() {
         <Link
           key={item.href}
           href={item.href}
-          className='font-medium text-muted-foreground hover:text-brand text-sm transition'
+          className='font-medium text-muted-foreground hover:text-brand text-sm lg:text-lg transition'
         >
           {item.title}
         </Link>

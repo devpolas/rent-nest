@@ -7,8 +7,8 @@ import { ThemeSwitcher } from "../theme/theme-switcher";
 
 export default function Navbar() {
   return (
-    <header className='top-0 z-50 sticky bg-background/80 backdrop-blur border-b'>
-      <div className='flex justify-between items-center h-16 container'>
+    <header className='top-0 z-50 sticky bg-background/80 backdrop-blur border-b w-full'>
+      <div className='flex justify-between items-center mx-auto w-full h-16 container'>
         {/* Logo */}
         <Logo />
         {/* Desktop */}
