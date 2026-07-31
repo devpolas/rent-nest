@@ -209,6 +209,7 @@ export async function resetPassword({
       {
         token,
         password,
+        confirmPassword,
       },
     );
     return response.data;

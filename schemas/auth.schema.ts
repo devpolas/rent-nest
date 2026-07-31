@@ -42,6 +42,7 @@ export const ResetPasswordSchema = z
       .min(1, "Password is required")
       .min(6, "Password must be at least 6 characters")
       .max(30, "Password must be 30 characters or less"),
+
     confirmPassword: z.string().min(1, "Confirm password is required"),
   })
   .refine((data) => data.password === data.confirmPassword, {
