@@ -47,8 +47,8 @@ const socialLinks = [
 export default function Footer() {
   return (
     <footer className='bg-brand-surface/40 border-t'>
-      <div className='py-16 container'>
-        <div className='gap-12 grid md:grid-cols-2 lg:grid-cols-4'>
+      <div className='mx-auto px-4 py-8 container'>
+        <div className='items-start gap-12 grid md:grid-cols-2 lg:grid-cols-4'>
           {/* Brand */}
           <div className='space-y-5'>
             <Logo />
@@ -64,7 +64,7 @@ export default function Footer() {
                   key={name}
                   href={href}
                   aria-label={name}
-                  className='flex justify-center items-center bg-background hover:bg-brand border hover:border-brand rounded-full w-10 h-10 hover:text-brand-foreground transition-all duration-200'
+                  className='flex justify-center items-center bg-background hover:bg-brand border hover:border-brand rounded-full w-10 h-10 hover:text-brand-foreground transition-all'
                 >
                   <Icon className='w-4 h-4' />
                 </Link>
@@ -92,8 +92,9 @@ export default function Footer() {
           ))}
         </div>
       </div>
-      <div className='py-3 border-t text-muted-foreground text-sm text-center'>
-        <Small>
+
+      <div className='py-3 border-t text-center'>
+        <Small className='text-muted-foreground'>
           © {new Date().getFullYear()} RentNest. All rights reserved.
         </Small>
       </div>
