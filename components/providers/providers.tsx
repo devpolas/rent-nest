@@ -13,9 +13,7 @@ interface Props {
 export default function Providers({ children }: Props) {
   return (
     <ThemeProvider>
-      <StoreProvider>
-        <QueryProvider>{children}</QueryProvider>
-      </StoreProvider>
+      <QueryProvider>{children}</QueryProvider>
     </ThemeProvider>
   );
 }

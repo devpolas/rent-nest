@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "sonner";
-
 import { signin } from "@/lib/actions/auth.actions";
 import { useState } from "react";
 import { Paragraph } from "@/components/typography/typography";
@@ -14,12 +13,17 @@ import LoadingSpinner from "@/components/spinner/loading-spinner";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SigninSchema } from "@/schemas/auth.schema";
+import {
+  clearCallbackUrl,
+  getCallbackUrl,
+  saveCallbackUrl,
+} from "@/utils/helpers";
 
 type FormValues = z.infer<typeof SigninSchema>;
 
 export default function SigninForm() {
   const searchParams = useSearchParams();
-  const callbackURL = searchParams.get("callbackURL");
+  const callbackUrl = searchParams.get("callbackUrl");
   const router = useRouter();
   const [isError, setIsError] = useState<string>("");
   const {
@@ -39,23 +43,27 @@ export default function SigninForm() {
     try {
       const response = await signin(formData);
       if (response.success) {
-        toast.success("Logged in successfully 🎉");
-        await new Promise((resolve) => setTimeout(resolve, 200)); // small delay
-        router.push(callbackURL || "/");
+        const redirect = callbackUrl ?? getCallbackUrl();
+        clearCallbackUrl();
+        toast.success(response.message ?? "Logged in successfully 🎉");
+        router.replace(redirect);
         router.refresh();
-      } else {
-        if (response) {
-          toast.error("Please verify your account");
-          router.push(
-            `/verify-account?email=${encodeURIComponent(formData.email)}`,
-          );
-          return;
-        }
-        setIsError("Invalid Credentials");
+        return;
       }
-    } catch (error) {
+      if (response.message === "Please verify your email before login") {
+        saveCallbackUrl(callbackUrl ?? "/");
+        router.push(
+          `/verify-account?email=${encodeURIComponent(formData.email)}`,
+        );
+
+        return;
+      }
+
+      toast.error(response.message);
+      setIsError(response.message);
+    } catch {
       toast.error("Something went wrong");
-      setIsError("Invalid Credentials");
+      setIsError("Something went wrong");
     }
   }
 
@@ -78,7 +86,7 @@ export default function SigninForm() {
           <div className='flex justify-between items-center'>
             <span className='font-medium text-sm'>Password</span>
             <Link
-              href='/forget-password'
+              href={`/forget-password?callbackUrl=${encodeURIComponent(callbackUrl ?? "/")}`}
               className='text-sm hover:underline underline-offset-4'
             >
               Forgot your password?

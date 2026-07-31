@@ -11,6 +11,7 @@ import { signup } from "@/lib/actions/auth.actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SignupSchema } from "@/schemas/auth.schema";
 import { FormRhfSelect } from "@/components/rhf-input/form-rfh-select";
+import { saveCallbackUrl } from "@/utils/helpers";
 
 const allowRoles = [
   { label: "Tenant", value: "TENANT" },
@@ -42,18 +43,18 @@ export default function SignupForm() {
   const confirmPassword = watch("confirmPassword");
 
   async function handleSignup(formData: FormValues) {
-    console.log(formData);
     try {
       const response = await signup(formData);
-      if (response.success) {
-        toast.success("Account created successfully 🎉");
-        await new Promise((resolve) => setTimeout(resolve, 200)); // small delay
-        localStorage.setItem("signupCallbackUrl", callbackUrl || "/");
-        router.push(
-          `/verify-account?email=${encodeURIComponent(formData.email)}`,
-        );
+      if (!response.success) {
+        toast.error(response.message ?? "Something went wrong");
+        return;
       }
-    } catch (error) {
+      saveCallbackUrl(callbackUrl ?? "/");
+      toast.success(response.message ?? "Account created successfully 🎉");
+      router.push(
+        `/verify-account?email=${encodeURIComponent(formData.email)}`,
+      );
+    } catch {
       toast.error("Something went wrong");
     }
   }

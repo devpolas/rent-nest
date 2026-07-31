@@ -3,6 +3,7 @@ import { FormRhfInput } from "@/components/rhf-input/form-rhf-input";
 import LoadingSpinner from "@/components/spinner/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { forgotPassword } from "@/lib/actions/auth.actions";
+import { saveCallbackUrl } from "@/utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -22,6 +23,7 @@ export default function ForgetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const callbackUrl = searchParams.get("callbackUrl");
   const {
     control,
     handleSubmit,
@@ -37,20 +39,21 @@ export default function ForgetPasswordForm() {
     try {
       const result = await forgotPassword(data);
 
-      if (result.success) {
-        toast.success("Password reset link sent to your email.");
-        await new Promise((resolve) => setTimeout(resolve, 200)); // small delay
-        router.push("/signin");
-      } else {
-        throw new Error(result.message);
+      if (!result.success) {
+        toast.error(
+          result.message ??
+            "Failed to send password reset link. Please try again.",
+        );
+        return;
       }
-    } catch (error) {
-      console.error(`Forgot password failed:`, error);
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Failed to send forget link. Please try again.",
+      // Preserve the original destination
+      saveCallbackUrl(callbackUrl ?? "/");
+      toast.success(
+        result.message ?? "Password reset link sent to your email.",
       );
+      router.push("/signin");
+    } catch {
+      toast.error("Failed to send password reset link. Please try again.");
     }
   }
 

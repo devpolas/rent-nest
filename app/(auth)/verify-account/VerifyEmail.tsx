@@ -15,6 +15,7 @@ import LoadingSpinner from "@/components/spinner/loading-spinner";
 import { Heading4 } from "@/components/typography/typography";
 import Logo from "@/components/logo/logo";
 import { sendVerificationEmail, verifyEmail } from "@/lib/actions/auth.actions";
+import { clearCallbackUrl, getCallbackUrl } from "@/utils/helpers";
 
 function VerifyEmailContent() {
   const router = useRouter();
@@ -36,21 +37,23 @@ function VerifyEmailContent() {
         const result = await sendVerificationEmail({ email });
 
         if (result.success) {
-          toast.success("Verification link sent!");
-          const callbackUrl = localStorage.getItem("signupCallbackUrl");
-          localStorage.removeItem("signupCallbackUrl");
-          router.push(callbackUrl ? `/signin?${callbackUrl}` : "/signin");
+          toast.success(result.message ?? "Verification link sent!");
+
+          const callbackUrl = getCallbackUrl();
+
+          router.push(`/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`);
         } else {
-          toast.error(result.message || "Failed to send email");
+          toast.error(result.message ?? "Failed to send email");
         }
-      } catch (error) {
+      } catch {
         toast.error("An unexpected error occurred");
       }
     });
   }
+
   async function verifyNow() {
     if (!email || !token) {
-      toast.error("No email address found.");
+      toast.error("No email address or token found.");
       return;
     }
 
@@ -59,14 +62,15 @@ function VerifyEmailContent() {
     startTransition(async () => {
       try {
         const result = await verifyEmail(data);
-
         if (result.success) {
-          toast.success("successfully verified!");
-          router.push("/signin");
+          toast.success(result.message ?? "Successfully verified!");
+          const callbackUrl = getCallbackUrl();
+          clearCallbackUrl();
+          router.push(`/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`);
         } else {
-          toast.error(result.message || "verification failed");
+          toast.error(result.message ?? "Verification failed");
         }
-      } catch (error) {
+      } catch {
         toast.error("An unexpected error occurred");
       }
     });

@@ -4,6 +4,7 @@ import { FormRhfInput } from "@/components/rhf-input/form-rhf-input";
 import LoadingSpinner from "@/components/spinner/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { resetPassword } from "@/lib/actions/auth.actions";
+import { getCallbackUrl } from "@/utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -51,9 +52,8 @@ export default function ResetPasswordForm() {
   async function handleResetPassword(data: FormValues) {
     if (!token) {
       toast.error("Invalid or expired reset link");
-      await new Promise((resolve) => setTimeout(resolve, 200)); // small delay
-      router.push("/forgot-password");
-      return null;
+      router.replace("/signup");
+      return;
     }
     try {
       const result = await resetPassword({
@@ -61,24 +61,19 @@ export default function ResetPasswordForm() {
         confirmPassword: data.confirmPassword,
         token,
       });
-
-      if (result.success) {
-        toast.success("Your password has been changed successfully");
-        if (result.success) {
-          toast.success("Your password has been changed successfully");
-          await new Promise((resolve) => setTimeout(resolve, 200)); // small delay
-          router.push("/signin");
-        }
-      } else {
-        throw new Error(result.message);
+      if (!result.success) {
+        toast.error(
+          result.message ?? "Reset password failed. Please try again.",
+        );
+        return;
       }
-    } catch (error) {
-      console.error(`Reset password failed:`, error);
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Reset password failed. Please try again.",
+      toast.success(
+        result.message ?? "Your password has been changed successfully",
       );
+      const redirect = getCallbackUrl();
+      router.replace(`/signin?callbackUrl=${encodeURIComponent(redirect)}`);
+    } catch {
+      toast.error("Reset password failed. Please try again.");
     }
   }
 

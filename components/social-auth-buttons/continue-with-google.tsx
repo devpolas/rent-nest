@@ -10,23 +10,17 @@ import { useSearchParams } from "next/navigation";
 
 export default function ContinueWithGoogle() {
   const searchParams = useSearchParams();
-  const callbackURL = searchParams.get("callbackURL");
-  const [isLoading, setIsLoading] = useState(false);
+  const callbackUrl = searchParams.get("callbackUrl");
 
-  function setGoogleCallbackUrl() {
-    if (callbackURL) {
-      localStorage.setItem("googleCallbackUrl", callbackURL);
-    }
-  }
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <Button asChild disabled={isLoading} variant='outline' className='w-full'>
       <Link
-        href={`${config.base_url}/auth/google`}
-        onClick={() => {
-          setGoogleCallbackUrl();
-          setIsLoading(true);
-        }}
+        href={`${config.base_url}/auth/google?callbackUrl=${encodeURIComponent(
+          callbackUrl ?? "/",
+        )}`}
+        onClick={() => setIsLoading(true)}
       >
         <span className='flex flex-row gap-2'>
           <span>{isLoading ? <LoadingSpinner /> : <FcGoogle />}</span>

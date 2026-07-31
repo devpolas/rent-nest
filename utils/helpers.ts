@@ -36,3 +36,17 @@ export function getInitials(name: string) {
     .toUpperCase()
     .slice(0, 2);
 }
+
+export const CALLBACK_URL_KEY = "callbackUrl";
+
+export function saveCallbackUrl(callbackUrl?: string) {
+  localStorage.setItem(CALLBACK_URL_KEY, callbackUrl || "/");
+}
+
+export function getCallbackUrl() {
+  return localStorage.getItem(CALLBACK_URL_KEY) || "/";
+}
+
+export function clearCallbackUrl() {
+  localStorage.removeItem(CALLBACK_URL_KEY);
+}
