@@ -1,21 +1,25 @@
 "use client";
 
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
+
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { Textarea } from "../ui/textarea";
 
-type FormRhfInputProps<T extends FieldValues> = {
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+
+type FormRhfTextareaProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
   label: string;
   placeholder?: string;
   disabled?: boolean;
-  height: number;
+  height?: number;
+  className?: string;
 };
 
 export default function FormRhfTextarea<T extends FieldValues>({
@@ -23,28 +27,43 @@ export default function FormRhfTextarea<T extends FieldValues>({
   name,
   label,
   placeholder,
-  height,
-}: FormRhfInputProps<T>) {
+  disabled = false,
+  height = 120,
+  className,
+}: FormRhfTextareaProps<T>) {
+  const textareaId = `rent-nest-${String(name)}`;
+
   return (
     <FieldGroup>
       <Controller
         name={name}
         control={control}
         render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel htmlFor={`form-rhf-input-${String(name)}`}>
+          <Field data-invalid={fieldState.invalid} className='space-y-2'>
+            <FieldLabel
+              htmlFor={textareaId}
+              className='font-medium text-foreground'
+            >
               {label}
             </FieldLabel>
 
-            <div className='relative'>
-              <Textarea
-                {...field}
-                id={`form-rhf-input-${String(name)}`}
-                aria-invalid={fieldState.invalid}
-                placeholder={placeholder}
-                style={{ height: `${height}px` }}
-              />
-            </div>
+            <Textarea
+              {...field}
+              id={textareaId}
+              value={field.value ?? ""}
+              placeholder={placeholder}
+              disabled={disabled}
+              aria-invalid={fieldState.invalid}
+              style={{
+                height: `${height}px`,
+              }}
+              className={cn(
+                "transition-colors resize-y",
+                "focus-visible:ring-brand",
+                "focus-visible:border-brand",
+                className,
+              )}
+            />
 
             {fieldState.error && <FieldError errors={[fieldState.error]} />}
           </Field>

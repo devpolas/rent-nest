@@ -1,5 +1,9 @@
 "use client";
+
+import { useState } from "react";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
+import { Eye, EyeOff } from "lucide-react";
+
 import {
   Field,
   FieldError,
@@ -7,16 +11,17 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type FormRhfInputProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
   label: string;
   placeholder?: string;
-  type: React.HTMLInputTypeAttribute;
+  type?: React.HTMLInputTypeAttribute;
   disabled?: boolean;
+  autoComplete?: string;
+  className?: string;
 };
 
 export function FormRhfInput<T extends FieldValues>({
@@ -24,13 +29,18 @@ export function FormRhfInput<T extends FieldValues>({
   name,
   label,
   placeholder,
-  type,
-  disabled,
+  type = "text",
+  disabled = false,
+  autoComplete,
+  className,
 }: FormRhfInputProps<T>) {
   const [showPassword, setShowPassword] = useState(false);
 
   const isPassword = type === "password";
+
   const inputType = isPassword && showPassword ? "text" : type;
+
+  const inputId = `rent-nest-${String(name)}`;
 
   return (
     <FieldGroup>
@@ -38,48 +48,65 @@ export function FormRhfInput<T extends FieldValues>({
         name={name}
         control={control}
         render={({ field, fieldState }) => {
-          // If type is number, coerce value to number
           const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            const val = e.target.value;
+            const value = e.target.value;
+
             if (type === "number") {
-              field.onChange(val === "" ? undefined : Number(val));
-            } else {
-              field.onChange(val);
+              field.onChange(value === "" ? undefined : Number(value));
+              return;
             }
+
+            field.onChange(value);
           };
 
           return (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={`form-rhf-input-${String(name)}`}>
+            <Field data-invalid={fieldState.invalid} className='space-y-2'>
+              <FieldLabel
+                htmlFor={inputId}
+                className='font-medium text-foreground'
+              >
                 {label}
               </FieldLabel>
 
               <div className='relative'>
                 <Input
                   {...field}
-                  id={`form-rhf-input-${String(name)}`}
+                  id={inputId}
                   type={inputType}
-                  value={field.value ?? ""} // ensures controlled input
+                  value={field.value ?? ""}
                   onChange={handleChange}
-                  aria-invalid={fieldState.invalid}
                   placeholder={placeholder}
-                  autoComplete={String(name)}
                   disabled={disabled}
+                  autoComplete={autoComplete ?? String(name)}
+                  aria-invalid={fieldState.invalid}
+                  className={cn(
+                    "transition-colors",
+                    "focus-visible:ring-brand",
+                    "focus-visible:border-brand",
+                    isPassword && "pr-10",
+                    className,
+                  )}
                 />
 
                 {isPassword && (
                   <button
                     type='button'
                     onClick={() => setShowPassword((prev) => !prev)}
-                    className='top-1/2 right-2.5 absolute -translate-y-1/2'
+                    className={cn(
+                      "top-1/2 right-3 absolute",
+                      "-translate-y-1/2",
+                      "text-muted-foreground",
+                      "transition-colors",
+                      "hover:text-brand",
+                    )}
                     aria-label={
                       showPassword ? "Hide password" : "Show password"
                     }
                   >
                     {showPassword ? (
-                      <EyeOff className='w-5 h-5' />
+                      <EyeOff className='size-5' />
                     ) : (
-                      <Eye className='w-5 h-5' />
+                      <Eye className='size-5' />
                     )}
                   </button>
                 )}

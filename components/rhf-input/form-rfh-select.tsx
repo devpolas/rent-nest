@@ -1,12 +1,14 @@
 "use client";
 
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
+
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+
 import {
   Select,
   SelectContent,
@@ -15,8 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "../ui/badge";
-import { PlusCircleIcon } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { PlusCircle } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 import { namePerfect } from "@/utils/helpers";
 
 type Option = {
@@ -33,7 +38,7 @@ type FormRhfSelectProps<T extends FieldValues> = {
   createNew?: boolean;
   onCreateNew?: () => void;
   disabled?: boolean;
-  isBoolean?: boolean;
+  className?: string;
 };
 
 export function FormRhfSelect<T extends FieldValues>({
@@ -41,12 +46,13 @@ export function FormRhfSelect<T extends FieldValues>({
   name,
   label,
   options,
-  placeholder,
-  createNew,
+  placeholder = "Select an option",
+  createNew = false,
   onCreateNew,
-  disabled,
+  disabled = false,
+  className,
 }: FormRhfSelectProps<T>) {
-  const id = `form-rhf-select-${String(name)}`;
+  const id = `rent-nest-${String(name)}`;
 
   return (
     <FieldGroup>
@@ -54,16 +60,25 @@ export function FormRhfSelect<T extends FieldValues>({
         name={name}
         control={control}
         render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <div className='flex justify-between flow-row'>
-              <FieldLabel htmlFor={id}>{label}</FieldLabel>
+          <Field data-invalid={fieldState.invalid} className='space-y-2'>
+            <div className='flex justify-between items-center gap-3'>
+              <FieldLabel htmlFor={id} className='font-medium text-foreground'>
+                {label}
+              </FieldLabel>
+
               {createNew && (
                 <Badge
-                  className='hover:cursor-pointer'
-                  variant={"default"}
+                  variant='outline'
                   onClick={onCreateNew}
+                  className={cn(
+                    "gap-1 cursor-pointer",
+                    "border-brand/30",
+                    "text-brand",
+                    "hover:bg-brand/10",
+                  )}
                 >
-                  <PlusCircleIcon /> Create New
+                  <PlusCircle className='size-4' />
+                  Create New
                 </Badge>
               )}
             </div>
@@ -73,14 +88,23 @@ export function FormRhfSelect<T extends FieldValues>({
               onValueChange={field.onChange}
               disabled={disabled}
             >
-              <SelectTrigger id={id} aria-invalid={fieldState.invalid}>
+              <SelectTrigger
+                id={id}
+                aria-invalid={fieldState.invalid}
+                className={cn(
+                  "transition-colors",
+                  "focus-visible:ring-brand",
+                  "focus-visible:border-brand",
+                  className,
+                )}
+              >
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
 
               <SelectContent>
                 <SelectGroup>
-                  {options.map((option, i) => (
-                    <SelectItem key={i} value={option.value}>
+                  {options.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
                       {namePerfect(option.label)}
                     </SelectItem>
                   ))}
