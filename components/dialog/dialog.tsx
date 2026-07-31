@@ -1,6 +1,6 @@
 "use client";
-import LoadingSpinner from "../spinner/loading-spinner";
-import { Button } from "../ui/button";
+
+import LoadingSpinner from "@/components/spinner/loading-spinner";
 import {
   Dialog,
   DialogClose,
@@ -9,15 +9,17 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
-import { FieldGroup } from "../ui/field";
+} from "@/components/ui/dialog";
 
-interface DialogProps {
+import { Button } from "@/components/ui/button";
+import { FieldGroup } from "@/components/ui/field";
+
+interface ReusableDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   dialogTitle: string;
   dialogDescription?: string;
-  onSubmit?: (e: React.SyntheticEvent<HTMLFormElement>) => void;
+  onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
   isSubmitting?: boolean;
   isSubmittingText?: string;
   submitText: string;
@@ -37,8 +39,8 @@ export function ReusableDialog({
   submitText,
   cancelText,
   children,
-  size = "sm",
-}: DialogProps) {
+  size = "md",
+}: ReusableDialogProps) {
   const sizeClasses = {
     sm: "sm:max-w-sm",
     md: "sm:max-w-md",
@@ -46,26 +48,47 @@ export function ReusableDialog({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className={sizeClasses[size]}>
-        <form onSubmit={onSubmit} className='space-y-4'>
-          <DialogHeader>
-            <DialogTitle>{dialogTitle}</DialogTitle>
+    <Dialog
+      open={isOpen}
+      onOpenChange={isSubmitting ? undefined : onOpenChange}
+    >
+      <DialogContent
+        className={`
+          ${sizeClasses[size]}
+          border-brand/10
+          shadow-xl
+        `}
+      >
+        <form onSubmit={onSubmit} className='space-y-6'>
+          <DialogHeader className='space-y-2'>
+            <DialogTitle className='font-semibold text-foreground text-xl'>
+              {dialogTitle}
+            </DialogTitle>
+
             {dialogDescription && (
               <DialogDescription>{dialogDescription}</DialogDescription>
             )}
           </DialogHeader>
 
-          <FieldGroup>{children}</FieldGroup>
+          <FieldGroup className='space-y-4'>{children}</FieldGroup>
 
-          <DialogFooter className='flex flex-row gap-2'>
+          <DialogFooter className='sm:flex-row flex-col-reverse sm:justify-end gap-3'>
             <DialogClose asChild>
-              <Button type='button' variant='outline'>
+              <Button
+                type='button'
+                variant='outline'
+                disabled={isSubmitting}
+                className='hover:bg-brand/5 hover:border-brand/30'
+              >
                 {cancelText}
               </Button>
             </DialogClose>
 
-            <Button type='submit' disabled={isSubmitting}>
+            <Button
+              type='submit'
+              disabled={isSubmitting}
+              className='bg-brand hover:bg-brand/90 text-brand-foreground'
+            >
               {isSubmitting ? (
                 <LoadingSpinner text={isSubmittingText} />
               ) : (

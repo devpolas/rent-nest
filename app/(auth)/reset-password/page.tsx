@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+import { Suspense } from "react";
+
+import Logo from "@/components/logo/logo";
+import { Heading4 } from "@/components/typography/typography";
+import LoadingSpinner from "@/components/spinner/loading-spinner";
+
 import {
   Card,
   CardContent,
@@ -5,34 +12,39 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import ResetPasswordForm from "./reset-password-form";
-import { Suspense } from "react";
-import LoadingSpinner from "@/components/spinner/loading-spinner";
-import { Metadata } from "next";
-import { Heading4 } from "@/components/typography/typography";
-import Logo from "@/components/logo/logo";
 
 export const metadata: Metadata = {
   title: "Reset Password",
-  description: "Rent Nest Reset Password Page",
+  description: "Create a new password for your Rent Nest account",
 };
 
-export default function ResetPassword() {
+export default function ResetPasswordPage() {
   return (
-    <Card className='w-full max-w-sm'>
-      <div className='flex flex-col justify-center items-center gap-4'>
+    <Card className='shadow-lg border-border/60 w-full max-w-md'>
+      {/* Brand Header */}
+      <div className='flex flex-col items-center gap-4 pt-6'>
         <Logo />
-        <Heading4 text='Welcome Back to Rent Nest' />
+
+        <Heading4 className='text-brand'>Welcome Back to Rent Nest</Heading4>
       </div>
-      <CardHeader>
-        <CardTitle>Reset your password</CardTitle>
+
+      {/* Content Header */}
+      <CardHeader className='space-y-3'>
+        <CardTitle className='text-xl'>Reset your password</CardTitle>
+
         <CardDescription>
-          Enter your new password and confirm password below to reset your
-          account password
+          Enter your new password and confirm it below to securely reset your
+          Rent Nest account password.
         </CardDescription>
       </CardHeader>
+
+      {/* Form */}
       <CardContent>
-        <Suspense fallback={<LoadingSpinner text='Reset Form Loading...' />}>
+        <Suspense
+          fallback={<LoadingSpinner text='Reset password form loading...' />}
+        >
           <ResetPasswordForm />
         </Suspense>
       </CardContent>

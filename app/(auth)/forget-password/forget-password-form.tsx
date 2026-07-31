@@ -1,4 +1,5 @@
 "use client";
+
 import { FormRhfInput } from "@/components/rhf-input/form-rhf-input";
 import LoadingSpinner from "@/components/spinner/loading-spinner";
 import { Button } from "@/components/ui/button";
@@ -11,79 +12,77 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
-const forgetPasswordSchema = z.object({
-  email: z
-    .email("Please enter a valid email address.")
-    .min(1, "Email is required."),
+const forgotPasswordSchema = z.object({
+  email: z.email("Please enter a valid email address."),
 });
 
-type FormValues = z.infer<typeof forgetPasswordSchema>;
+type FormValues = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const email = searchParams.get("email");
+
   const callbackUrl = searchParams.get("callbackUrl");
+  const email = searchParams.get("email");
+
   const {
     control,
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<FormValues>({
-    resolver: zodResolver(forgetPasswordSchema),
+    resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
-      email: email || "",
+      email: email ?? "",
     },
   });
 
-  async function handleForgetPassword(data: FormValues) {
+  async function handleForgotPassword(data: FormValues) {
     try {
       const result = await forgotPassword(data);
 
       if (!result.success) {
-        toast.error(
-          result.message ??
-            "Failed to send password reset link. Please try again.",
-        );
+        toast.error(result.message ?? "Unable to send reset password email.");
         return;
       }
-      // Preserve the original destination
+
       saveCallbackUrl(callbackUrl ?? "/");
-      toast.success(
-        result.message ?? "Password reset link sent to your email.",
-      );
+
+      toast.success(result.message ?? "Password reset link has been sent.");
+
       router.push("/signin");
     } catch {
-      toast.error("Failed to send password reset link. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
   }
 
   return (
-    <form onSubmit={handleSubmit(handleForgetPassword)}>
-      <div className='flex flex-col gap-6'>
+    <form onSubmit={handleSubmit(handleForgotPassword)}>
+      <div className='flex flex-col gap-5'>
         <FormRhfInput
-          name='email'
-          label='Email'
-          type='email'
           control={control}
+          name='email'
+          label='Email Address'
+          type='email'
+          placeholder='Enter your email'
         />
+
         <Button
-          variant={"outline"}
           type='submit'
-          className='mt-4 w-full'
           disabled={isSubmitting}
+          className='bg-brand hover:bg-brand/90 w-full text-brand-foreground'
         >
           {isSubmitting ? (
-            <LoadingSpinner text='Sending...' />
+            <LoadingSpinner text='Sending reset link...' />
           ) : (
-            <span>Send Reset Link</span>
+            "Send Reset Link"
           )}
         </Button>
 
-        <p className='px-8 text-muted-foreground text-sm text-center'>
+        <p className='text-brand-muted text-sm text-center'>
           Remember your password?{" "}
           <Link
             href='/signin'
-            className='text-primary text-sm hover:underline underline-offset-4'
+            className='font-medium text-brand hover:underline underline-offset-4 transition-colors'
           >
             Sign in
           </Link>

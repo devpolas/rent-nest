@@ -1,31 +1,35 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { toast } from "sonner";
-import { signin } from "@/lib/actions/auth.actions";
-import { useState } from "react";
-import { Paragraph } from "@/components/typography/typography";
-import { FormRhfInput } from "@/components/rhf-input/form-rhf-input";
-import { Button } from "@/components/ui/button";
-import LoadingSpinner from "@/components/spinner/loading-spinner";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { FormRhfInput } from "@/components/rhf-input/form-rhf-input";
+import LoadingSpinner from "@/components/spinner/loading-spinner";
+import { Button } from "@/components/ui/button";
+import { Paragraph } from "@/components/typography/typography";
+
+import { signin } from "@/lib/actions/auth.actions";
 import { SigninSchema } from "@/schemas/auth.schema";
+
 import {
   clearCallbackUrl,
   getCallbackUrl,
   saveCallbackUrl,
 } from "@/utils/helpers";
 
+import * as z from "zod";
+
 type FormValues = z.infer<typeof SigninSchema>;
 
 export default function SigninForm() {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
   const router = useRouter();
-  const [isError, setIsError] = useState<string>("");
+  const searchParams = useSearchParams();
+
+  const callbackUrl = searchParams.get("callbackUrl");
+
   const {
     control,
     handleSubmit,
@@ -38,83 +42,81 @@ export default function SigninForm() {
     },
   });
 
-  async function handleSignin(formData: FormValues) {
-    setIsError("");
+  async function handleSignIn(data: FormValues) {
     try {
-      const response = await signin(formData);
-      if (response.success) {
-        const redirect = callbackUrl ?? getCallbackUrl();
-        clearCallbackUrl();
-        toast.success(response.message ?? "Logged in successfully 🎉");
-        router.replace(redirect);
-        router.refresh();
-        return;
-      }
-      if (response.message === "Please verify your email before login") {
-        saveCallbackUrl(callbackUrl ?? "/");
-        router.push(
-          `/verify-account?email=${encodeURIComponent(formData.email)}`,
-        );
+      const response = await signin(data);
+
+      if (!response.success) {
+        if (response.message === "Please verify your email before login") {
+          saveCallbackUrl(callbackUrl ?? "/");
+
+          router.push(
+            `/verify-account?email=${encodeURIComponent(data.email)}`,
+          );
+
+          return;
+        }
+
+        toast.error(response.message ?? "Invalid email or password.");
 
         return;
       }
 
-      toast.error(response.message);
-      setIsError(response.message);
+      const redirectUrl = callbackUrl ?? getCallbackUrl();
+
+      clearCallbackUrl();
+
+      toast.success(response.message ?? "Welcome back to Rent Nest 🎉");
+
+      router.replace(redirectUrl);
+      router.refresh();
     } catch {
-      toast.error("Something went wrong");
-      setIsError("Something went wrong");
+      toast.error("Something went wrong. Please try again.");
     }
   }
 
   return (
-    <form onSubmit={handleSubmit(handleSignin)}>
-      <div className='flex flex-col gap-6'>
-        {isError && (
-          <Paragraph className={"text-center text-red-600"} text={isError} />
-        )}
+    <form onSubmit={handleSubmit(handleSignIn)}>
+      <div className='flex flex-col gap-5'>
         <FormRhfInput<FormValues>
+          control={control}
           name='email'
           type='email'
-          label='Email'
-          control={control}
+          label='Email Address'
           placeholder='username@example.com'
         />
 
-        {/* Password with extra header */}
         <div className='space-y-2'>
           <div className='flex justify-between items-center'>
             <span className='font-medium text-sm'>Password</span>
+
             <Link
-              href={`/forget-password?callbackUrl=${encodeURIComponent(callbackUrl ?? "/")}`}
-              className='text-sm hover:underline underline-offset-4'
+              href={`/forget-password?callbackUrl=${encodeURIComponent(
+                callbackUrl ?? "/",
+              )}`}
+              className='font-medium text-brand text-sm hover:underline underline-offset-4'
             >
-              Forgot your password?
+              Forgot password?
             </Link>
           </div>
 
           <FormRhfInput<FormValues>
+            control={control}
             name='password'
             type='password'
-            label='' // label already shown above
-            control={control}
+            label=''
             placeholder='Enter your password'
           />
         </div>
-      </div>
 
-      <Button
-        variant={"outline"}
-        type='submit'
-        className='mt-4 w-full'
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? (
-          <LoadingSpinner text='logging in...' />
-        ) : (
-          <span>Login</span>
-        )}
-      </Button>
+        <Button
+          type='submit'
+          disabled={isSubmitting}
+          className='bg-brand hover:bg-brand/90 mt-2 w-full text-brand-foreground'
+        >
+          {isSubmitting ? <LoadingSpinner text='Signing in...' /> : "Sign In"}
+        </Button>
+      </div>
     </form>
   );
 }

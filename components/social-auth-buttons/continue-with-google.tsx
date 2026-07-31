@@ -1,30 +1,43 @@
 "use client";
 
-import { Button } from "../ui/button";
-import { FcGoogle } from "react-icons/fc";
-import { useState } from "react";
-import LoadingSpinner from "../spinner/loading-spinner";
-import config from "@/config/client/client";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
+
+import { Button } from "@/components/ui/button";
+import LoadingSpinner from "@/components/spinner/loading-spinner";
+import config from "@/config/client/client";
 
 export default function ContinueWithGoogle() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const callbackUrl = useMemo(
+    () => searchParams.get("callbackUrl") ?? "/",
+    [searchParams],
+  );
+
+  const googleAuthUrl = `${config.base_url}/auth/google?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+
   return (
-    <Button asChild disabled={isLoading} variant='outline' className='w-full'>
+    <Button
+      asChild
+      disabled={isLoading}
+      variant='outline'
+      className='group relative hover:bg-brand/5 border-border hover:border-brand/40 w-full hover:text-brand transition-colors'
+    >
       <Link
-        href={`${config.base_url}/auth/google?callbackUrl=${encodeURIComponent(
-          callbackUrl ?? "/",
-        )}`}
+        href={googleAuthUrl}
         onClick={() => setIsLoading(true)}
+        aria-label='Continue with Google'
+        className={isLoading ? "pointer-events-none" : ""}
       >
-        <span className='flex flex-row gap-2'>
-          <span>{isLoading ? <LoadingSpinner /> : <FcGoogle />}</span>
-          <span>Continue with Google</span>
+        <span className='flex justify-center items-center gap-3'>
+          {isLoading ? <LoadingSpinner /> : <FcGoogle className='w-5 h-5' />}
+
+          <span className='font-medium'>Continue with Google</span>
         </span>
       </Link>
     </Button>

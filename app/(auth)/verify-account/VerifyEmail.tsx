@@ -1,5 +1,13 @@
 "use client";
 
+import { Suspense, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+
+import Logo from "@/components/logo/logo";
+import LoadingSpinner from "@/components/spinner/loading-spinner";
+import { Heading4 } from "@/components/typography/typography";
+
 import {
   Card,
   CardContent,
@@ -7,26 +15,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useTransition } from "react"; // Added useTransition
-import { toast } from "sonner";
-import LoadingSpinner from "@/components/spinner/loading-spinner";
-import { Heading4 } from "@/components/typography/typography";
-import Logo from "@/components/logo/logo";
+
 import { sendVerificationEmail, verifyEmail } from "@/lib/actions/auth.actions";
+
 import { clearCallbackUrl, getCallbackUrl } from "@/utils/helpers";
 
 function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const email = searchParams.get("email");
   const token = searchParams.get("token");
 
-  // useTransition is often better for Server Actions than manual loading states
   const [isPending, startTransition] = useTransition();
 
-  async function handleResendVerification() {
+  function redirectToSignin() {
+    const callbackUrl = getCallbackUrl();
+
+    router.push(`/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+  }
+
+  function handleResendVerification() {
     if (!email) {
       toast.error("No email address found.");
       return;
@@ -34,97 +45,117 @@ function VerifyEmailContent() {
 
     startTransition(async () => {
       try {
-        const result = await sendVerificationEmail({ email });
+        const result = await sendVerificationEmail({
+          email,
+        });
 
-        if (result.success) {
-          toast.success(result.message ?? "Verification link sent!");
-
-          const callbackUrl = getCallbackUrl();
-
-          router.push(`/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`);
-        } else {
-          toast.error(result.message ?? "Failed to send email");
+        if (!result.success) {
+          toast.error(result.message ?? "Failed to send verification email");
+          return;
         }
+
+        toast.success(result.message ?? "Verification email sent successfully");
+
+        redirectToSignin();
       } catch {
-        toast.error("An unexpected error occurred");
+        toast.error("Something went wrong. Please try again.");
       }
     });
   }
 
-  async function verifyNow() {
+  function handleVerify() {
     if (!email || !token) {
-      toast.error("No email address or token found.");
+      toast.error("Verification information is missing.");
       return;
     }
 
-    const data = { email, token };
-
     startTransition(async () => {
       try {
-        const result = await verifyEmail(data);
-        if (result.success) {
-          toast.success(result.message ?? "Successfully verified!");
-          const callbackUrl = getCallbackUrl();
-          clearCallbackUrl();
-          router.push(`/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`);
-        } else {
+        const result = await verifyEmail({
+          email,
+          token,
+        });
+
+        if (!result.success) {
           toast.error(result.message ?? "Verification failed");
+          return;
         }
+
+        toast.success(result.message ?? "Account verified successfully");
+
+        clearCallbackUrl();
+
+        redirectToSignin();
       } catch {
-        toast.error("An unexpected error occurred");
+        toast.error("Something went wrong. Please try again.");
       }
     });
   }
 
   if (!email) {
     return (
-      <Card className='mx-auto mt-10 w-full max-w-sm'>
+      <Card className='shadow-lg border-border/60 w-full max-w-md'>
         <CardHeader>
-          <CardTitle>Invalid Request</CardTitle>
-          <CardDescription>No email provided for verification.</CardDescription>
+          <CardTitle>Invalid Verification Request</CardTitle>
+
+          <CardDescription>
+            No email address was provided for account verification.
+          </CardDescription>
         </CardHeader>
       </Card>
     );
   }
 
+  const isVerificationRequest = Boolean(email && token);
+
   return (
-    <Card className='mx-auto mt-10 w-full max-w-sm'>
-      <CardHeader className='space-y-2'>
-        <div className='flex flex-col justify-center items-center gap-4'>
-          <Logo />
-          <Heading4 text='Welcome Back to NextShop' />
-        </div>
-        <CardTitle>Verify Your Account</CardTitle>
+    <Card className='shadow-lg border-border/60 w-full max-w-md'>
+      {/* Brand */}
+      <div className='flex flex-col items-center gap-4 pt-6'>
+        <Logo />
+
+        <Heading4 className='text-brand'>Welcome Back to Rent Nest</Heading4>
+      </div>
+
+      <CardHeader className='space-y-3'>
+        <CardTitle className='text-xl'>Verify Your Account</CardTitle>
+
         <CardDescription>
-          {email && token ? (
+          {isVerificationRequest ? (
             <>
-              Confirm your email address <strong>{email}</strong> by clicking
-              the button below. Once verified, your account will be activated
-              and you&apos;ll be able to sign in.
+              Confirm your email address{" "}
+              <strong className='text-foreground'>{email}</strong> to activate
+              your Rent Nest account.
             </>
           ) : (
             <>
-              We&apos;ve sent a verification email to <strong>{email}</strong>.
-              Please check your inbox and click the verification link to
-              activate your account. If you can&apos;t find the email, check
-              your spam folder or resend the verification email below.
+              We sent a verification email to{" "}
+              <strong className='text-foreground'>{email}</strong>. Please check
+              your inbox or spam folder.
             </>
           )}
         </CardDescription>
       </CardHeader>
+
       <CardContent>
         <Button
-          variant={"outline"}
-          onClick={email && token ? verifyNow : handleResendVerification}
+          variant='default'
+          className='bg-brand hover:bg-brand-primary w-full'
           disabled={isPending}
-          className='w-full'
+          onClick={
+            isVerificationRequest ? handleVerify : handleResendVerification
+          }
         >
           {isPending ? (
             <LoadingSpinner
-              text={email && token ? "Verifying..." : "Sending..."}
+              text={
+                isVerificationRequest
+                  ? "Verifying account..."
+                  : "Sending email..."
+              }
             />
-          ) : email && token ? (
-            "Verify Now"
+          ) : isVerificationRequest ? (
+            "Verify Account"
           ) : (
             "Resend Verification Email"
           )}
@@ -134,10 +165,9 @@ function VerifyEmailContent() {
   );
 }
 
-// Ensure the Suspense boundary is wrapping the component using useSearchParams
 export default function VerifyEmail() {
   return (
-    <Suspense fallback={<LoadingSpinner text='loading...' />}>
+    <Suspense fallback={<LoadingSpinner text='Loading verification...' />}>
       <VerifyEmailContent />
     </Suspense>
   );

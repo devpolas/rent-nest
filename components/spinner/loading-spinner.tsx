@@ -1,25 +1,34 @@
-import { LoaderIcon } from "lucide-react";
-
+import { LoaderCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+type SpinnerProps = React.ComponentProps<"svg">;
 
-function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
+function Spinner({ className, ...props }: SpinnerProps) {
   return (
-    <LoaderIcon
+    <LoaderCircle
       role='status'
       aria-label='Loading'
-      className={cn("size-4 animate-spin", className)}
+      className={cn("size-4 text-brand animate-spin", className)}
       {...props}
     />
   );
 }
 
-export default function LoadingSpinner({ text }: { text?: string }) {
+type LoadingSpinnerProps = {
+  text?: string;
+  className?: string;
+};
+
+export default function LoadingSpinner({
+  text,
+  className,
+}: LoadingSpinnerProps) {
   return (
-    <div className='flex items-center gap-4'>
-      <div className='flex flex-row gap-2'>
-        <Spinner />
-        <p>{text}</p>
-      </div>
-    </div>
+    <span
+      role='status'
+      className={cn("inline-flex items-center gap-2", className)}
+    >
+      <Spinner />
+      {text && <span className='font-medium text-sm'>{text}</span>}
+    </span>
   );
 }
