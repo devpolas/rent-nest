@@ -1,5 +1,7 @@
 "use server";
 import {
+  ResetPasswordPayload,
+  ResetPasswordSchema,
   SigninPayload,
   SigninSchema,
   SignupPayload,
@@ -176,18 +178,27 @@ export async function forgotPassword({
 
 // ================= reset password =================
 export async function resetPassword({
+  payload,
   token,
-  password,
-  confirmPassword,
 }: {
+  payload: ResetPasswordPayload;
   token: string;
-  password: string;
-  confirmPassword: string;
 }): Promise<ApiResponse<null>> {
+  const parsed = ResetPasswordSchema.safeParse(payload);
+
+  if (!parsed.success) {
+    return errorResponse(
+      handleZodError(parsed.error) || "Invalid input",
+      httpStatus.BAD_REQUEST,
+    );
+  }
+
+  if (!token) {
+    return errorResponse("Token is required");
+  }
+
   try {
-    if (!token || !password || !confirmPassword) {
-      return handleApiError("Invalid request");
-    }
+    const { password, confirmPassword } = parsed.data;
 
     if (password !== confirmPassword) {
       return errorResponse("Passwords do not match");

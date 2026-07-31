@@ -35,6 +35,21 @@ export const VerifyEmailSchema = z.object({
   token: z.string(),
 });
 
+export const ResetPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(1, "Password is required")
+      .min(6, "Password must be at least 6 characters")
+      .max(30, "Password must be 30 characters or less"),
+    confirmPassword: z.string().min(1, "Confirm password is required"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
 export type SignupPayload = z.input<typeof SignupSchema>;
 export type SigninPayload = z.input<typeof SigninSchema>;
 export type VerifyEmailPayload = z.input<typeof VerifyEmailSchema>;
+export type ResetPasswordPayload = z.infer<typeof ResetPasswordSchema>;

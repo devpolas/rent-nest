@@ -4,28 +4,15 @@ import { FormRhfInput } from "@/components/rhf-input/form-rhf-input";
 import LoadingSpinner from "@/components/spinner/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { resetPassword } from "@/lib/actions/auth.actions";
+import {
+  ResetPasswordPayload,
+  ResetPasswordSchema,
+} from "@/schemas/auth.schema";
 import { getCallbackUrl } from "@/utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import * as z from "zod";
-
-const forgetPasswordSchema = z
-  .object({
-    password: z
-      .string()
-      .min(1, "Password is required")
-      .min(6, "Password must be at least 6 characters")
-      .max(30, "Password must be 30 characters or less"),
-    confirmPassword: z.string().min(1, "Confirm password is required"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-type FormValues = z.infer<typeof forgetPasswordSchema>;
 
 export default function ResetPasswordForm() {
   const router = useRouter();
@@ -35,8 +22,8 @@ export default function ResetPasswordForm() {
     handleSubmit,
     watch,
     formState: { isSubmitting },
-  } = useForm<FormValues>({
-    resolver: zodResolver(forgetPasswordSchema),
+  } = useForm<ResetPasswordPayload>({
+    resolver: zodResolver(ResetPasswordSchema),
     defaultValues: {
       password: "",
       confirmPassword: "",
@@ -49,18 +36,14 @@ export default function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  async function handleResetPassword(data: FormValues) {
+  async function handleResetPassword(data: ResetPasswordPayload) {
     if (!token) {
       toast.error("Invalid or expired reset link");
       router.replace("/signup");
       return;
     }
     try {
-      const result = await resetPassword({
-        password: data.password,
-        confirmPassword: data.confirmPassword,
-        token,
-      });
+      const result = await resetPassword({ payload: data, token });
       if (!result.success) {
         toast.error(
           result.message ?? "Reset password failed. Please try again.",
@@ -91,7 +74,7 @@ export default function ResetPasswordForm() {
   return (
     <form onSubmit={handleSubmit(handleResetPassword)}>
       <div className='flex flex-col gap-6'>
-        <FormRhfInput<FormValues>
+        <FormRhfInput<ResetPasswordPayload>
           name='password'
           type='password'
           label='Password'
@@ -99,7 +82,7 @@ export default function ResetPasswordForm() {
           placeholder='Enter your password'
         />
 
-        <FormRhfInput<FormValues>
+        <FormRhfInput<ResetPasswordPayload>
           name='confirmPassword'
           type='password'
           label='Confirm Password'
