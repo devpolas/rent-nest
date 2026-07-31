@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
 import LoadingSpinner from "../spinner/loading-spinner";
-import config from "@/config/client";
+import config from "@/config/client/client";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 

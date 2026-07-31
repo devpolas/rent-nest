@@ -19,7 +19,7 @@ import httpStatus from "http-status";
 import { cookies } from "next/headers";
 import { Time } from "@/utils/helpers";
 import Jwt from "jsonwebtoken";
-import config from "@/config/server";
+import config from "@/config/server/server";
 
 interface AccountSession {
   userId: string;
