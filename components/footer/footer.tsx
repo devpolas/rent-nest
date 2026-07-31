@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import Logo from "@/components/logo/logo";
 import { Heading5, Muted, Small } from "@/components/typography/typography";
@@ -45,6 +46,7 @@ const socialLinks = [
 ] as const;
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
   return (
     <footer className='bg-brand-surface/40 border-t'>
       <div className='mx-auto py-8 container'>
@@ -95,7 +97,7 @@ export default function Footer() {
 
       <div className='py-3 border-t text-center'>
         <Small className='text-muted-foreground'>
-          © {new Date().getFullYear()} RentNest. All rights reserved.
+          © {currentYear} RentNest. All rights reserved.
         </Small>
       </div>
     </footer>
