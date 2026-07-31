@@ -1,10 +1,12 @@
 "use client";
 
-import Logo from "@/components/logo/logo";
-import { Heading4 } from "@/components/typography/typography";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useEffect } from "react";
+import { AlertTriangle, Home, RefreshCcw } from "lucide-react";
+
+import Logo from "@/components/logo/logo";
+import { Heading3, Muted } from "@/components/typography/typography";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -20,48 +22,48 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Error Boundary:", error);
+    console.error("RentNest Error Boundary:", error);
   }, [error]);
 
   return (
     <div className='flex justify-center items-center px-4 min-h-[70vh]'>
-      <Card className='bg-red-50/50 dark:bg-red-950/20 shadow-lg border-red-200 dark:border-red-900 w-full max-w-md'>
-        <CardHeader className='flex flex-col items-center gap-4'>
+      <Card className='shadow-xl w-full max-w-lg'>
+        <CardHeader className='items-center space-y-5 text-center'>
           <Logo />
 
-          <Heading4
-            text='Something went wrong'
-            className='text-red-600 dark:text-red-400'
-          />
+          <div className='flex justify-center items-center bg-destructive/10 rounded-full size-12'>
+            <AlertTriangle className='size-6 text-destructive' />
+          </div>
 
-          <p className='text-red-700 dark:text-red-300 text-sm'>
-            We encountered an unexpected error. Please try again.
-          </p>
+          <div className='space-y-2'>
+            <Heading3>Something went wrong</Heading3>
+
+            <Muted>
+              We couldn&apos;t complete your request. Please try again.
+            </Muted>
+          </div>
         </CardHeader>
 
         <CardContent>
           {process.env.NODE_ENV === "development" && (
-            <div className='bg-red-100 dark:bg-red-950 p-3 border border-red-200 dark:border-red-900 rounded-md text-red-800 dark:text-red-200 text-sm text-left'>
+            <div className='bg-destructive/5 p-3 border border-destructive/30 rounded-md text-destructive text-sm'>
               {error.message}
             </div>
           )}
         </CardContent>
 
-        <CardFooter className='flex flex-col gap-3'>
-          <Button
-            variant='destructive'
-            onClick={() => reset()}
-            className='w-full'
-          >
-            Try again
+        <CardFooter className='flex sm:flex-row flex-col gap-3'>
+          <Button onClick={reset} className='w-full'>
+            <RefreshCcw className='mr-2 size-4' />
+            Try Again
           </Button>
 
-          <Link
-            href='/'
-            className='flex justify-center items-center hover:bg-red-100 dark:hover:bg-red-950 px-4 py-2 border border-red-300 dark:border-red-800 rounded-md w-full font-medium text-red-700 dark:text-red-300 text-sm transition'
-          >
-            Return Home
-          </Link>
+          <Button asChild variant='outline' className='w-full'>
+            <Link href='/'>
+              <Home className='mr-2 size-4' />
+              Return Home
+            </Link>
+          </Button>
         </CardFooter>
       </Card>
     </div>

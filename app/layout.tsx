@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
-import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import Providers from "@/components/providers/providers";
@@ -44,7 +43,6 @@ export default function RootLayout({
       <head />
       <body className='h-full' cz-shortcut-listen='true'>
         <Providers>{children}</Providers>
-        <Toaster />
       </body>
     </html>
   );
