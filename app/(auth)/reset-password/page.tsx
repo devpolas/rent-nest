@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 
 export default function ResetPasswordPage() {
   return (
-    <Card className='shadow-lg border-border/60 w-full max-w-md'>
+    <Card className='shadow-lg py-6 border-border/60 w-full max-w-md'>
       {/* Brand Header */}
       <div className='flex flex-col items-center gap-4'>
         <Logo />

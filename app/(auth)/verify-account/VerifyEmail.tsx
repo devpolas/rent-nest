@@ -97,7 +97,6 @@ function VerifyEmailContent() {
       <Card className='shadow-lg border-border/60 w-full max-w-md'>
         <CardHeader>
           <CardTitle>Invalid Verification Request</CardTitle>
-
           <CardDescription>
             No email address was provided for account verification.
           </CardDescription>
@@ -109,9 +108,9 @@ function VerifyEmailContent() {
   const isVerificationRequest = Boolean(email && token);
 
   return (
-    <Card className='shadow-lg border-border/60 w-full max-w-md'>
+    <Card className='shadow-lg py-6 border-border/60 w-full max-w-md'>
       {/* Brand */}
-      <div className='flex flex-col items-center gap-4 pt-6'>
+      <div className='flex flex-col items-center gap-4'>
         <Logo />
 
         <Heading4 className='text-brand'>Welcome Back to Rent Nest</Heading4>
@@ -137,7 +136,7 @@ function VerifyEmailContent() {
         </CardDescription>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className='pb-6'>
         <Button
           variant='default'
           className='bg-brand hover:bg-brand-primary w-full'

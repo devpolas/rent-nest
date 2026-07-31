@@ -21,14 +21,14 @@ export const metadata: Metadata = {
 
 export default function LandlordSignup() {
   return (
-    <Card className='shadow-lg border-brand/10 w-full max-w-md'>
-      <div className='flex flex-col items-center gap-2 pt-5'>
+    <Card className='shadow-lg py-6 border-brand/10 w-full max-w-md'>
+      <div className='flex flex-col items-center gap-2'>
         <Logo />
 
         <Heading4 className='text-brand'>Become a Rent Nest landlord</Heading4>
       </div>
 
-      <CardHeader className='space-y-2 pt-4'>
+      <CardHeader className='space-y-2'>
         <CardTitle className='text-xl'>Create landlord account</CardTitle>
 
         <CardDescription>
