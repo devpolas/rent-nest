@@ -11,4 +11,6 @@ export default {
   nodemailer_smtp_host: process.env.SMTP_HOST,
   nodemailer_smtp_port: process.env.SMTP_PORT,
   jwt_access_secret: process.env.JWT_ACCESS_SECRET as StringValue,
+  cloudinary_api_key: process.env.CLOUDINARY_API_KEY,
+  cloudinary_secret: process.env.CLOUDINARY_SECRET,
 };
