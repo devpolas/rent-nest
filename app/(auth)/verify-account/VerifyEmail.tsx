@@ -117,7 +117,7 @@ function VerifyEmailContent() {
         <Heading4 className='text-brand'>Welcome Back to Rent Nest</Heading4>
       </div>
 
-      <CardHeader className='space-y-3'>
+      <CardHeader className='space-y-4'>
         <CardTitle className='text-xl'>Verify Your Account</CardTitle>
 
         <CardDescription>

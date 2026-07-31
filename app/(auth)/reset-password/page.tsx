@@ -24,14 +24,14 @@ export default function ResetPasswordPage() {
   return (
     <Card className='shadow-lg border-border/60 w-full max-w-md'>
       {/* Brand Header */}
-      <div className='flex flex-col items-center gap-4 pt-6'>
+      <div className='flex flex-col items-center gap-4'>
         <Logo />
 
         <Heading4 className='text-brand'>Welcome Back to Rent Nest</Heading4>
       </div>
 
       {/* Content Header */}
-      <CardHeader className='space-y-3'>
+      <CardHeader className='space-y-4'>
         <CardTitle className='text-xl'>Reset your password</CardTitle>
 
         <CardDescription>

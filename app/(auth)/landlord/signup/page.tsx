@@ -1,7 +1,6 @@
 import ContinueWithGoogle from "@/components/social-auth-buttons/continue-with-google";
 import Logo from "@/components/logo/logo";
 import { Heading4, Paragraph } from "@/components/typography/typography";
-
 import {
   Card,
   CardContent,
@@ -11,48 +10,44 @@ import {
 } from "@/components/ui/card";
 
 import { FieldSeparator } from "@/components/ui/field";
-
 import Link from "next/link";
-
 import type { Metadata } from "next";
-import SignupForm from "./signup-form";
+import SignupForm from "@/app/(auth)/signup/signup-form";
 
 export const metadata: Metadata = {
-  title: "Signup",
-  description: "Create your Rent Nest account",
+  title: "Landlord Signup",
+  description: "Create your Rent Nest landlord account",
 };
 
-export default function SignupPage() {
+export default function LandlordSignup() {
   return (
     <Card className='shadow-lg border-brand/10 w-full max-w-md'>
       <div className='flex flex-col items-center gap-2 pt-5'>
         <Logo />
 
-        <Heading4 className='text-brand'>
-          Create your Rent Nest account
-        </Heading4>
+        <Heading4 className='text-brand'>Become a Rent Nest landlord</Heading4>
       </div>
 
       <CardHeader className='space-y-2 pt-4'>
-        <CardTitle className='text-xl'>Create an account</CardTitle>
+        <CardTitle className='text-xl'>Create landlord account</CardTitle>
 
         <CardDescription>
-          Enter your details to start your rental journey.
+          Enter your details to start listing properties.
         </CardDescription>
 
         <p className='text-muted-foreground text-sm'>
-          Want to rent out your property?{" "}
+          Looking for a home?{" "}
           <Link
-            href='/landlord/signup'
+            href='/signup'
             className='font-medium text-brand hover:underline'
           >
-            Create landlord account
+            Create tenant account
           </Link>
         </p>
       </CardHeader>
 
       <CardContent className='space-y-4 pt-2'>
-        <SignupForm />
+        <SignupForm defaultRole='LANDLORD' />
 
         <p className='text-muted-foreground text-sm text-center'>
           Already have an account?{" "}
@@ -64,9 +59,7 @@ export default function SignupPage() {
           </Link>
         </p>
       </CardContent>
-
       <FieldSeparator>Or continue with</FieldSeparator>
-
       <ContinueWithGoogle />
     </Card>
   );

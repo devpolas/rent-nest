@@ -10,7 +10,6 @@ import {
   CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -28,14 +27,14 @@ export default function SigninPage() {
   return (
     <Card className='shadow-lg border-border/60 w-full max-w-md'>
       {/* Brand Header */}
-      <div className='flex flex-col items-center gap-4 pt-6'>
+      <div className='flex flex-col items-center gap-4'>
         <Logo />
 
         <Heading4 className='text-brand'>Welcome Back to Rent Nest</Heading4>
       </div>
 
       {/* Auth Header */}
-      <CardHeader className='space-y-3'>
+      <CardHeader className='space-y-2'>
         <CardTitle className='text-xl'>Sign in to your account</CardTitle>
 
         <CardDescription>
@@ -53,18 +52,18 @@ export default function SigninPage() {
       </CardHeader>
 
       {/* Form */}
-      <CardContent>
+      <CardContent className='space-y-4'>
         <SigninForm />
+
+        {/* Social Login */}
+        <FieldSeparator className='*:data-[slot=field-separator-content]:bg-card'>
+          Or continue with
+        </FieldSeparator>
+
+        <div className='pt-4'>
+          <ContinueWithGoogle />
+        </div>
       </CardContent>
-
-      {/* Social Login */}
-      <FieldSeparator className='*:data-[slot=field-separator-content]:bg-card'>
-        Or continue with
-      </FieldSeparator>
-
-      <CardFooter className='pt-4'>
-        <ContinueWithGoogle />
-      </CardFooter>
     </Card>
   );
 }

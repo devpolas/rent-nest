@@ -9,7 +9,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormRhfInput } from "@/components/rhf-input/form-rhf-input";
 import LoadingSpinner from "@/components/spinner/loading-spinner";
 import { Button } from "@/components/ui/button";
-import { Paragraph } from "@/components/typography/typography";
 
 import { signin } from "@/lib/actions/auth.actions";
 import { SigninSchema } from "@/schemas/auth.schema";
