@@ -5,10 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { FormRhfInput } from "@/components/rhf-input/form-rhf-input";
-import LoadingSpinner from "@/components/spinner/loading-spinner";
-import { Button } from "@/components/ui/button";
 
 import { resetPassword } from "@/lib/actions/auth.actions";
 import {
@@ -16,6 +13,7 @@ import {
   ResetPasswordSchema,
 } from "@/schemas/auth.schema";
 import { getCallbackUrl } from "@/utils/helpers";
+import ActionButton from "@/components/button/action-button";
 
 export default function ResetPasswordForm() {
   const router = useRouter();
@@ -61,11 +59,8 @@ export default function ResetPasswordForm() {
         );
         return;
       }
-
       toast.success(result.message ?? "Password changed successfully.");
-
       const callbackUrl = getCallbackUrl();
-
       router.replace(`/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`);
     } catch {
       toast.error("Something went wrong. Please try again.");
@@ -111,18 +106,14 @@ export default function ResetPasswordForm() {
         {passwordMismatch && (
           <p className='text-destructive text-sm'>Passwords do not match.</p>
         )}
-
-        <Button
+        <ActionButton
           type='submit'
-          disabled={isSubmitting || passwordMismatch}
-          className='bg-brand hover:bg-brand/90 w-full text-brand-foreground'
+          isLoading={isSubmitting}
+          disabled={passwordMismatch}
+          loadingText='Resetting password...'
         >
-          {isSubmitting ? (
-            <LoadingSpinner text='Resetting password...' />
-          ) : (
-            "Reset Password"
-          )}
-        </Button>
+          Reset Password
+        </ActionButton>
       </div>
     </form>
   );

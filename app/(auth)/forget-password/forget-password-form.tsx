@@ -1,8 +1,7 @@
 "use client";
 
+import ActionButton from "@/components/button/action-button";
 import { FormRhfInput } from "@/components/rhf-input/form-rhf-input";
-import LoadingSpinner from "@/components/spinner/loading-spinner";
-import { Button } from "@/components/ui/button";
 import { forgotPassword } from "@/lib/actions/auth.actions";
 import { saveCallbackUrl } from "@/utils/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,11 +43,8 @@ export default function ForgetPasswordForm() {
         toast.error(result.message ?? "Unable to send reset password email.");
         return;
       }
-
       saveCallbackUrl(callbackUrl ?? "/");
-
       toast.success(result.message ?? "Password reset link has been sent.");
-
       router.push("/signin");
     } catch {
       toast.error("Something went wrong. Please try again.");
@@ -66,17 +62,13 @@ export default function ForgetPasswordForm() {
           placeholder='Enter your email'
         />
 
-        <Button
+        <ActionButton
+          isLoading={isSubmitting}
+          loadingText='Sending reset link...'
           type='submit'
-          disabled={isSubmitting}
-          className='bg-brand hover:bg-brand/90 w-full text-brand-foreground'
         >
-          {isSubmitting ? (
-            <LoadingSpinner text='Sending reset link...' />
-          ) : (
-            "Send Reset Link"
-          )}
-        </Button>
+          Send Reset Link
+        </ActionButton>
 
         <p className='text-brand-muted text-sm text-center'>
           Remember your password?{" "}

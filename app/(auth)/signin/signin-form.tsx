@@ -5,11 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { FormRhfInput } from "@/components/rhf-input/form-rhf-input";
-import LoadingSpinner from "@/components/spinner/loading-spinner";
-import { Button } from "@/components/ui/button";
-
 import { signin } from "@/lib/actions/auth.actions";
 import { SigninSchema } from "@/schemas/auth.schema";
 
@@ -20,6 +16,7 @@ import {
 } from "@/utils/helpers";
 
 import * as z from "zod";
+import ActionButton from "@/components/button/action-button";
 
 type FormValues = z.infer<typeof SigninSchema>;
 
@@ -48,25 +45,18 @@ export default function SigninForm() {
       if (!response.success) {
         if (response.message === "Please verify your email before login") {
           saveCallbackUrl(callbackUrl ?? "/");
-
           router.push(
             `/verify-account?email=${encodeURIComponent(data.email)}`,
           );
-
           return;
         }
-
         toast.error(response.message ?? "Invalid email or password.");
-
         return;
       }
 
       const redirectUrl = callbackUrl ?? getCallbackUrl();
-
       clearCallbackUrl();
-
       toast.success(response.message ?? "Welcome back to Rent Nest 🎉");
-
       router.replace(redirectUrl);
       router.refresh();
     } catch {
@@ -108,13 +98,14 @@ export default function SigninForm() {
           />
         </div>
 
-        <Button
+        <ActionButton
           type='submit'
-          disabled={isSubmitting}
-          className='bg-brand hover:bg-brand/90 mt-2 w-full text-brand-foreground'
+          isLoading={isSubmitting}
+          loadingText='Signing in...'
+          className='mt-2'
         >
-          {isSubmitting ? <LoadingSpinner text='Signing in...' /> : "Sign In"}
-        </Button>
+          Sign In
+        </ActionButton>
       </div>
     </form>
   );

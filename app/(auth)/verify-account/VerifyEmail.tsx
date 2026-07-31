@@ -1,13 +1,10 @@
 "use client";
-
 import { Suspense, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-
 import Logo from "@/components/logo/logo";
 import LoadingSpinner from "@/components/spinner/loading-spinner";
 import { Heading4 } from "@/components/typography/typography";
-
 import {
   Card,
   CardContent,
@@ -15,17 +12,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-import { Button } from "@/components/ui/button";
-
 import { sendVerificationEmail, verifyEmail } from "@/lib/actions/auth.actions";
-
 import { clearCallbackUrl, getCallbackUrl } from "@/utils/helpers";
+import ActionButton from "@/components/button/action-button";
 
 function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const email = searchParams.get("email");
   const token = searchParams.get("token");
 
@@ -33,29 +26,23 @@ function VerifyEmailContent() {
 
   function redirectToSignin() {
     const callbackUrl = getCallbackUrl();
-
     router.push(`/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
-
   function handleResendVerification() {
     if (!email) {
       toast.error("No email address found.");
       return;
     }
-
     startTransition(async () => {
       try {
         const result = await sendVerificationEmail({
           email,
         });
-
         if (!result.success) {
           toast.error(result.message ?? "Failed to send verification email");
           return;
         }
-
         toast.success(result.message ?? "Verification email sent successfully");
-
         redirectToSignin();
       } catch {
         toast.error("Something went wrong. Please try again.");
@@ -68,23 +55,18 @@ function VerifyEmailContent() {
       toast.error("Verification information is missing.");
       return;
     }
-
     startTransition(async () => {
       try {
         const result = await verifyEmail({
           email,
           token,
         });
-
         if (!result.success) {
           toast.error(result.message ?? "Verification failed");
           return;
         }
-
         toast.success(result.message ?? "Account verified successfully");
-
         clearCallbackUrl();
-
         redirectToSignin();
       } catch {
         toast.error("Something went wrong. Please try again.");
@@ -137,28 +119,20 @@ function VerifyEmailContent() {
       </CardHeader>
 
       <CardContent className='pb-6'>
-        <Button
-          variant='default'
-          className='bg-brand hover:bg-brand-primary w-full'
-          disabled={isPending}
+        <ActionButton
+          type='submit'
+          isLoading={isPending}
+          loadingText={
+            isVerificationRequest ? "Verifying account..." : "Sending email..."
+          }
           onClick={
             isVerificationRequest ? handleVerify : handleResendVerification
           }
         >
-          {isPending ? (
-            <LoadingSpinner
-              text={
-                isVerificationRequest
-                  ? "Verifying account..."
-                  : "Sending email..."
-              }
-            />
-          ) : isVerificationRequest ? (
-            "Verify Account"
-          ) : (
-            "Resend Verification Email"
-          )}
-        </Button>
+          {isVerificationRequest
+            ? "Verify Account"
+            : "Resend Verification Email"}
+        </ActionButton>
       </CardContent>
     </Card>
   );

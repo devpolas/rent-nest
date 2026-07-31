@@ -5,14 +5,11 @@ import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { Button } from "@/components/ui/button";
 import { FormRhfInput } from "@/components/rhf-input/form-rhf-input";
-import LoadingSpinner from "@/components/spinner/loading-spinner";
-
 import { signup } from "@/lib/actions/auth.actions";
 import { SignupSchema } from "@/schemas/auth.schema";
 import { saveCallbackUrl } from "@/utils/helpers";
+import ActionButton from "@/components/button/action-button";
 
 type SignupFormProps = {
   defaultRole?: "TENANT" | "LANDLORD";
@@ -27,7 +24,6 @@ export default function SignupForm({
 
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const callbackUrl = searchParams.get("callbackUrl");
 
   const {
@@ -56,16 +52,12 @@ export default function SignupForm({
   async function handleSignup(data: FormValues) {
     try {
       const response = await signup(data);
-
       if (!response.success) {
         toast.error(response.message ?? "Unable to create account.");
         return;
       }
-
       saveCallbackUrl(callbackUrl ?? "/");
-
       toast.success(response.message ?? "Account created successfully 🎉");
-
       router.push(`/verify-account?email=${encodeURIComponent(data.email)}`);
     } catch {
       toast.error("Something went wrong. Please try again.");
@@ -111,17 +103,14 @@ export default function SignupForm({
           <p className='text-destructive text-sm'>Passwords do not match.</p>
         )}
 
-        <Button
+        <ActionButton
           type='submit'
-          disabled={isSubmitting || passwordMismatch}
-          className='bg-brand hover:bg-brand/90 w-full text-brand-foreground'
+          isLoading={isSubmitting}
+          disabled={passwordMismatch}
+          loadingText={`Creating ${accountType} account...`}
         >
-          {isSubmitting ? (
-            <LoadingSpinner text={`Creating ${accountType} account...`} />
-          ) : (
-            `Create ${accountType} Account`
-          )}
-        </Button>
+          Create {accountType} Account
+        </ActionButton>
       </div>
     </form>
   );
