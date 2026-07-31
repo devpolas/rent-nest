@@ -20,7 +20,7 @@ export default function Logo({ className }: Props) {
         <House className='size-6' strokeWidth={2.4} />
       </div>
 
-      <span className='font-extrabold text-xl md:text-2xl'>
+      <span className='font-extrabold text-lg lg:text-xl xl:text-2xl'>
         <span className='text-brand'>RENT</span>
         <span className='text-foreground'>REST</span>
       </span>

@@ -30,19 +30,19 @@ export default function MobileNavbar() {
         </Button>
       </SheetTrigger>
 
-      <SheetContent side='right' className='flex flex-col w-72'>
+      <SheetContent side='right' className='flex flex-col pb-4 w-72'>
         <SheetHeader>
           <SheetTitle>
             <Logo />
           </SheetTitle>
         </SheetHeader>
 
-        <nav className='flex flex-col gap-2 mt-8'>
+        <nav className='flex flex-col gap-2'>
           {publicNavigation.map((item) => (
             <SheetClose asChild key={item.href}>
               <Link
                 href={item.href}
-                className='hover:bg-brand/10 px-4 py-3 rounded-md font-medium text-muted-foreground hover:text-brand text-base transition-colors'
+                className='hover:bg-brand/10 px-4 py-1 rounded-md font-medium text-muted-foreground hover:text-brand text-base transition-colors'
               >
                 {item.title}
               </Link>

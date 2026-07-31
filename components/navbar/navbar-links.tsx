@@ -3,7 +3,7 @@ import { publicNavigation } from "@/config/client/navigation";
 
 export default function NavbarLinks() {
   return (
-    <nav className='hidden md:flex items-center gap-8'>
+    <nav className='hidden md:flex items-center gap-8 2xl:gap-14 xl:gap-10'>
       {publicNavigation.map((item) => (
         <Link
           key={item.href}
