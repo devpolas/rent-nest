@@ -1,5 +1,4 @@
 import Link from "next/link";
-
 import { publicNavigation } from "@/config/client/navigation";
 
 export default function NavbarLinks() {

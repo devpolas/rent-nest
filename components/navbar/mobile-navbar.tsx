@@ -1,13 +1,8 @@
 "use client";
-
 import Link from "next/link";
-
 import { Menu } from "lucide-react";
-
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
 import { Button } from "@/components/ui/button";
-
 import { publicNavigation } from "@/config/client/navigation";
 
 export default function MobileNavbar() {
