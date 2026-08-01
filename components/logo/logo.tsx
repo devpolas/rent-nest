@@ -12,7 +12,7 @@ export default function Logo({ className }: Props) {
       href='/'
       aria-label='Go to homepage'
       className={cn(
-        "inline-flex items-center gap-1 font-bold tracking-tight",
+        "inline-flex items-center gap-0.5 font-bold tracking-tight",
         className,
       )}
     >
