@@ -8,7 +8,6 @@ export function handleApiError<T = null>(error: unknown): ApiResponse<T> {
       error.response?.data ??
       errorResponse<T>(
         error.response?.data.message ?? error.message ?? "Network error",
-        error.response?.status ?? 500,
       )
     );
   }
