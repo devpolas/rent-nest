@@ -28,7 +28,7 @@ export default function Error({
   return (
     <div className='flex justify-center items-center px-4 min-h-[70vh]'>
       <Card className='shadow-xl w-full max-w-lg'>
-        <CardHeader className='items-center space-y-5 text-center'>
+        <CardHeader className='flex flex-col justify-center items-center space-y-5 text-center'>
           <Logo />
 
           <div className='flex justify-center items-center bg-destructive/10 rounded-full size-12'>
@@ -46,7 +46,7 @@ export default function Error({
 
         <CardContent>
           {process.env.NODE_ENV === "development" && (
-            <div className='bg-destructive/5 p-3 border border-destructive/30 rounded-md text-destructive text-sm'>
+            <div className='bg-destructive/5 p-3 border border-destructive/30 rounded-md text-destructive text-sm text-center'>
               {error.message}
             </div>
           )}
