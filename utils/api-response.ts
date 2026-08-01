@@ -1,25 +1,25 @@
-import type { ApiResponse } from "@/types/response";
+import type { ApiResponse, Meta } from "@/types/response";
 
 export function successResponse<T>(
   data: T,
   message = "Success",
-  status = 200,
+  meta?: Meta,
 ): ApiResponse<T> {
   return {
     success: true,
     message,
-    status,
+    timestamp: new Date().toISOString(),
     data,
+    ...(meta && { meta }),
   };
 }
 
 export function errorResponse<T = null>(
   message = "Something went wrong",
-  status = 500,
 ): ApiResponse<T> {
   return {
     success: false,
     message,
-    status,
+    timestamp: new Date().toISOString(),
   };
 }
