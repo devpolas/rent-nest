@@ -93,6 +93,48 @@ export const CompleteUpdateAdminPropertySchema = PropertyUpdateSchema.extend({
   ...AdminUpdateSchema.shape,
 });
 
+export const PropertyQuerySchema = z.object({
+  search: z.string().optional(),
+  category: z.string().optional(),
+  categoryId: z.string().optional(),
+  country: z.string().optional(),
+  division: z.string().optional(),
+  district: z.string().optional(),
+  city: z.string().optional(),
+  village: z.string().optional(),
+  minRent: z.string().optional(),
+  maxRent: z.string().optional(),
+  minArea: z.string().optional(),
+  maxArea: z.string().optional(),
+  bedrooms: z.string().optional(),
+  bathrooms: z.string().optional(),
+  availability: z
+    .enum(["AVAILABLE", "RESERVED", "RENTED", "UNAVAILABLE"])
+    .optional(),
+  status: z
+    .enum(["PENDING", "APPROVED", "REJECTED", "RENTED", "ARCHIVED"])
+    .optional(),
+  amenityIds: z.array(z.uuid()).optional(),
+  featureIds: z.array(z.uuid()).optional(),
+  ruleIds: z.array(z.uuid()).optional(),
+  minRating: z.string().optional(),
+  minReviews: z.string().optional(),
+  sortBy: z
+    .enum([
+      "createdAt",
+      "rent",
+      "area",
+      "bedrooms",
+      "bathrooms",
+      "averageRating",
+      "reviewCount",
+    ])
+    .optional(),
+  sortOrder: z.enum(["asc", "desc"]).optional(),
+  page: z.string().optional(),
+  limit: z.string().optional(),
+});
+
 export type PropertyInputType = z.infer<typeof CompletePropertySchema>;
 
 export type AdminPropertyInputType = z.infer<typeof PropertyAdminSchema>;
@@ -104,3 +146,5 @@ export type PropertyUpdateInputType = z.infer<
 export type AdminPropertyUpdateInputType = z.infer<
   typeof CompleteUpdateAdminPropertySchema
 >;
+
+export type PropertyQuery = z.infer<typeof PropertyQuerySchema>;
