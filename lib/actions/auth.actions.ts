@@ -15,7 +15,6 @@ import type { ApiResponse } from "@/types/response";
 import type { User } from "@/types/user";
 import { errorResponse } from "@/utils/api-response";
 import { handleApiError } from "@/utils/handle-api-error";
-import httpStatus from "http-status";
 import { cookies } from "next/headers";
 import { Time } from "@/utils/helpers";
 import Jwt from "jsonwebtoken";
@@ -36,10 +35,7 @@ export async function signup(
     const parse = SignupSchema.safeParse(payload);
 
     if (!parse.success) {
-      return errorResponse(
-        handleZodError(parse.error) || "Invalid input",
-        httpStatus.BAD_REQUEST,
-      );
+      return errorResponse(handleZodError(parse.error) || "Invalid input");
     }
 
     const { password, confirmPassword } = parse.data;
@@ -89,7 +85,7 @@ export async function signin(
     const parse = SigninSchema.safeParse(payload);
 
     if (!parse.success) {
-      return errorResponse(handleZodError(parse.error) || "Invalid input", 400);
+      return errorResponse(handleZodError(parse.error) || "Invalid input");
     }
 
     const response = await axiosInstance.post<ApiResponse<null>>(
@@ -187,10 +183,7 @@ export async function resetPassword({
   const parsed = ResetPasswordSchema.safeParse(payload);
 
   if (!parsed.success) {
-    return errorResponse(
-      handleZodError(parsed.error) || "Invalid input",
-      httpStatus.BAD_REQUEST,
-    );
+    return errorResponse(handleZodError(parsed.error) || "Invalid input");
   }
 
   if (!token) {

@@ -11,7 +11,6 @@ import {
 } from "@/schemas/property.schema";
 import { errorResponse } from "@/utils/api-response";
 import { handleZodError } from "@/utils/handle-zod-errors";
-import httpStatus from "http-status";
 
 export async function getAllProperties({
   payload,
@@ -22,10 +21,7 @@ export async function getAllProperties({
     const parsed = PropertyQuerySchema.safeParse(payload);
 
     if (!parsed.success) {
-      return errorResponse(
-        handleZodError(parsed.error) || "Invalid input",
-        httpStatus.BAD_REQUEST,
-      );
+      return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
 
     const query = new URLSearchParams();
@@ -59,10 +55,7 @@ export async function createProperty({
     const parsed = PropertyAdminSchema.safeParse(payload);
 
     if (!parsed.success) {
-      return errorResponse(
-        handleZodError(parsed.error) || "Invalid input",
-        httpStatus.BAD_REQUEST,
-      );
+      return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
     const response = await axiosInstance.post("/properties", parsed.data);
     return response.data;
@@ -84,10 +77,7 @@ export async function updateProperty({
     }
     const parsed = PropertyAdminSchema.safeParse(payload);
     if (!parsed.success) {
-      return errorResponse(
-        handleZodError(parsed.error) || "Invalid input",
-        httpStatus.BAD_REQUEST,
-      );
+      return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
     const response = await axiosInstance.patch(
       `/properties/${id}`,
