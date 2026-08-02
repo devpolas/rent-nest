@@ -1,10 +1,4 @@
 import {
-  LocationCreateInput,
-  LocationCreateSchema,
-  LocationUpdateInput,
-  LocationUpdateSchema,
-} from "@/schemas/location.schema";
-import {
   ProfileInputType,
   ProfileSchema,
   ProfileUpdateInputType,
@@ -24,7 +18,6 @@ import { errorResponse } from "@/utils/api-response";
 import { handleZodError } from "@/utils/handle-zod-errors";
 import { Profile } from "@/types/profile";
 import { SocialProfile } from "@/types/social-profile";
-import { Location } from "@/types/location";
 
 // user itself
 export async function getMe(): Promise<
@@ -146,56 +139,6 @@ export async function deleteSocialProfile({
 }): Promise<ApiResponse<null>> {
   try {
     const response = await axiosInstance.delete(`/social-profiles/${id}`);
-    return response.data;
-  } catch (error) {
-    return handleApiError(error);
-  }
-}
-
-// user with location
-export async function createUserLocation({
-  payload,
-}: {
-  payload: LocationCreateInput;
-}): Promise<ApiResponse<{ location: Location } | null>> {
-  try {
-    const parsed = LocationCreateSchema.safeParse(payload);
-    if (parsed.error) {
-      return errorResponse(handleZodError(parsed.error) || "Invalid Input");
-    }
-    const response = await axiosInstance.post("/locations", parsed.data);
-    return response.data;
-  } catch (error) {
-    return handleApiError(error);
-  }
-}
-
-export async function updateUserLocation({
-  id,
-  payload,
-}: {
-  id: string;
-  payload: LocationUpdateInput;
-}): Promise<ApiResponse<{ location: Location }>> {
-  try {
-    const parsed = LocationUpdateSchema.safeParse(payload);
-    if (parsed.error) {
-      return errorResponse(handleZodError(parsed.error) || "Invalid Input");
-    }
-    const response = await axiosInstance.patch(`/locations/${id}`, parsed.data);
-    return response.data;
-  } catch (error) {
-    return handleApiError(error);
-  }
-}
-
-export async function deleteUserLocation({
-  id,
-}: {
-  id: string;
-}): Promise<ApiResponse<null>> {
-  try {
-    const response = await axiosInstance.delete(`/locations/${id}`);
     return response.data;
   } catch (error) {
     return handleApiError(error);

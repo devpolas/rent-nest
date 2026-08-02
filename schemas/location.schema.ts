@@ -18,14 +18,13 @@ const LocationBaseSchema = z.object({
   village: z.string().min(1).max(100),
 
   postalCode: z.string().min(1).max(20),
-
   addressLine: z.string().optional(),
 });
 
 export const LocationCreateSchema = LocationBaseSchema.extend({
   type: LocationTypeSchema,
 
-  profileId: z.string().uuid().optional(),
+  profileId: z.uuid().optional(),
 }).superRefine((data, ctx) => {
   if (data.type !== "PROPERTY" && !data.profileId) {
     ctx.addIssue({
