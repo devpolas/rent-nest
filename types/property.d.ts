@@ -72,3 +72,32 @@ export interface PropertyResponse extends Property {
   features: Feature[];
   rules: Rule[];
 }
+
+export type PropertyDetailsMap = {
+  categories: {
+    category: Category;
+  };
+  amenities: {
+    amenity: Amenity;
+  };
+  features: {
+    feature: Feature;
+  };
+  rules: {
+    rule: Rule;
+  };
+};
+export type AllPropertyDetailsMap = {
+  categories: {
+    categories: Category[];
+  };
+  amenities: {
+    amenities: Amenity[];
+  };
+  features: {
+    features: Feature[];
+  };
+  rules: {
+    rules: Rule[];
+  };
+};
