@@ -3,15 +3,11 @@ import axiosInstance from "../axios";
 import { handleApiError } from "@/utils/handle-api-error";
 import {
   AllPropertyDetailsMap,
-  Amenity,
-  Category,
-  Feature,
   Property,
   PropertyDetailsMap,
-  Rule,
 } from "@/types/property";
 import {
-  PropertyAdminSchema,
+  PropertyAdminUpdateSchema,
   PropertyDetailsSchema,
   PropertyDetailsType,
   PropertyDetailsUpdateSchema,
@@ -19,7 +15,10 @@ import {
   PropertyInputType,
   PropertyQuery,
   PropertyQuerySchema,
+  PropertySchema,
+  PropertyUpdateAdminInputType,
   PropertyUpdateInputType,
+  PropertyUpdateSchema,
 } from "@/schemas/property.schema";
 import { errorResponse } from "@/utils/api-response";
 import { handleZodError } from "@/utils/handle-zod-errors";
@@ -64,12 +63,37 @@ export async function createProperty({
   payload: PropertyInputType;
 }): Promise<ApiResponse<{ property: Property } | null>> {
   try {
-    const parsed = PropertyAdminSchema.safeParse(payload);
+    const parsed = PropertySchema.safeParse(payload);
 
     if (!parsed.success) {
       return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
     const response = await axiosInstance.post("/properties", parsed.data);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function updatePropertyByAdmin({
+  id,
+  payload,
+}: {
+  id: string;
+  payload: PropertyUpdateAdminInputType;
+}): Promise<ApiResponse<{ property: Property } | null>> {
+  try {
+    if (!id.trim()) {
+      return errorResponse("Property ID is required");
+    }
+    const parsed = PropertyAdminUpdateSchema.safeParse(payload);
+    if (!parsed.success) {
+      return errorResponse(handleZodError(parsed.error) || "Invalid input");
+    }
+    const response = await axiosInstance.patch(
+      `/properties/${id}`,
+      parsed.data,
+    );
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -87,7 +111,7 @@ export async function updateProperty({
     if (!id.trim()) {
       return errorResponse("Property ID is required");
     }
-    const parsed = PropertyAdminSchema.safeParse(payload);
+    const parsed = PropertyUpdateSchema.safeParse(payload);
     if (!parsed.success) {
       return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
