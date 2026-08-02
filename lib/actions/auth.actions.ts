@@ -19,6 +19,7 @@ import { cookies } from "next/headers";
 import { Time } from "@/utils/helpers";
 import Jwt from "jsonwebtoken";
 import config from "@/config/server/server";
+import { withAuthHeaders } from "@/utils/server-auth";
 
 interface AccountSession {
   userId: string;
@@ -214,8 +215,10 @@ export async function resetPassword({
 // ================= logout =================
 export async function logout(): Promise<ApiResponse<null>> {
   try {
-    const response =
-      await axiosInstance.post<ApiResponse<null>>("/auth/logout");
+    const response = await axiosInstance.post<ApiResponse<null>>(
+      "/auth/logout",
+      await withAuthHeaders(),
+    );
 
     const cookieStore = await cookies();
 
@@ -235,6 +238,7 @@ export async function logoutDeviceBySessionId(
   try {
     const response = await axiosInstance.delete<ApiResponse<null>>(
       `/auth/sessions/${session}`,
+      await withAuthHeaders(),
     );
     return response.data;
   } catch (error) {
@@ -247,6 +251,7 @@ export async function logoutFromOtherDevices(): Promise<ApiResponse<null>> {
   try {
     const response = await axiosInstance.post<ApiResponse<null>>(
       "/auth/logout-other-devices",
+      await withAuthHeaders(),
     );
     return response.data;
   } catch (error) {
