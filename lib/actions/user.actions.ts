@@ -1,4 +1,6 @@
 import {
+  AdminUserInputType,
+  AdminUserSchema,
   ProfileInputType,
   ProfileSchema,
   ProfileUpdateInputType,
@@ -164,6 +166,80 @@ export async function deleteSocialProfile({
   try {
     const response = await axiosInstance.delete(
       `/social-profiles/${id}`,
+      await withAuthHeaders(),
+    );
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function getUserById({
+  id,
+}: {
+  id: string;
+}): Promise<ApiResponse<{ user: UserWithProfile } | null>> {
+  try {
+    if (!id) {
+      return errorResponse("User ID is required");
+    }
+    const response = await axiosInstance.get(
+      `/users/${id}`,
+      await withAuthHeaders(),
+    );
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+export async function updateUserById({
+  id,
+  payload,
+}: {
+  id: string;
+  payload: AdminUserInputType;
+}): Promise<ApiResponse<{ user: UserWithProfile } | null>> {
+  try {
+    if (!id) {
+      return errorResponse("User ID is required");
+    }
+    const parsed = AdminUserSchema.safeParse(payload);
+    if (parsed.error) {
+      return errorResponse(handleZodError(parsed.error) || "Invalid Input");
+    }
+    const response = await axiosInstance.patch(
+      `/users/${id}`,
+      parsed.data,
+      await withAuthHeaders(),
+    );
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function getAllUsers(): Promise<
+  ApiResponse<{ users: UserWithProfile[] } | null>
+> {
+  try {
+    const response = await axiosInstance.get("/users", await withAuthHeaders());
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function deleteUserById({
+  id,
+}: {
+  id: string;
+}): Promise<ApiResponse<null>> {
+  try {
+    if (!id) {
+      return errorResponse("User ID is required");
+    }
+    const response = await axiosInstance.delete(
+      `/users/${id}`,
       await withAuthHeaders(),
     );
     return response.data;
