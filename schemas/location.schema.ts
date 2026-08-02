@@ -24,3 +24,6 @@ export const LocationUpdateSchema = z.object({
   postalCode: z.string().min(1).optional(),
   addressLine: z.string().optional().optional(),
 });
+
+export type LocationInputType = z.infer<typeof LocationSchema>;
+export type LocationUpdateInputType = z.infer<typeof LocationUpdateSchema>;
