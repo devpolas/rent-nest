@@ -30,7 +30,7 @@ interface AccountSession {
 // ================= signup =================
 export async function signup(
   payload: SignupPayload,
-): Promise<ApiResponse<User | null>> {
+): Promise<ApiResponse<{ user: User } | null>> {
   try {
     const parse = SignupSchema.safeParse(payload);
 
@@ -78,7 +78,7 @@ function saveCookie(
 // ================= signin =================
 export async function signin(
   payload: SigninPayload,
-): Promise<ApiResponse<null>> {
+): Promise<ApiResponse<{ accessToken: string } | null>> {
   try {
     const cookieStore = await cookies();
 
