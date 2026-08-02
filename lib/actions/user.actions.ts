@@ -1,0 +1,203 @@
+import {
+  LocationCreateInput,
+  LocationCreateSchema,
+  LocationUpdateInput,
+  LocationUpdateSchema,
+} from "@/schemas/location.schema";
+import {
+  ProfileInputType,
+  ProfileSchema,
+  ProfileUpdateInputType,
+  ProfileUpdateSchema,
+  SocialProfileCreateInput,
+  SocialProfileCreateSchema,
+  SocialProfileUpdateInput,
+  SocialProfileUpdateSchema,
+  UserUpdateInputType,
+  UserUpdateSchema,
+} from "@/schemas/user.schema";
+import { handleApiError } from "@/utils/handle-api-error";
+import axiosInstance from "../axios";
+import { ApiResponse } from "@/types/response";
+import { MeResponse, UserWithProfile } from "@/types/user";
+import { errorResponse } from "@/utils/api-response";
+import { handleZodError } from "@/utils/handle-zod-errors";
+import { Profile } from "@/types/profile";
+import { SocialProfile } from "@/types/social-profile";
+import { Location } from "@/types/location";
+
+// user itself
+export async function getMe(): Promise<
+  ApiResponse<{ user: MeResponse } | null>
+> {
+  try {
+    const response = await axiosInstance.get("/users");
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function updateMe({
+  payload,
+}: {
+  payload: UserUpdateInputType;
+}): Promise<ApiResponse<{ user: UserWithProfile } | null>> {
+  try {
+    const parsed = UserUpdateSchema.safeParse(payload);
+    if (parsed.error) {
+      return errorResponse(handleZodError(parsed.error) || "Invalid Input");
+    }
+    const response = await axiosInstance.patch("/users", parsed.data);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function deleteMe(): Promise<ApiResponse<null>> {
+  try {
+    const response = await axiosInstance.delete("/users");
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+//user with profile
+export async function createUserProfile({
+  payload,
+}: {
+  payload: ProfileInputType;
+}): Promise<ApiResponse<{ profile: Profile } | null>> {
+  try {
+    const parsed = ProfileSchema.safeParse(payload);
+    if (parsed.error) {
+      return errorResponse(handleZodError(parsed.error) || "Invalid Input");
+    }
+    const response = await axiosInstance.post("/profiles", parsed.data);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function updateProfile({
+  payload,
+}: {
+  payload: ProfileUpdateInputType;
+}): Promise<ApiResponse<{ profile: Profile } | null>> {
+  try {
+    const parsed = ProfileUpdateSchema.safeParse(payload);
+    if (parsed.error) {
+      return errorResponse(handleZodError(parsed.error) || "Invalid Input");
+    }
+    const response = await axiosInstance.patch("/profiles", parsed.data);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+// user with social profile
+export async function createSocialProfile({
+  payload,
+}: {
+  payload: SocialProfileCreateInput;
+}): Promise<ApiResponse<{ socialProfile: SocialProfile } | null>> {
+  try {
+    const parsed = SocialProfileCreateSchema.safeParse(payload);
+    if (parsed.error) {
+      return errorResponse(handleZodError(parsed.error) || "Invalid Input");
+    }
+    const response = await axiosInstance.post("/social-profiles", parsed.data);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function updateSocialProfile({
+  id,
+  payload,
+}: {
+  id: string;
+  payload: SocialProfileUpdateInput;
+}): Promise<ApiResponse<{ socialProfile: SocialProfile } | null>> {
+  try {
+    const parsed = SocialProfileUpdateSchema.safeParse(payload);
+    if (parsed.error) {
+      return errorResponse(handleZodError(parsed.error) || "Invalid Input");
+    }
+    const response = await axiosInstance.patch(
+      `/social-profiles/${id}`,
+      parsed.data,
+    );
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function deleteSocialProfile({
+  id,
+}: {
+  id: string;
+}): Promise<ApiResponse<null>> {
+  try {
+    const response = await axiosInstance.delete(`/social-profiles/${id}`);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+// user with location
+export async function createUserLocation({
+  payload,
+}: {
+  payload: LocationCreateInput;
+}): Promise<ApiResponse<{ location: Location } | null>> {
+  try {
+    const parsed = LocationCreateSchema.safeParse(payload);
+    if (parsed.error) {
+      return errorResponse(handleZodError(parsed.error) || "Invalid Input");
+    }
+    const response = await axiosInstance.post("/locations", parsed.data);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function updateUserLocation({
+  id,
+  payload,
+}: {
+  id: string;
+  payload: LocationUpdateInput;
+}): Promise<ApiResponse<{ location: Location }>> {
+  try {
+    const parsed = LocationUpdateSchema.safeParse(payload);
+    if (parsed.error) {
+      return errorResponse(handleZodError(parsed.error) || "Invalid Input");
+    }
+    const response = await axiosInstance.patch(`/locations/${id}`, parsed.data);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function deleteUserLocation({
+  id,
+}: {
+  id: string;
+}): Promise<ApiResponse<null>> {
+  try {
+    const response = await axiosInstance.delete(`/locations/${id}`);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}

@@ -1,7 +1,9 @@
 import { AuthAccount } from "./auth";
 import { UserRole, UserStatus } from "./enum";
+import { Location } from "./location";
 import { Profile } from "./profile";
 import { AccountSession } from "./session";
+import { SocialProfile } from "./social-profile";
 
 export interface User {
   id: string;
@@ -23,6 +25,11 @@ export interface User {
 
 export interface UserResponse extends User {
   profile: Profile | null;
+}
+
+export interface UserWithProfile extends User {
+  location: Location[];
+  socialProfile: SocialProfile[];
 }
 
 export interface UserWithSessionsResponse extends UserResponse {
