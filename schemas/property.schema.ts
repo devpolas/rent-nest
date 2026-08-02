@@ -22,27 +22,7 @@ export const PropertySchema = z.object({
   rules: z.array(z.uuid()).min(1),
 });
 
-export const PropertyUpdateSchema = z.object({
-  title: z.string().min(10).optional(),
-  description: z.string().min(15).optional(),
-  rent: z.number().positive().optional(),
-  securityDeposit: z.number().nonnegative().optional(),
-  bedrooms: z.number().int().positive().optional(),
-  bathrooms: z.number().int().positive().optional(),
-  area: z.number().positive().optional(),
-  availableFrom: z.coerce.date().optional(),
-  availability: z
-    .enum(["AVAILABLE", "RESERVED", "RENTED", "UNAVAILABLE"])
-    .optional(),
-  status: z
-    .enum(["PENDING", "APPROVED", "REJECTED", "RENTED", "ARCHIVED"])
-    .optional(),
-  images: z.array(z.url()).optional(),
-  categoryId: z.uuid().optional(),
-  amenities: z.array(z.uuid()).min(1).optional(),
-  features: z.array(z.uuid()).min(1).optional(),
-  rules: z.array(z.uuid()).min(1).optional(),
-});
+export const PropertyUpdateSchema = PropertySchema.partial();
 
 export const PropertyAdminUpdateSchema = z.object({
   landlordId: z.uuid().optional(),
