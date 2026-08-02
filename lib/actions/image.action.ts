@@ -1,32 +1,63 @@
-import axios from "axios";
+import axiosInstance from "../axios";
 
-const uploadSingleImage = async (image: File) => {
+type ImageUploadResponse = {
+  url: string;
+  publicId: string;
+};
+
+type UploadResponse = {
+  images: ImageUploadResponse[];
+};
+
+
+const uploadImages = async (
+  images: File[],
+): Promise<ImageUploadResponse[]> => {
+
   const formData = new FormData();
-  formData.append("file", image);
-  formData.append("upload_preset", "rent_nest");
 
-  const { data } = await axios.post(
-    `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+  images.forEach((image) => {
+    formData.append("images", image);
+  });
+
+
+  const { data } = await axiosInstance.post<{
+    data: UploadResponse;
+  }>(
+    "/images/upload",
     formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
   );
 
-  if (!data?.secure_url) {
+
+  if (!data.data.images?.length) {
     throw new Error("Image upload failed");
   }
 
-  return data.secure_url;
+
+  return data.data.images;
 };
 
-export const uploadImageToCloudinary = async ({ image }: { image: File }) => {
-  return uploadSingleImage(image);
+
+export const uploadImageToBackend = async ({
+  image,
+}: {
+  image: File;
+}) => {
+  const result = await uploadImages([image]);
+
+  return result[0];
 };
 
-export const uploadImagesToCloudinary = async (images: { image: File }[]) => {
-  const urls = await Promise.all(
-    images.map(async ({ image }) => ({
-      url: await uploadSingleImage(image),
-    })),
-  );
 
-  return urls;
+export const uploadImagesToBackend = async ({
+  images,
+}: {
+  images: File[];
+}) => {
+  return uploadImages(images);
 };
