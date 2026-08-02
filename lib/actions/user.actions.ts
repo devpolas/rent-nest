@@ -24,7 +24,7 @@ export async function getMe(): Promise<
   ApiResponse<{ user: MeResponse } | null>
 > {
   try {
-    const response = await axiosInstance.get("/users");
+    const response = await axiosInstance.get("/auth/me");
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -41,7 +41,7 @@ export async function updateMe({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.patch("/users", parsed.data);
+    const response = await axiosInstance.patch("/users/me", parsed.data);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -50,7 +50,7 @@ export async function updateMe({
 
 export async function deleteMe(): Promise<ApiResponse<null>> {
   try {
-    const response = await axiosInstance.delete("/users");
+    const response = await axiosInstance.delete("/users/me");
     return response.data;
   } catch (error) {
     return handleApiError(error);

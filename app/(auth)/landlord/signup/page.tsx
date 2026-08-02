@@ -8,7 +8,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { FieldSeparator } from "@/components/ui/field";
 import Link from "next/link";
 import type { Metadata } from "next";
 import SignupForm from "@/app/(auth)/signup/signup-form";

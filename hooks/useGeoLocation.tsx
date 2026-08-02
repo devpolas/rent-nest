@@ -1,5 +1,6 @@
 import { useState } from "react";
 import config from "@/config/client/client";
+import axios from "axios";
 
 interface Coordinates {
   lat: number;
@@ -100,15 +101,15 @@ export function useGeoLocation(defaultLocation: Coordinates | null = null) {
             localityLanguage: "en",
           });
 
-          const response = await fetch(
+          const response = await axios(
             `${config.location_api_base_url}?${params.toString()}`,
           );
 
-          if (!response.ok) {
+          if (!response.data) {
             throw new Error("Failed to fetch address");
           }
 
-          const geoAddress: GeoAddress = await response.json();
+          const geoAddress: GeoAddress = await response.data;
 
           setAddress(geoAddress);
 

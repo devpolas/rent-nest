@@ -1,9 +1,13 @@
-import { getAllPropertyDetails } from "@/lib/actions/property.actions";
+import { getSession } from "@/lib/actions/auth.actions";
+import { getMe } from "@/lib/actions/user.actions";
 
 export default async function Home() {
-  const allPropertiesDetails = await getAllPropertyDetails({
-    detailsAction: "categories",
-  });
-  console.log(allPropertiesDetails.data);
-  return <div>hello rent nest</div>;
+  let me;
+  const session = await getSession();
+  console.log(session);
+  if (session) {
+    me = await getMe();
+  }
+  console.log(me);
+  return <div>{me?.data?.user.name}</div>;
 }
