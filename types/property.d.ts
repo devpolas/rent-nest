@@ -1,10 +1,6 @@
-import { Amenity } from "./amenity";
 import { AvailabilityStatus, PropertyStatus } from "./enums";
-import { Feature } from "./feature";
 import { Location } from "./location";
-import { PropertyCategory } from "./property-category";
 import { PropertyImage } from "./property-image";
-import { Rule } from "./rule";
 
 interface Landlord {
   id: string;
@@ -42,6 +38,29 @@ export interface Property {
 
   createdAt: string;
   updatedAt: string;
+}
+
+interface PropertyDetail {
+  id: string;
+  name: string;
+  slug: string;
+  icon: string | null;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Category extends PropertyDetail {
+  categoryNo: number;
+}
+export interface Amenity extends PropertyDetail {
+  amenityNo: number;
+}
+export interface Feature extends PropertyDetail {
+  featureNo: number;
+}
+export interface Rule extends PropertyDetail {
+  ruleNo: number;
 }
 
 export interface PropertyResponse extends Property {

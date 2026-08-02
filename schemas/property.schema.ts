@@ -135,6 +135,21 @@ export const PropertyQuerySchema = z.object({
   limit: z.string().optional(),
 });
 
+export const PropertyDetailsSchema = z.object({
+  name: z.string().min(1).max(100),
+  icon: z.string().optional(),
+});
+
+export const PropertyDetailsUpdateSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  icon: z.string().optional(),
+});
+
+export type PropertyDetailsType = z.infer<typeof PropertyDetailsSchema>;
+export type PropertyDetailsUpdateType = z.infer<
+  typeof PropertyDetailsUpdateSchema
+>;
+
 export type PropertyInputType = z.infer<typeof CompletePropertySchema>;
 
 export type AdminPropertyInputType = z.infer<typeof PropertyAdminSchema>;
@@ -142,7 +157,6 @@ export type AdminPropertyInputType = z.infer<typeof PropertyAdminSchema>;
 export type PropertyUpdateInputType = z.infer<
   typeof CompleteUpdatePropertySchema
 >;
-
 export type AdminPropertyUpdateInputType = z.infer<
   typeof CompleteUpdateAdminPropertySchema
 >;
