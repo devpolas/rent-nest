@@ -7,6 +7,8 @@ import {
   PropertyDetailsMap,
 } from "@/types/property";
 import {
+  CreatePropertyImageInput,
+  CreatePropertyImageSchema,
   PropertyAdminUpdateSchema,
   PropertyDetailsSchema,
   PropertyDetailsType,
@@ -22,6 +24,7 @@ import {
 } from "@/schemas/property.schema";
 import { errorResponse } from "@/utils/api-response";
 import { handleZodError } from "@/utils/handle-zod-errors";
+import { PropertyImage } from "@/types/property-image";
 
 export async function getAllProperties({
   payload,
@@ -254,6 +257,80 @@ export async function deletePropertyDetails<
       return errorResponse("Details ID is required");
     }
     const response = await axiosInstance.delete(`/${detailsAction}/${id}`);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function createPropertyImages({
+  propertyId,
+  payload,
+}: {
+  propertyId: string;
+  payload: CreatePropertyImageInput;
+}): Promise<ApiResponse<{ images: PropertyImage[] } | null>> {
+  try {
+    const parsed = CreatePropertyImageSchema.safeParse(payload);
+    if (!parsed.success) {
+      return errorResponse(handleZodError(parsed.error) || "Invalid Input");
+    }
+    const response = await axiosInstance.post(
+      `/properties/${propertyId}/images`,
+      parsed.data,
+    );
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function getPropertyImages({
+  propertyId,
+}: {
+  propertyId: string;
+}): Promise<ApiResponse<{ images: PropertyImage[] } | null>> {
+  try {
+    const response = await axiosInstance.get(
+      `/properties/${propertyId}/images`,
+    );
+
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function setPropertyThumbnail({
+  propertyId,
+  imageId,
+}: {
+  propertyId: string;
+  imageId: string;
+}): Promise<ApiResponse<{ image: PropertyImage } | null>> {
+  try {
+    const response = await axiosInstance.patch(
+      `/properties/${propertyId}/images/${imageId}/thumbnail`,
+    );
+
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function deletePropertyImage({
+  propertyId,
+  imageId,
+}: {
+  propertyId: string;
+  imageId: string;
+}): Promise<ApiResponse<null>> {
+  try {
+    const response = await axiosInstance.delete(
+      `/properties/${propertyId}/images/${imageId}`,
+    );
+
     return response.data;
   } catch (error) {
     return handleApiError(error);
