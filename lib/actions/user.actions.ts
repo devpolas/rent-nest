@@ -18,13 +18,17 @@ import { errorResponse } from "@/utils/api-response";
 import { handleZodError } from "@/utils/handle-zod-errors";
 import { Profile } from "@/types/profile";
 import { SocialProfile } from "@/types/social-profile";
+import { withAuthHeaders } from "@/utils/server-auth";
 
 // user itself
 export async function getMe(): Promise<
   ApiResponse<{ user: MeResponse } | null>
 > {
   try {
-    const response = await axiosInstance.get("/auth/me");
+    const response = await axiosInstance.get(
+      "/auth/me",
+      await withAuthHeaders(),
+    );
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -41,7 +45,11 @@ export async function updateMe({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.patch("/users/me", parsed.data);
+    const response = await axiosInstance.patch(
+      "/users/me",
+      parsed.data,
+      await withAuthHeaders(),
+    );
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -50,7 +58,10 @@ export async function updateMe({
 
 export async function deleteMe(): Promise<ApiResponse<null>> {
   try {
-    const response = await axiosInstance.delete("/users/me");
+    const response = await axiosInstance.delete(
+      "/users/me",
+      await withAuthHeaders(),
+    );
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -68,7 +79,11 @@ export async function createUserProfile({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.post("/profiles", parsed.data);
+    const response = await axiosInstance.post(
+      "/profiles",
+      parsed.data,
+      await withAuthHeaders(),
+    );
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -85,7 +100,11 @@ export async function updateProfile({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.patch("/profiles", parsed.data);
+    const response = await axiosInstance.patch(
+      "/profiles",
+      parsed.data,
+      await withAuthHeaders(),
+    );
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -103,7 +122,11 @@ export async function createSocialProfile({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.post("/social-profiles", parsed.data);
+    const response = await axiosInstance.post(
+      "/social-profiles",
+      parsed.data,
+      await withAuthHeaders(),
+    );
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -125,6 +148,7 @@ export async function updateSocialProfile({
     const response = await axiosInstance.patch(
       `/social-profiles/${id}`,
       parsed.data,
+      await withAuthHeaders(),
     );
     return response.data;
   } catch (error) {
@@ -138,7 +162,10 @@ export async function deleteSocialProfile({
   id: string;
 }): Promise<ApiResponse<null>> {
   try {
-    const response = await axiosInstance.delete(`/social-profiles/${id}`);
+    const response = await axiosInstance.delete(
+      `/social-profiles/${id}`,
+      await withAuthHeaders(),
+    );
     return response.data;
   } catch (error) {
     return handleApiError(error);
