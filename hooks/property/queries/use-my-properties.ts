@@ -1,3 +1,4 @@
+"use client";
 import { getMyAllProperties } from "@/lib/actions/property.actions";
 import { useQuery } from "@tanstack/react-query";
 

@@ -38,7 +38,6 @@ import { LocationCard } from "./location-card";
 import { CategoryCard } from "./category-card";
 import { FeatureRow } from "./feature-row";
 import { TrustItem } from "./trust-item";
-import Image from "next/image";
 import { AudienceCard } from "./audience-card";
 import { TestimonialCard } from "./testimonial-card";
 
@@ -47,7 +46,7 @@ export default function Homepage() {
     <div className='space-y-28 mx-auto py-10 container'>
       {/* ================= HERO ================= */}
 
-      <section className='relative bg-brand-surface px-6 md:px-12 py-20 lg:py-32 rounded-3xl overflow-hidden'>
+      <section className='relative py-20 lg:py-32 rounded-3xl overflow-hidden glass-brand'>
         <div className='space-y-8 mx-auto max-w-5xl text-center'>
           <Badge className='bg-brand/10 text-brand'>
             Bangladesh&apos;s Smart Rental Platform

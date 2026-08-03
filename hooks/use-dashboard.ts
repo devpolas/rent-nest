@@ -1,6 +1,6 @@
 "use client";
 
-import { dashboardMenu } from "@/config/client/dashboard-menu";
+import { dashboardMenu } from "@/config/dashboard-menu";
 import { useAuthStore } from "@/store/auth-store";
 
 export function useDashboardMenu() {

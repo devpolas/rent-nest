@@ -1,4 +1,4 @@
-import type { DashboardRole } from "@/config/client/dashboard-menu";
+import type { DashboardRole } from "@/config/dashboard-menu";
 
 export const rolePermissions = {
   /**

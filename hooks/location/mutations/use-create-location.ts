@@ -1,3 +1,4 @@
+"use client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createLocation } from "@/lib/actions/location.actions";
 

@@ -14,9 +14,14 @@ import {
 
 import { Button } from "@/components/ui/button";
 import Logo from "@/components/logo/logo";
-import { publicNavigation } from "@/config/client/navigation";
+import { publicNavigation } from "@/config/navigation";
+import { useAuthStore } from "@/store/auth-store";
+import LoadingSpinner from "../spinner/loading-spinner";
+import { useMe, useProperties } from "@/hooks";
 
 export default function MobileNavbar() {
+  const { isAuthenticated } = useAuthStore();
+  const { data, isLoading } = useProperties();
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -30,7 +35,7 @@ export default function MobileNavbar() {
         </Button>
       </SheetTrigger>
 
-      <SheetContent side='right' className='flex flex-col pb-4 w-72'>
+      <SheetContent side='right' className='flex flex-col w-72'>
         <SheetHeader>
           <SheetTitle>
             <Logo />
@@ -56,7 +61,13 @@ export default function MobileNavbar() {
               asChild
               className='bg-brand hover:bg-brand/90 w-full text-brand-foreground'
             >
-              <Link href='/signup'>Get Started</Link>
+              {isLoading ? (
+                <LoadingSpinner />
+              ) : isAuthenticated ? (
+                <Link href='/dashboard'>Go to Dashboard</Link>
+              ) : (
+                <Link href='/signup'>Get Started</Link>
+              )}
             </Button>
           </SheetClose>
         </div>

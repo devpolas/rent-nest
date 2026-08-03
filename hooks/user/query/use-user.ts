@@ -1,3 +1,4 @@
+"use client";
 import { useQuery } from "@tanstack/react-query";
 import { getUserById } from "@/lib/actions/user.actions";
 

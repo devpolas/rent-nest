@@ -178,3 +178,43 @@
     @apply font-sans;
   }
 }
+
+@layer utilities {
+  .glass {
+    @apply border
+    border-white/20
+    bg-white/10
+    backdrop-blur-xl
+    shadow-lg;
+  }
+
+  .glass-brand {
+    @apply border
+    border-brand/20
+    bg-brand/10
+    backdrop-blur-xl
+    shadow-lg;
+  }
+
+  .glass-card {
+    @apply border
+    border-border/50
+    bg-background/60
+    backdrop-blur-xl
+    shadow-sm;
+  }
+
+  .brand-gradient {
+    background:
+      radial-gradient(
+        circle at top left,
+        oklch(0.62 0.19 255 / 0.25),
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at bottom right,
+        oklch(0.72 0.19 145 / 0.15),
+        transparent 40%
+      );
+  }
+}

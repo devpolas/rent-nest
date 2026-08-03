@@ -1,4 +1,3 @@
-import config from "@/config/server/server";
 import transporter from "@/lib/nodemailer";
 export const emailTemplate = ({
   title,
@@ -351,12 +350,12 @@ export const sendEmail = async ({
   const mailOptions = {
     from: {
       name: "Rent Nest",
-      address: config.nodemailer_user,
+      address: process.env.NODEMAILER_USER!,
     },
 
     to,
 
-    replyTo: config.nodemailer_user,
+    replyTo: process.env.NODEMAILER_USER!,
 
     subject: `Rent Nest - ${subject}`,
 

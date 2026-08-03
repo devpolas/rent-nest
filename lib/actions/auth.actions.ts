@@ -17,7 +17,6 @@ import { handleApiError } from "@/utils/handle-api-error";
 import { cookies } from "next/headers";
 import { Time } from "@/utils/helpers";
 import Jwt from "jsonwebtoken";
-import config from "@/config/server/server";
 import { withAuthHeaders } from "@/utils/server-auth";
 import { ApiResponse } from "../../types/response";
 
@@ -70,7 +69,7 @@ function saveCookie(
 
   cookieStore.set(name, value, {
     httpOnly: true,
-    secure: config.node_env === "production",
+    secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
     maxAge: name === "refreshToken" ? Time.day(30) : Time.day(1),
@@ -265,7 +264,7 @@ export async function getSession(): Promise<AccountSession | null> {
   try {
     const token = (await cookies()).get("accessToken")?.value;
     if (!token) return null;
-    return Jwt.verify(token, config.jwt_access_secret) as AccountSession;
+    return Jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as AccountSession;
   } catch {
     return null;
   }

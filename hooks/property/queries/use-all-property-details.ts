@@ -1,3 +1,4 @@
+"use client";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPropertyDetails } from "@/lib/actions/property.actions";
 import { AllPropertyDetailsMap } from "@/types/property";
