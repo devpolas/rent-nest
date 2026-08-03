@@ -11,7 +11,6 @@ import {
 } from "@/schemas/auth.schema";
 import { handleZodError } from "@/utils/handle-zod-errors";
 import axiosInstance from "../axios";
-import type { ApiResponse } from "@/types/response";
 import type { User } from "@/types/user";
 import { errorResponse } from "@/utils/api-response";
 import { handleApiError } from "@/utils/handle-api-error";
@@ -20,6 +19,7 @@ import { Time } from "@/utils/helpers";
 import Jwt from "jsonwebtoken";
 import config from "@/config/server/server";
 import { withAuthHeaders } from "@/utils/server-auth";
+import { ApiResponse } from "../../types/response";
 
 interface AccountSession {
   userId: string;
@@ -215,20 +215,20 @@ export async function resetPassword({
 
 // ================= logout =================
 export async function logout(): Promise<ApiResponse<null>> {
+  const cookieStore = await cookies();
+
   try {
     const response = await axiosInstance.post<ApiResponse<null>>(
       "/auth/logout",
+      {},
       await withAuthHeaders(),
     );
-
-    const cookieStore = await cookies();
-
-    cookieStore.delete("accessToken");
-    cookieStore.delete("refreshToken");
-
     return response.data;
   } catch (error) {
     return handleApiError(error);
+  } finally {
+    cookieStore.delete("accessToken");
+    cookieStore.delete("refreshToken");
   }
 }
 
@@ -264,11 +264,34 @@ export async function logoutFromOtherDevices(): Promise<ApiResponse<null>> {
 export async function getSession(): Promise<AccountSession | null> {
   try {
     const token = (await cookies()).get("accessToken")?.value;
-
     if (!token) return null;
-
     return Jwt.verify(token, config.jwt_access_secret) as AccountSession;
   } catch {
     return null;
+  }
+}
+
+export async function getFreshToken(): Promise<
+  | ApiResponse<{
+      accessToken: string;
+    }>
+  | boolean
+> {
+  try {
+    const cookieStore = await cookies();
+    const response = await axiosInstance.get(
+      "/auth/refresh-token",
+      await withAuthHeaders(),
+    );
+    const setCookie = response.headers["set-cookie"] as string[] | undefined;
+
+    if (setCookie) {
+      for (const cookie of setCookie) {
+        saveCookie(cookieStore, cookie);
+      }
+    }
+    return true;
+  } catch (error) {
+    return false;
   }
 }
