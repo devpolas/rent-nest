@@ -1,4 +1,5 @@
 // Queries
+export * from "./property/queries/use-my-properties";
 export * from "./property/queries/use-properties";
 export * from "./property/queries/use-property";
 export * from "./property/queries/use-property-details";
