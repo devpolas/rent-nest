@@ -11,4 +11,5 @@ export default {
   nodemailer_smtp_host: process.env.SMTP_HOST,
   nodemailer_smtp_port: process.env.SMTP_PORT,
   jwt_access_secret: process.env.JWT_ACCESS_SECRET as StringValue,
+  node_env: process.env.NODE_ENV,
 };
