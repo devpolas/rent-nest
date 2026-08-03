@@ -15,7 +15,6 @@ export const PropertySchema = z.object({
   status: z
     .enum(["PENDING", "APPROVED", "REJECTED", "RENTED", "ARCHIVED"])
     .optional(),
-  images: z.array(z.url()).min(1),
   categoryId: z.uuid(),
   amenities: z.array(z.uuid()).min(1),
   features: z.array(z.uuid()).min(1),
