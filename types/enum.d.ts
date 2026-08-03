@@ -21,7 +21,6 @@ export type AuthProvider = (typeof AuthProvider)[keyof typeof AuthProvider];
 export const UserRole = {
   TENANT: "TENANT",
   LANDLORD: "LANDLORD",
-  MODERATOR: "MODERATOR",
   ADMIN: "ADMIN",
 } as const;
 
