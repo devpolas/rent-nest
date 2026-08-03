@@ -13,7 +13,6 @@ import {
   ReviewUpdateSchema,
 } from "@/schemas/review.schema";
 import { errorResponse } from "@/utils/api-response";
-import { withAuthHeaders } from "@/utils/server-auth";
 
 export async function createReview({
   propertyId,
@@ -36,7 +35,6 @@ export async function createReview({
     const response = await axiosInstance.post(
       `/properties/${propertyId}/reviews`,
       parsed.data,
-      await withAuthHeaders(),
     );
 
     return response.data;
@@ -63,11 +61,7 @@ export async function updateReview({
       return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
 
-    const response = await axiosInstance.patch(
-      `/reviews/${id}`,
-      parsed.data,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.patch(`/reviews/${id}`, parsed.data);
 
     return response.data;
   } catch (error) {
@@ -85,10 +79,7 @@ export async function deleteReview({
       return errorResponse("Review ID is required");
     }
 
-    const response = await axiosInstance.delete(
-      `/reviews/${id}`,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.delete(`/reviews/${id}`);
 
     return response.data;
   } catch (error) {
@@ -138,10 +129,7 @@ export async function getAllReviews(): Promise<
   ApiResponse<{ reviews: Review[] } | null>
 > {
   try {
-    const response = await axiosInstance.get(
-      "/reviews/admin/all",
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.get("/reviews/admin/all");
 
     return response.data;
   } catch (error) {

@@ -25,7 +25,6 @@ import {
 import { errorResponse } from "@/utils/api-response";
 import { handleZodError } from "@/utils/handle-zod-errors";
 import { PropertyImage } from "@/types/property-image";
-import { withAuthHeaders } from "@/utils/server-auth";
 
 export async function getAllProperties({
   payload,
@@ -65,10 +64,7 @@ export async function getMyAllProperties(): Promise<
   ApiResponse<{ properties: Property[] } | null>
 > {
   try {
-    const response = await axiosInstance.get(
-      "/properties/my",
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.get("/properties/my");
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -86,11 +82,7 @@ export async function createProperty({
     if (!parsed.success) {
       return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
-    const response = await axiosInstance.post(
-      "/properties",
-      parsed.data,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.post("/properties", parsed.data);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -115,7 +107,6 @@ export async function updatePropertyByAdmin({
     const response = await axiosInstance.patch(
       `/properties/${id}`,
       parsed.data,
-      await withAuthHeaders(),
     );
     return response.data;
   } catch (error) {
@@ -141,7 +132,6 @@ export async function updateProperty({
     const response = await axiosInstance.patch(
       `/properties/${id}`,
       parsed.data,
-      await withAuthHeaders(),
     );
     return response.data;
   } catch (error) {
@@ -174,10 +164,7 @@ export async function deletePropertyById({
     if (!id.trim()) {
       return errorResponse("Property ID is required");
     }
-    const response = await axiosInstance.delete(
-      `/properties/${id}`,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.delete(`/properties/${id}`);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -198,11 +185,7 @@ export async function createPropertyDetails<
     if (!parsed.success) {
       return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
-    const response = await axiosInstance.post(
-      `/${detailsAction}`,
-      parsed.data,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.post(`/${detailsAction}`, parsed.data);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -231,7 +214,6 @@ export async function updatePropertyDetails<
     const response = await axiosInstance.patch(
       `/${detailsAction}/${id}`,
       parsed.data,
-      await withAuthHeaders(),
     );
     return response.data;
   } catch (error) {
@@ -285,10 +267,7 @@ export async function deletePropertyDetails<
     if (!id.trim()) {
       return errorResponse("Details ID is required");
     }
-    const response = await axiosInstance.delete(
-      `/${detailsAction}/${id}`,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.delete(`/${detailsAction}/${id}`);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -310,7 +289,6 @@ export async function createPropertyImages({
     const response = await axiosInstance.post(
       `/properties/${propertyId}/images`,
       parsed.data,
-      await withAuthHeaders(),
     );
     return response.data;
   } catch (error) {
@@ -344,7 +322,6 @@ export async function setPropertyThumbnail({
   try {
     const response = await axiosInstance.patch(
       `/properties/${propertyId}/images/${imageId}/thumbnail`,
-      await withAuthHeaders(),
     );
 
     return response.data;
@@ -363,7 +340,6 @@ export async function deletePropertyImage({
   try {
     const response = await axiosInstance.delete(
       `/properties/${propertyId}/images/${imageId}`,
-      await withAuthHeaders(),
     );
 
     return response.data;

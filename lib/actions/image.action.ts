@@ -1,4 +1,3 @@
-import { withAuthHeaders } from "@/utils/server-auth";
 import axiosInstance from "../axios/axios";
 
 type ImageUploadResponse = {
@@ -19,7 +18,7 @@ const uploadImages = async (images: File[]): Promise<ImageUploadResponse[]> => {
 
   const { data } = await axiosInstance.post<{
     data: UploadResponse;
-  }>("/images/upload", formData, await withAuthHeaders());
+  }>("/images/upload", formData);
 
   if (!data.data.images?.length) {
     throw new Error("Image upload failed");

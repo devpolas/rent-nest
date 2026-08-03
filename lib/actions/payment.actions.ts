@@ -4,17 +4,13 @@ import axiosInstance from "../axios/axios";
 import type { ApiResponse } from "@/types/response";
 import type { PaymentHistory } from "@/types/payment";
 import { handleApiError } from "@/utils/handle-api-error";
-import { withAuthHeaders } from "@/utils/server-auth";
 import { errorResponse } from "@/utils/api-response";
 
 export async function getPaymentHistories(): Promise<
   ApiResponse<{ paymentHistory: PaymentHistory[] } | null>
 > {
   try {
-    const response = await axiosInstance.get(
-      "/payments",
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.get("/payments");
 
     return response.data;
   } catch (error) {
@@ -34,7 +30,6 @@ export async function getPaymentHistoryById({
 
     const response = await axiosInstance.get(
       `/payments/transaction/${transactionId}`,
-      await withAuthHeaders(),
     );
 
     return response.data;
@@ -53,10 +48,7 @@ export async function getPaymentSession({
       return errorResponse("Session ID is required");
     }
 
-    const response = await axiosInstance.get(
-      `/payments/session/${sessionId}`,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.get(`/payments/session/${sessionId}`);
 
     return response.data;
   } catch (error) {
@@ -77,7 +69,6 @@ export async function makePayment({
     const response = await axiosInstance.post(
       `/rentals/${rentRequestId}/payment`,
       {},
-      await withAuthHeaders(),
     );
 
     return response.data;

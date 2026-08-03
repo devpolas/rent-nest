@@ -20,17 +20,13 @@ import { errorResponse } from "@/utils/api-response";
 import { handleZodError } from "@/utils/handle-zod-errors";
 import { Profile } from "@/types/profile";
 import { SocialProfile } from "@/types/social-profile";
-import { withAuthHeaders } from "@/utils/server-auth";
 
 // user itself
 export async function getMe(): Promise<
   ApiResponse<{ user: MeResponse } | null>
 > {
   try {
-    const response = await axiosInstance.get(
-      "/auth/me",
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.get("/auth/me");
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -47,11 +43,7 @@ export async function updateMe({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.patch(
-      "/users/me",
-      parsed.data,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.patch("/users/me", parsed.data);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -60,10 +52,7 @@ export async function updateMe({
 
 export async function deleteMe(): Promise<ApiResponse<null>> {
   try {
-    const response = await axiosInstance.delete(
-      "/users/me",
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.delete("/users/me");
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -81,11 +70,7 @@ export async function createUserProfile({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.post(
-      "/profiles",
-      parsed.data,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.post("/profiles", parsed.data);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -102,11 +87,7 @@ export async function updateProfile({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.patch(
-      "/profiles",
-      parsed.data,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.patch("/profiles", parsed.data);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -124,11 +105,7 @@ export async function createSocialProfile({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.post(
-      "/social-profiles",
-      parsed.data,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.post("/social-profiles", parsed.data);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -150,7 +127,6 @@ export async function updateSocialProfile({
     const response = await axiosInstance.patch(
       `/social-profiles/${id}`,
       parsed.data,
-      await withAuthHeaders(),
     );
     return response.data;
   } catch (error) {
@@ -164,10 +140,7 @@ export async function deleteSocialProfile({
   id: string;
 }): Promise<ApiResponse<null>> {
   try {
-    const response = await axiosInstance.delete(
-      `/social-profiles/${id}`,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.delete(`/social-profiles/${id}`);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -183,10 +156,7 @@ export async function getUserById({
     if (!id) {
       return errorResponse("User ID is required");
     }
-    const response = await axiosInstance.get(
-      `/users/${id}`,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.get(`/users/${id}`);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -207,11 +177,7 @@ export async function updateUserById({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.patch(
-      `/users/${id}`,
-      parsed.data,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.patch(`/users/${id}`, parsed.data);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -222,7 +188,7 @@ export async function getAllUsers(): Promise<
   ApiResponse<{ users: UserWithProfile[] } | null>
 > {
   try {
-    const response = await axiosInstance.get("/users", await withAuthHeaders());
+    const response = await axiosInstance.get("/users");
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -238,10 +204,7 @@ export async function deleteUserById({
     if (!id) {
       return errorResponse("User ID is required");
     }
-    const response = await axiosInstance.delete(
-      `/users/${id}`,
-      await withAuthHeaders(),
-    );
+    const response = await axiosInstance.delete(`/users/${id}`);
     return response.data;
   } catch (error) {
     return handleApiError(error);
