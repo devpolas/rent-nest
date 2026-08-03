@@ -25,12 +25,13 @@ import {
   DatabaseIcon,
   FileChartColumnIcon,
   FileIcon,
-  CommandIcon,
 } from "lucide-react";
 import { NavMain } from "./nav-main";
 import { NavDocuments } from "./nav-documents";
 import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
+import Logo from "../logo/logo";
+import { ThemeSwitcher } from "../theme/theme-switcher";
 
 const data = {
   user: {
@@ -154,15 +155,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible='offcanvas' {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem>
+          <SidebarMenuItem className='flex flex-row justify-between'>
             <SidebarMenuButton
               asChild
               className='data-[slot=sidebar-menu-button]:p-1.5!'
             >
-              <a href='#'>
-                <CommandIcon className='size-5!' />
-                <span className='font-semibold text-base'>Acme Inc.</span>
-              </a>
+              <Logo />
+            </SidebarMenuButton>
+            <SidebarMenuButton
+              asChild
+              className='data-[slot=sidebar-menu-button]:p-1.5!'
+            >
+              <ThemeSwitcher />
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

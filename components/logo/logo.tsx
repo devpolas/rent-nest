@@ -16,9 +16,9 @@ export default function Logo({ className }: Props) {
         className,
       )}
     >
-      <div className='flex justify-center items-center shadow-sm rounded-xl text-brand'>
-        <House className='size-6' strokeWidth={2.4} />
-      </div>
+      <span className='flex justify-center items-center shadow-sm rounded-xl text-brand'>
+        <House className='size-5! lg:size-6!' strokeWidth={2.4} />
+      </span>
 
       <span className='font-extrabold text-lg lg:text-xl xl:text-2xl'>
         <span className='text-brand'>RENT</span>
