@@ -7,7 +7,6 @@ import { FcGoogle } from "react-icons/fc";
 
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/spinner/loading-spinner";
-import config from "@/config/client/client";
 
 export default function ContinueWithGoogle() {
   const searchParams = useSearchParams();
@@ -19,7 +18,7 @@ export default function ContinueWithGoogle() {
     [searchParams],
   );
 
-  const googleAuthUrl = `${config.base_url}/auth/google?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+  const googleAuthUrl = `${process.env.NEXT_PUBLIC_LOCATION_API_BASE_URL!}/auth/google?callbackUrl=${encodeURIComponent(callbackUrl)}`;
 
   return (
     <Button
