@@ -1,30 +1,52 @@
+// hooks/use-auth.ts
 "use client";
 
-import { useAuthStore } from "@/store/auth-store";
-import { useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getMe } from "@/lib/actions/user.actions";
+import { logout } from "@/lib/actions/auth.actions";
+export const AUTH_QUERY_KEY = ["currentUser"];
 
 export default function useAuth() {
-  const user = useAuthStore((state) => state.user);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const isLoading = useAuthStore((state) => state.isLoading);
-  const error = useAuthStore((state) => state.error);
+  const queryClient = useQueryClient();
 
-  const checkAuth = useAuthStore((state) => state.checkAuth);
-  const logoutUser = useAuthStore((state) => state.logoutUser);
+  // 1. Fetch User Profile
+  const {
+    data: user,
+    isLoading,
+    isPending,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: AUTH_QUERY_KEY,
+    queryFn: async () => {
+      const res = await getMe();
+      if (!res.success || !res.data?.user) {
+        return null;
+      }
+      return res.data.user;
+    },
+    staleTime: 1000 * 60 * 5, // ⚡ Fresh for 5 minutes: ZERO refetches during this window!
+    gcTime: 1000 * 60 * 30, // Retained in memory for 30 minutes
+    retry: false, // Don't retry endlessly if unauthenticated (401)
+  });
 
-  // Auto-run checkAuth when component mounts
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+  // 2. Logout Mutation
+  const logoutMutation = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      // Instantly clear user from query cache
+      queryClient.setQueryData(AUTH_QUERY_KEY, null);
+      queryClient.clear();
+    },
+  });
 
   return {
-    user,
-    isAuthenticated,
-    isLoading,
-    error,
-
-    // Synchronous action callers for UI handlers
-    logout: logoutUser,
-    refetch: checkAuth,
+    user: user ?? null,
+    isAuthenticated: !!user,
+    isLoading: isLoading || isPending,
+    error: error ? error.message : null,
+    refetchUser: refetch,
+    logout: logoutMutation.mutateAsync,
+    isLoggingOut: logoutMutation.isPending,
   };
 }
