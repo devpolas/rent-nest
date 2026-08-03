@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Menu } from "lucide-react";
-
 import {
   Sheet,
   SheetClose,
@@ -15,13 +14,11 @@ import {
 import { Button } from "@/components/ui/button";
 import Logo from "@/components/logo/logo";
 import { publicNavigation } from "@/config/navigation";
-import { useAuthStore } from "@/store/auth-store";
 import LoadingSpinner from "../spinner/loading-spinner";
-import { useMe, useProperties } from "@/hooks";
+import useAuth from "@/hooks/auth/use-auth";
 
 export default function MobileNavbar() {
-  const { isAuthenticated } = useAuthStore();
-  const { data, isLoading } = useProperties();
+  const { isLoading, isAuthenticated } = useAuth();
   return (
     <Sheet>
       <SheetTrigger asChild>

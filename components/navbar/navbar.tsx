@@ -3,16 +3,13 @@ import Logo from "@/components/logo/logo";
 import NavbarLinks from "./navbar-links";
 import MobileNavbar from "./mobile-navbar";
 import { ThemeSwitcher } from "../theme/theme-switcher";
-import { useAuthStore } from "@/store/auth-store";
 import AuthButtons from "./auth-buttons";
 import Link from "next/link";
 import LoadingSpinner from "../spinner/loading-spinner";
-import { useMe } from "@/hooks";
+import useAuth from "@/hooks/auth/use-auth";
 
 export default function Navbar() {
-  const { isAuthenticated, isLoading, user } = useAuthStore();
-  const { data } = useMe();
-  console.log(data);
+  const { isAuthenticated, isLoading } = useAuth();
   return (
     <header className='top-0 z-50 sticky bg-background/80 backdrop-blur border-b w-full'>
       <div className='flex justify-between items-center mx-auto w-full h-16 container'>

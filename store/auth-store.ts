@@ -11,6 +11,7 @@ interface AuthState {
   user: MeResponse | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  error: string | null;
 
   // actions
   checkAuth: () => Promise<void>;
@@ -22,6 +23,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()(
   immer((set) => ({
     user: null,
+    error: null,
     isAuthenticated: false,
     isLoading: true,
 
@@ -72,6 +74,7 @@ export const useAuthStore = create<AuthState>()(
             state.user = null;
             state.isAuthenticated = false;
             state.isLoading = false;
+            state.error = response.message ?? "Failed to fetch";
           });
         }
       } catch {

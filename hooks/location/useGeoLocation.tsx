@@ -1,5 +1,4 @@
 import { useState } from "react";
-import config from "@/config/client/client";
 import axios from "axios";
 
 interface Coordinates {
@@ -102,7 +101,7 @@ export function useGeoLocation(defaultLocation: Coordinates | null = null) {
           });
 
           const response = await axios(
-            `${config.location_api_base_url}?${params.toString()}`,
+            `${process.env.NEXT_PUBLIC_LOCATION_API_BASE_URL!}?${params.toString()}`,
           );
 
           if (!response.data) {
