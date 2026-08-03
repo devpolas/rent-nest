@@ -1,6 +1,6 @@
 "use server";
 
-import axiosInstance from "../axios";
+import axiosInstance from "../axios/axios";
 import type { ApiResponse } from "@/types/response";
 import type { PaymentHistory } from "@/types/payment";
 import { handleApiError } from "@/utils/handle-api-error";

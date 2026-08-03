@@ -8,7 +8,7 @@ import { ApiResponse } from "@/types/response";
 import { errorResponse } from "@/utils/api-response";
 import { handleApiError } from "@/utils/handle-api-error";
 import { handleZodError } from "@/utils/handle-zod-errors";
-import axiosInstance from "../axios";
+import axiosInstance from "../axios/axios";
 import { withAuthHeaders } from "@/utils/server-auth";
 
 export async function createLocation({

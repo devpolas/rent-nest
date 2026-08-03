@@ -13,7 +13,7 @@ import {
   UserUpdateSchema,
 } from "@/schemas/user.schema";
 import { handleApiError } from "@/utils/handle-api-error";
-import axiosInstance from "../axios";
+import axiosInstance from "../axios/axios";
 import { ApiResponse } from "@/types/response";
 import { MeResponse, UserWithProfile } from "@/types/user";
 import { errorResponse } from "@/utils/api-response";

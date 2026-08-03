@@ -1,5 +1,5 @@
 import { withAuthHeaders } from "@/utils/server-auth";
-import axiosInstance from "../axios";
+import axiosInstance from "../axios/axios";
 
 type ImageUploadResponse = {
   url: string;

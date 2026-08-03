@@ -1,5 +1,5 @@
 import { ApiResponse } from "@/types/response";
-import axiosInstance from "../axios";
+import axiosInstance from "../axios/axios";
 import { handleApiError } from "@/utils/handle-api-error";
 import {
   AllPropertyDetailsMap,

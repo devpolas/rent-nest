@@ -1,7 +1,7 @@
 "use server";
 
 import { RentalRequest } from "@/types/rental-request";
-import axiosInstance from "../axios";
+import axiosInstance from "../axios/axios";
 import {
   RentalRequestAdminAndOwnerUpdateSchema,
   RentalRequestAdminAndOwnerUpdateType,

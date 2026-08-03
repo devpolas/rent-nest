@@ -1,6 +1,6 @@
 "use server";
 
-import axiosInstance from "../axios";
+import axiosInstance from "../axios/axios";
 import { handleApiError } from "@/utils/handle-api-error";
 import { handleZodError } from "@/utils/handle-zod-errors";
 import type { ApiResponse } from "@/types/response";

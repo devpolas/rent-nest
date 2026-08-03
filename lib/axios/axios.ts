@@ -1,9 +1,7 @@
-"use server";
-import config from "@/config/server/server";
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: config.base_url,
+  baseURL: process.env.base_url,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

@@ -10,7 +10,7 @@ import {
   VerifyEmailSchema,
 } from "@/schemas/auth.schema";
 import { handleZodError } from "@/utils/handle-zod-errors";
-import axiosInstance from "../axios";
+import axiosInstance from "../axios/axios";
 import type { User } from "@/types/user";
 import { errorResponse } from "@/utils/api-response";
 import { handleApiError } from "@/utils/handle-api-error";

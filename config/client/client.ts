@@ -1,4 +1,3 @@
-"use client";
 import type { StringValue } from "ms";
 
 export default {
