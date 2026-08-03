@@ -4,9 +4,9 @@ import NavbarLinks from "./navbar-links";
 import MobileNavbar from "./mobile-navbar";
 import { ThemeSwitcher } from "../theme/theme-switcher";
 import AuthButtons from "./auth-buttons";
-import Link from "next/link";
 import LoadingSpinner from "../spinner/loading-spinner";
 import useAuth from "@/hooks/auth/use-auth";
+import DashboardButton from "./dashboard-button";
 
 export default function Navbar() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -23,7 +23,7 @@ export default function Navbar() {
             {isLoading ? (
               <LoadingSpinner />
             ) : isAuthenticated ? (
-              <Link href='/dashboard'>Go to Dashboard</Link>
+              <DashboardButton />
             ) : (
               <AuthButtons />
             )}

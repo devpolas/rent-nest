@@ -21,7 +21,7 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()(
-  immer((set) => ({
+  immer((set, get) => ({
     user: null,
     error: null,
     isAuthenticated: false,
@@ -32,6 +32,7 @@ export const useAuthStore = create<AuthState>()(
         state.user = user;
         state.isAuthenticated = !!user;
         state.isLoading = false;
+        state.error = null;
       }),
 
     clearAuth: () =>
@@ -39,15 +40,27 @@ export const useAuthStore = create<AuthState>()(
         state.user = null;
         state.isAuthenticated = false;
         state.isLoading = false;
+        state.error = null;
       }),
 
     checkAuth: async () => {
+      // 1. If user is already loaded, ensure isLoading is false and skip fetch
+      const { user } = get();
+      if (user) {
+        set((state) => {
+          state.isLoading = false;
+        });
+        return;
+      }
+
       try {
         set((state) => {
           state.isLoading = true;
+          state.error = null;
         });
+
         /**
-         * Check JWT cookie session
+         * 2. Check JWT cookie session
          */
         const session = await getSession();
         if (!session) {
@@ -60,7 +73,7 @@ export const useAuthStore = create<AuthState>()(
         }
 
         /**
-         * Fetch current user
+         * 3. Fetch current user
          */
         const response = await getMe();
         if (response.success && response.data?.user) {
@@ -77,11 +90,13 @@ export const useAuthStore = create<AuthState>()(
             state.error = response.message ?? "Failed to fetch";
           });
         }
-      } catch {
+      } catch (err) {
         set((state) => {
           state.user = null;
           state.isAuthenticated = false;
           state.isLoading = false;
+          state.error =
+            err instanceof Error ? err.message : "Authentication failed";
         });
       }
     },
@@ -94,6 +109,7 @@ export const useAuthStore = create<AuthState>()(
           state.user = null;
           state.isAuthenticated = false;
           state.isLoading = false;
+          state.error = null;
         });
       }
     },

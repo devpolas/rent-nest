@@ -18,7 +18,7 @@ export default function ContinueWithGoogle() {
     [searchParams],
   );
 
-  const googleAuthUrl = `${process.env.NEXT_PUBLIC_LOCATION_API_BASE_URL!}/auth/google?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+  const googleAuthUrl = `${process.env.NEXT_PUBLIC_API!}/auth/google?callbackUrl=${encodeURIComponent(callbackUrl)}`;
 
   return (
     <Button
