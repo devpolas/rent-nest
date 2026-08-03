@@ -1,10 +1,16 @@
 import { getFreshToken, getSession, logout } from "@/lib/actions/auth.actions";
 import { NextRequest, NextResponse } from "next/server";
-import {
-  MATCHER,
-  PROTECTED_PREFIX,
-  PUBLIC_ROUTES,
-} from "./config/client/routes";
+
+const PUBLIC_ROUTES = [
+  "/signin",
+  "/signup",
+  "/forget-password",
+  "/reset-password",
+  "/landlord/signup",
+  "/verify-account",
+] as const;
+
+const PROTECTED_PREFIX = "/dashboard";
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -31,5 +37,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: MATCHER,
+  matcher: [
+    // Exclude API routes, static files, image optimizations, and .png files
+    "/((?!api|_next/static|_next/image|.*\\.png$).*)",
+  ],
 };
