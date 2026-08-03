@@ -1,3 +1,6 @@
+import { Location } from "./location";
+import { SocialProfile } from "./social-profile";
+
 export interface Profile {
   id: string;
 
@@ -9,4 +12,9 @@ export interface Profile {
 
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ProfileWithLocationsSocialProfiles extends Profile {
+  locations: Location[]
+  socialProfiles:SocialProfile[]
 }
