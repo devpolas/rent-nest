@@ -56,50 +56,30 @@ export async function signup(
   }
 }
 
-// ================= save cookies =================
-function saveCookie(
-  cookieStore: Awaited<ReturnType<typeof cookies>>,
-  cookie: string,
-) {
-  const [cookieValue] = cookie.split(";");
-
-  const separator = cookieValue.indexOf("=");
-
-  const name = cookieValue.slice(0, separator);
-  const value = cookieValue.slice(separator + 1);
-
-  cookieStore.set(name, value, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: name === "refreshToken" ? Time.day(30) : Time.day(1),
-  });
-}
-
 // ================= signin =================
 export async function signin(
   payload: SigninPayload,
 ): Promise<ApiResponse<{ accessToken: string } | null>> {
   try {
     const cookieStore = await cookies();
-
-    const parse = SigninSchema.safeParse(payload);
-
-    if (!parse.success) {
-      return errorResponse(handleZodError(parse.error) || "Invalid input");
+    const parsed = SigninSchema.safeParse(payload);
+    if (!parsed.success) {
+      return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
 
-    const response = await axiosInstance.post<ApiResponse<null>>(
-      "/auth/signin",
-      parse.data,
-    );
+    const response = await axiosInstance.post<
+      ApiResponse<{ accessToken: string } | null>
+    >("/auth/signin", parsed.data);
 
-    const setCookie = response.headers["set-cookie"] as string[] | undefined;
-
-    if (setCookie) {
-      for (const cookie of setCookie) {
-        saveCookie(cookieStore, cookie);
-      }
+    const accessToken = response.data.data?.accessToken;
+    if (accessToken) {
+      cookieStore.set("accessToken", accessToken, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        maxAge: Time.day(1),
+      });
     }
 
     return response.data;
