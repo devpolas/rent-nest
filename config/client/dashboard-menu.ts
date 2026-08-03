@@ -20,7 +20,6 @@ import {
 } from "lucide-react";
 
 import type { LucideIcon } from "lucide-react";
-
 export type DashboardRole = "TENANT" | "LANDLORD" | "ADMIN";
 
 export interface DashboardMenuItem {
