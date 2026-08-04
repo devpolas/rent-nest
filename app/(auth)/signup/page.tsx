@@ -63,11 +63,13 @@ export default function SignupPage() {
             Sign in
           </Link>
         </p>
+
+        <FieldSeparator>Or continue with</FieldSeparator>
+
+        <div className='pt-4'>
+          <ContinueWithGoogle />
+        </div>
       </CardContent>
-
-      <FieldSeparator>Or continue with</FieldSeparator>
-
-      <ContinueWithGoogle />
     </Card>
   );
 }
