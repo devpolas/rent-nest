@@ -46,7 +46,7 @@ export default function ProfileHero({ user }: Props) {
             </div>
           </div>
 
-          <Button className='bg-brand hover:bg-brand/90 text-brand-foreground'>
+          <Button variant='brand'>
             <Pencil className='mr-2 size-4' />
             Edit Profile
           </Button>

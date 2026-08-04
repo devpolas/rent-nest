@@ -8,7 +8,7 @@ export default function StatCard({
   value: number;
 }) {
   return (
-    <div className='bg-background p-4 border border-border rounded-xl'>
+    <div className='p-4 rounded-xl glass'>
       <Heading3 className='text-brand'>{value}</Heading3>
       <Muted>{label}</Muted>
     </div>
