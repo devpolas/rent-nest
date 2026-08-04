@@ -9,7 +9,7 @@ const locations = [
     name: "Dhaka",
     image: "/images/locations/dhaka.png",
     properties: "620+ properties",
-    className: "lg:col-span-2 h-72 lg:h-full",
+    className: "lg:col-span-3 h-72 lg:h-full",
   },
   {
     id: 2,
@@ -30,7 +30,7 @@ const locations = [
     name: "Cox's Bazar",
     image: "/images/locations/coxs-bazar.png",
     properties: "140+ properties",
-    className: "lg:col-span-2 h-72",
+    className: "lg:col-span-3 h-72",
   },
 ];
 
