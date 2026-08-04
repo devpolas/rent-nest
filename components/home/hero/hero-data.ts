@@ -39,25 +39,25 @@ export type HeroQuickCategory = {
 export const heroSlides: HeroSlide[] = [
   {
     id: 1,
-    image: "/images/hero/apartment.jpg",
+    image: "/images/hero/apartment.png",
     title: "Find Your Perfect Home",
     subtitle: "Verified apartments from trusted landlords.",
   },
   {
     id: 2,
-    image: "/images/hero/villa.jpg",
+    image: "/images/hero/villa.png",
     title: "Premium Villas",
     subtitle: "Luxury living in your favorite locations.",
   },
   {
     id: 3,
-    image: "/images/hero/office.jpg",
+    image: "/images/hero/office.png",
     title: "Commercial Spaces",
     subtitle: "Modern offices for growing businesses.",
   },
   {
     id: 4,
-    image: "/images/hero/family.jpg",
+    image: "/images/hero/family.png",
     title: "Comfort For Every Family",
     subtitle: "Discover spacious homes across Bangladesh.",
   },

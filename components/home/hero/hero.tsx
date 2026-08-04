@@ -7,7 +7,7 @@ export default function Hero() {
     <section className='relative overflow-hidden'>
       {/* Background Layer */}
       <HeroBackground
-        image='/images/hero/apartment.jpg'
+        image='/images/hero/apartment.png'
         alt='Modern rental apartment'
       />
 
