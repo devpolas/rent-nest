@@ -40,13 +40,13 @@ export default function Contact() {
   return (
     <div className='space-y-20 pb-24'>
       {/* Hero */}
-      <section className='relative overflow-hidden'>
+      <section className='relative flex items-center min-h-screen overflow-hidden'>
         <HeroBackground
           image='/images/hero/office.png'
           alt='Rent Nest support office'
         />
 
-        <div className='z-10 relative mx-auto px-4 py-24 lg:py-32 container'>
+        <div className='z-10 relative mx-auto px-4 py-24 lg:py-32 w-full container'>
           <div className='space-y-5 mx-auto max-w-3xl text-center'>
             <div className='inline-flex items-center px-4 py-2 rounded-full glass'>
               <span className='bg-brand-success mr-2 rounded-full size-2' />
@@ -136,7 +136,8 @@ export default function Contact() {
 
                 <Button
                   size='lg'
-                  className='bg-brand hover:bg-brand/90 w-full rounded-2xl text-brand-foreground'
+                  variant='brand'
+                  className='w-full rounded-2xl'
                 >
                   <Send className='mr-2 size-4' />
                   Send Message
