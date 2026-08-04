@@ -31,13 +31,13 @@ export default function About() {
   return (
     <div className='space-y-24 pb-24'>
       {/* Hero Section */}
-      <section className='relative overflow-hidden'>
+      <section className='relative flex items-center min-h-screen overflow-hidden'>
         <HeroBackground
           image='/images/hero/family.png'
           alt='Happy family in their new rental home'
         />
 
-        <div className='z-10 relative mx-auto px-4 py-24 lg:py-32 container'>
+        <div className='z-10 relative mx-auto px-4 py-24 lg:py-32 w-full container'>
           <div className='space-y-6 mx-auto max-w-4xl text-center'>
             <div className='inline-flex items-center px-4 py-2 rounded-full glass'>
               <span className='bg-brand-success mr-2 rounded-full size-2' />
@@ -57,19 +57,12 @@ export default function About() {
             </Lead>
 
             <div className='flex flex-wrap justify-center gap-4 pt-4'>
-              <Button
-                size='lg'
-                className='bg-brand hover:bg-brand/90 rounded-2xl text-brand-foreground'
-              >
+              <Button size='lg' variant='brand' className='rounded-2xl'>
                 Explore Properties
                 <ArrowRight className='ml-2 size-5' />
               </Button>
 
-              <Button
-                size='lg'
-                variant='outline'
-                className='bg-white/10 hover:bg-white/20 backdrop-blur-xl border-white/20 rounded-2xl text-white'
-              >
+              <Button size='lg' variant='glass' className='rounded-2xl'>
                 Become a Landlord
               </Button>
             </div>
@@ -288,10 +281,7 @@ export default function About() {
               properties.
             </Lead>
 
-            <Button
-              size='lg'
-              className='bg-brand hover:bg-brand/90 mt-2 rounded-2xl text-brand-foreground'
-            >
+            <Button size='lg' variant='brand' className='mt-2 rounded-2xl'>
               Get Started
               <ArrowRight className='ml-2 size-5' />
             </Button>
