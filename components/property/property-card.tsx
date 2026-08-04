@@ -78,7 +78,7 @@ export default function PropertyCard({ property }: Props) {
         </div>
 
         {/* Specifications */}
-        <div className='gap-2 grid grid-cols-3 p-3 rounded-xl glass'>
+        <div className='gap-2 grid grid-cols-3 p-3 rounded-xl glass-card'>
           <Feature icon={BedDouble} value={`${property.bedrooms} Beds`} />
           <Feature icon={Bath} value={`${property.bathrooms} Bath`} />
           <Feature icon={Ruler} value={`${property.area} sqft`} />
@@ -98,9 +98,7 @@ export default function PropertyCard({ property }: Props) {
             </div>
           </div>
 
-          <Button className='bg-brand hover:bg-brand/90 text-brand-foreground'>
-            View Details
-          </Button>
+          <Button variant='brand'>View Details</Button>
         </div>
       </CardContent>
     </Card>
