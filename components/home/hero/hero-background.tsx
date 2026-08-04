@@ -31,9 +31,6 @@ export default function HeroBackground({ image, alt }: Props) {
       {/* Bottom Glow */}
       <div className='right-0 bottom-0 absolute bg-brand-success/15 blur-[160px] rounded-full w-[500px] h-[500px]' />
 
-      {/* Decorative Blob */}
-      <div className='top-1/4 left-1/3 absolute bg-white/5 backdrop-blur-3xl border border-white/10 rounded-full size-72 animate-pulse' />
-
       {/* Bottom Fade */}
       <div className='bottom-0 absolute inset-x-0 bg-gradient-to-t from-background via-background/60 to-transparent h-48' />
     </div>

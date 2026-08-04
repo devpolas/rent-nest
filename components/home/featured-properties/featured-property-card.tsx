@@ -33,7 +33,7 @@ type Props = {
 
 export default function FeaturedPropertyCard({ property }: Props) {
   return (
-    <Card className='group hover:shadow-xl overflow-hidden transition-all hover:-translate-y-1 duration-300 glass-card'>
+    <Card className='group hover:shadow-xl pt-0 overflow-hidden transition-all hover:-translate-y-1 duration-300 glass-card'>
       <div className='relative aspect-4/3 overflow-hidden'>
         <Image
           src={property.image || "/placeholder.svg"}
@@ -50,10 +50,9 @@ export default function FeaturedPropertyCard({ property }: Props) {
 
         <Button
           size='icon'
-          variant='secondary'
-          className='top-4 right-4 absolute bg-background/70 hover:bg-background backdrop-blur-xl border border-border/50 rounded-full'
+          className='group/favorite top-4 right-4 absolute bg-transparent hover:bg-transparent backdrop-blur-xl border border-border/50 rounded-full'
         >
-          <Heart className='size-5' />
+          <Heart className='fill-transparent group-hover/favorite:fill-red-500 size-5 group-hover/favorite:text-red-500 transition-all duration-200' />
           <span className='sr-only'>Save to favorites</span>
         </Button>
       </div>

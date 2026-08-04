@@ -18,10 +18,7 @@ export default function HeroSearch() {
         {/* Budget */}
         <SearchField icon={Wallet} placeholder='Budget' />
 
-        <Button
-          variant='brand'
-          className='px-6 rounded-2xl h-12'
-        >
+        <Button variant='brand' className='px-6 rounded-2xl h-12'>
           <Search className='mr-2 size-5' />
           Search
         </Button>
@@ -37,7 +34,7 @@ type SearchFieldProps = {
 
 function SearchField({ icon: Icon, placeholder }: SearchFieldProps) {
   return (
-    <div className='flex items-center gap-3 bg-background/40 pr-2 pl-4 rounded-2xl'>
+    <div className='flex items-center gap-3 bg-background/60! dark:bg-background/40! pl-4 rounded-xl'>
       <Icon className='size-5 text-brand' />
 
       <Input

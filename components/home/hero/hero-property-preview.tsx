@@ -14,16 +14,16 @@ export default function HeroPropertyPreview() {
       <HeroCarousel />
 
       {/* Verified badge */}
-      <div className='top-4 left-4 sm:-left-5 absolute z-20 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full glass'>
+      <div className='top-4 left-4 sm:-left-5 z-20 absolute flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full glass'>
         <ShieldCheck className='size-5 text-brand-success' />
 
         <Muted className='text-white/90'>Verified Properties</Muted>
       </div>
 
       {/* Rating */}
-      <Card className='top-4 right-4 sm:-right-5 absolute z-20 glass-card'>
-        <CardContent className='flex items-center gap-3 p-3'>
-          <div className='flex justify-center items-center bg-brand/10 rounded-xl size-10 shrink-0'>
+      <Card className='top-4 right-4 sm:-right-5 z-20 absolute glass-card'>
+        <CardContent className='flex items-center gap-3'>
+          <div className='flex justify-center items-center bg-brand/10 rounded-xl size-7 shrink-0'>
             <Star className='fill-current size-5 text-brand' />
           </div>
 
