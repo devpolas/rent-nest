@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+
 import { Large, Muted } from "../typography/typography";
 
 export default function MissionItem({
@@ -5,16 +7,19 @@ export default function MissionItem({
   title,
   description,
 }: {
-  icon: React.ElementType;
+  icon: LucideIcon;
   title: string;
   description: string;
 }) {
   return (
-    <div className='flex gap-4'>
-      <Icon className='size-7 text-brand' />
-      <div>
+    <div className='flex items-start gap-4'>
+      <div className='flex justify-center items-center bg-brand/10 rounded-xl size-11 text-brand shrink-0'>
+        <Icon className='size-6' />
+      </div>
+
+      <div className='space-y-1'>
         <Large>{title}</Large>
-        <Muted>{description}</Muted>
+        <Muted className='leading-relaxed'>{description}</Muted>
       </div>
     </div>
   );
