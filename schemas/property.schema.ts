@@ -94,7 +94,7 @@ export const PropertyDetailsUpdateSchema = z.object({
   icon: z.string().optional(),
 });
 
-export type PropertyInputType = z.infer<typeof PropertySchema>;
+export type PropertyInputType = z.input<typeof PropertySchema>;
 export type PropertyUpdateInputType = z.infer<typeof PropertyUpdateSchema>;
 export type PropertyUpdateAdminInputType = z.infer<
   typeof PropertyAdminUpdateSchema
