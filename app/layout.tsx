@@ -33,7 +33,7 @@ export default function RootLayout({
     <html
       lang='en'
       className={cn(
-        "h-full antialiased",
+        "h-full bg-background antialiased",
         geistSans.variable,
         geistMono.variable,
         inter.variable,
@@ -41,7 +41,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head />
-      <body className='h-full' cz-shortcut-listen='true'>
+      <body className='relative h-full' cz-shortcut-listen='true'>
+        <div className='brand-backdrop' aria-hidden='true' />
+
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -180,27 +180,34 @@
 }
 
 @layer utilities {
+  /* Generic frosted glass with a subtle brand tint. */
   .glass {
     @apply border
-    border-white/20
-    bg-white/10
+    border-brand/15
+    bg-brand/5
     backdrop-blur-xl
+    backdrop-saturate-150
     shadow-lg;
   }
 
+  /* Stronger brand-tinted glass for emphasis surfaces (CTAs, highlights). */
   .glass-brand {
     @apply border
-    border-brand/20
+    border-brand/25
     bg-brand/10
     backdrop-blur-xl
+    backdrop-saturate-150
     shadow-lg;
   }
 
+  /* Brand-toned glass card surface. Used as the base for every Card
+     so all pages share one consistent frosted look. */
   .glass-card {
     @apply border
-    border-border/50
-    bg-background/60
+    border-brand/15
+    bg-card/60
     backdrop-blur-xl
+    backdrop-saturate-150
     shadow-sm;
   }
 
@@ -208,13 +215,54 @@
     background:
       radial-gradient(
         circle at top left,
-        oklch(0.62 0.19 255 / 0.25),
+        var(--brand) 0%,
         transparent 40%
       ),
       radial-gradient(
         circle at bottom right,
-        oklch(0.72 0.19 145 / 0.15),
+        var(--brand-success) 0%,
         transparent 40%
+      );
+  }
+
+  /* Full-viewport brand-toned backdrop shared by every page.
+     Provides the color for glass surfaces to blur through. */
+  .brand-backdrop {
+    @apply fixed inset-0 -z-10 pointer-events-none;
+    background:
+      radial-gradient(
+        circle at 15% 15%,
+        oklch(0.62 0.19 255 / 0.16),
+        transparent 42%
+      ),
+      radial-gradient(
+        circle at 85% 20%,
+        oklch(0.7 0.18 255 / 0.12),
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 80% 85%,
+        oklch(0.72 0.19 145 / 0.12),
+        transparent 45%
+      );
+  }
+
+  .dark .brand-backdrop {
+    background:
+      radial-gradient(
+        circle at 15% 15%,
+        oklch(0.7 0.18 255 / 0.2),
+        transparent 42%
+      ),
+      radial-gradient(
+        circle at 85% 20%,
+        oklch(0.62 0.19 255 / 0.14),
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 80% 85%,
+        oklch(0.78 0.17 145 / 0.14),
+        transparent 45%
       );
   }
 }
