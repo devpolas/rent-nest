@@ -18,9 +18,11 @@ import {
 } from "@/components/ui/command";
 
 import { Button } from "@/components/ui/button";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, PlusCircle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { Label } from "../ui/label";
+import { Badge } from "../ui/badge";
 
 export type ComboboxOption = {
   label: string;
@@ -33,6 +35,8 @@ type FormRhfComboboxProps<T extends FieldValues> = {
   label: string;
   options: ComboboxOption[];
   placeholder?: string;
+  createNew?: boolean;
+  onCreateNew?: () => void;
 };
 
 export function FormRhfCombobox<T extends FieldValues>({
@@ -41,6 +45,8 @@ export function FormRhfCombobox<T extends FieldValues>({
   label,
   options,
   placeholder = "Search...",
+  createNew = false,
+  onCreateNew,
 }: FormRhfComboboxProps<T>) {
   return (
     <Controller
@@ -50,8 +56,25 @@ export function FormRhfCombobox<T extends FieldValues>({
         const selected = options.find((item) => item.value === field.value);
 
         return (
-          <div className='space-y-2'>
-            <label className='font-medium text-sm'>{label}</label>
+          <div className='space-y-4'>
+            <div className='flex justify-between items-center gap-3'>
+              <Label className='font-medium text-sm'>{label}</Label>
+              {createNew && (
+                <Badge
+                  variant='outline'
+                  onClick={onCreateNew}
+                  className={cn(
+                    "gap-1 cursor-pointer",
+                    "border-brand/30",
+                    "text-brand",
+                    "hover:bg-brand/10",
+                  )}
+                >
+                  <PlusCircle className='size-4' />
+                  Create New
+                </Badge>
+              )}
+            </div>
 
             <Popover>
               <PopoverTrigger asChild>

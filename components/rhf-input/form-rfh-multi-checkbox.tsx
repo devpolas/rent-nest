@@ -2,7 +2,7 @@
 
 import { Control, FieldValues, Path } from "react-hook-form";
 import { Controller } from "react-hook-form";
-import { Check, X } from "lucide-react";
+import { Check, PlusCircle, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/command";
 
 import { cn } from "@/lib/utils";
+import { Label } from "../ui/label";
 
 export type MultiCheckboxOption = {
   label: string;
@@ -35,6 +36,8 @@ interface FormRhfMultiCheckboxProps<T extends FieldValues> {
   label: string;
   options: MultiCheckboxOption[];
   placeholder?: string;
+  createNew?: boolean;
+  onCreateNew?: () => void;
 }
 
 export function FormRhfMultiCheckbox<T extends FieldValues>({
@@ -43,6 +46,8 @@ export function FormRhfMultiCheckbox<T extends FieldValues>({
   label,
   options,
   placeholder = "Search...",
+  createNew = false,
+  onCreateNew,
 }: FormRhfMultiCheckboxProps<T>) {
   return (
     <Controller
@@ -71,9 +76,26 @@ export function FormRhfMultiCheckbox<T extends FieldValues>({
         }
 
         return (
-          <div className='space-y-3'>
-            <label className='font-medium text-sm'>{label}</label>
+          <div className='space-y-4'>
+            <div className='flex justify-between items-center gap-3'>
+              <Label className='font-medium text-sm'>{label}</Label>
 
+              {createNew && (
+                <Badge
+                  variant='outline'
+                  onClick={onCreateNew}
+                  className={cn(
+                    "gap-1 cursor-pointer",
+                    "border-brand/30",
+                    "text-brand",
+                    "hover:bg-brand/10",
+                  )}
+                >
+                  <PlusCircle className='size-4' />
+                  Create New
+                </Badge>
+              )}
+            </div>
             <Popover>
               <PopoverTrigger asChild>
                 <Button

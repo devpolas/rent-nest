@@ -1,6 +1,7 @@
 "use client";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -22,6 +23,7 @@ import { normalizeSelectOptions } from "@/utils/normalize-property-data";
 import { FormRhfMultiCheckbox } from "@/components/rhf-input/form-rfh-multi-checkbox";
 import { useAllPropertyDetails } from "@/hooks";
 import { FormRhfCombobox } from "@/components/rhf-input/form-rhf-combobox";
+import ActionButton from "@/components/button/action-button";
 
 const DEFAULT_VALUES: Partial<PropertyInputType> = {
   title: "",
@@ -71,7 +73,7 @@ export default function CreateProperty() {
 
   if (hasError) {
     return (
-      <Card>
+      <Card className='p-4'>
         <CardContent className='py-10 text-center'>
           <p className='font-medium text-destructive'>
             Failed to load property details.
@@ -91,7 +93,7 @@ export default function CreateProperty() {
     !rulesQuery.data?.data
   ) {
     return (
-      <Card>
+      <Card className='p-4'>
         <CardContent className='py-10 text-center'>
           Missing required property data.
         </CardContent>
@@ -110,13 +112,24 @@ export default function CreateProperty() {
   const normalizeRules = normalizeSelectOptions(rules);
 
   return (
-    <form>
+    <form className='p-4'>
       <Card className='px-4'>
         <CardHeader>
           <CardTitle>Crate New Property</CardTitle>
           <CardDescription>
             Please input correct value according to fields
           </CardDescription>
+
+          <CardAction>
+            <ActionButton
+              variant={"brand"}
+              type='submit'
+              isLoading={isSubmitting}
+              loadingText='Creating...'
+            >
+              Create Property
+            </ActionButton>
+          </CardAction>
         </CardHeader>
         <CardContent>
           <div className='gap-6 grid grid-cols-1 lg:grid-cols-2'>
@@ -178,6 +191,7 @@ export default function CreateProperty() {
                 control={control}
                 label='Category'
                 options={normalizeCategories}
+                createNew={true}
                 placeholder='Search category...'
               />
 
@@ -201,7 +215,7 @@ export default function CreateProperty() {
                 name='description'
                 label='Description'
                 placeholder='Property description'
-                height={150}
+                height={190}
               />
             </div>
           </div>
@@ -221,6 +235,7 @@ export default function CreateProperty() {
             control={control}
             label='Amenities'
             placeholder='Search amenities...'
+            createNew={true}
             options={normalizeAmenities}
           />
 
@@ -229,6 +244,7 @@ export default function CreateProperty() {
             control={control}
             label='Features'
             placeholder='Search features...'
+            createNew={true}
             options={normalizeFeatures}
           />
 
@@ -237,6 +253,7 @@ export default function CreateProperty() {
             control={control}
             label='Rules'
             placeholder='Search rules...'
+            createNew={true}
             options={normalizeRules}
           />
         </CardContent>
