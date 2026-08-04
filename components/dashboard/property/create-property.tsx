@@ -111,8 +111,12 @@ export default function CreateProperty() {
   const normalizeFeatures = normalizeSelectOptions(features);
   const normalizeRules = normalizeSelectOptions(rules);
 
+  async function handleCreateProperty(data: PropertyInputType) {
+    console.log(data);
+  }
+
   return (
-    <form className='p-4'>
+    <form onSubmit={handleSubmit(handleCreateProperty)} className='p-4'>
       <Card className='px-4'>
         <CardHeader>
           <CardTitle>Crate New Property</CardTitle>
