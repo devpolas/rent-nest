@@ -84,11 +84,7 @@ export function ReusableDialog({
               </Button>
             </DialogClose>
 
-            <Button
-              type='submit'
-              disabled={isSubmitting}
-              className='bg-brand hover:bg-brand/90 text-brand-foreground'
-            >
+            <Button type='submit' variant='brand' disabled={isSubmitting}>
               {isSubmitting ? (
                 <LoadingSpinner text={isSubmittingText} />
               ) : (
