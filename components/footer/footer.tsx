@@ -48,11 +48,11 @@ const socialLinks = [
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   return (
-    <footer className='bg-brand-surface/40 border-t'>
-      <div className='mx-auto px-4 py-8 container'>
-        <div className='items-start gap-12 grid md:grid-cols-2 lg:grid-cols-4'>
+    <footer className='glass mt-auto border-x-0 border-b-0 border-t border-brand/15 bg-brand/5'>
+      <div className='mx-auto px-4 sm:px-6 py-10 sm:py-12 container'>
+        <div className='items-start gap-10 sm:gap-12 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4'>
           {/* Brand */}
-          <div className='space-y-5'>
+          <div className='space-y-5 col-span-2 lg:col-span-1'>
             <Logo />
 
             <Muted className='max-w-sm leading-7'>
@@ -60,13 +60,13 @@ export default function Footer() {
               confidence across Bangladesh.
             </Muted>
 
-            <div className='flex items-center gap-3'>
+            <div className='flex flex-wrap items-center gap-3'>
               {socialLinks.map(({ name, href, icon: Icon }) => (
                 <Link
                   key={name}
                   href={href}
                   aria-label={name}
-                  className='flex justify-center items-center bg-background hover:bg-brand border hover:border-brand rounded-full w-10 h-10 hover:text-brand-foreground transition-all'
+                  className='flex justify-center items-center border border-brand/15 bg-background/40 hover:bg-brand backdrop-blur-md hover:border-brand rounded-full w-10 h-10 text-muted-foreground hover:text-brand-foreground transition-all'
                 >
                   <Icon className='w-4 h-4' />
                 </Link>
@@ -95,10 +95,12 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className='py-3 border-t text-center'>
-        <Small className='text-muted-foreground'>
-          © {currentYear} RentNest. All rights reserved.
-        </Small>
+      <div className='border-t border-brand/10 bg-brand/[0.03]'>
+        <div className='mx-auto px-4 sm:px-6 py-4 text-center container'>
+          <Small className='text-muted-foreground'>
+            © {currentYear} RentNest. All rights reserved.
+          </Small>
+        </div>
       </div>
     </footer>
   );
