@@ -99,10 +99,7 @@ export default function FeaturedPropertyCard({ property }: Props) {
             </div>
           </div>
 
-          <Button
-            asChild
-            className='bg-brand hover:bg-brand/90 text-brand-foreground'
-          >
+          <Button asChild variant='brand'>
             <Link href={`/properties/property/${property.id}`}>
               View Details
             </Link>

@@ -18,7 +18,10 @@ export default function HeroSearch() {
         {/* Budget */}
         <SearchField icon={Wallet} placeholder='Budget' />
 
-        <Button className='bg-brand hover:bg-brand/90 px-6 rounded-2xl h-12 text-brand-foreground'>
+        <Button
+          variant='brand'
+          className='px-6 rounded-2xl h-12'
+        >
           <Search className='mr-2 size-5' />
           Search
         </Button>

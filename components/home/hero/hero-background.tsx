@@ -9,7 +9,7 @@ type Props = {
 
 export default function HeroBackground({ image, alt }: Props) {
   return (
-    <div className='-z-10 absolute inset-0 overflow-hidden'>
+    <div className='z-0 absolute inset-0 overflow-hidden'>
       {/* Background Image */}
       <Image
         src={image}

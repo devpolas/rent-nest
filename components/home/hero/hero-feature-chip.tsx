@@ -62,7 +62,7 @@ export default function HeroFeatureChip({
         />
       </div>
 
-      <Caption className="text-foreground/90 whitespace-nowrap">
+      <Caption className="text-white/90 whitespace-nowrap">
         {title}
       </Caption>
     </div>

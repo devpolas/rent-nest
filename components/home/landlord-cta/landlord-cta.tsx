@@ -40,11 +40,7 @@ export default function LandlordCta() {
           </ul>
 
           <div className='flex flex-wrap gap-4 pt-2'>
-            <Button
-              asChild
-              size='lg'
-              className='bg-brand hover:bg-brand/90 rounded-xl text-brand-foreground'
-            >
+            <Button asChild size='lg' variant='brand' className='rounded-xl'>
               <Link href='/landlord/signup'>
                 List Your Property
                 <ArrowRight className='ml-2 size-5' />

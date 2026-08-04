@@ -50,17 +50,14 @@ export default function HeroContent() {
       <div className='flex flex-wrap gap-4'>
         <Button
           size='lg'
-          className='bg-brand hover:bg-brand/90 px-6 rounded-2xl text-brand-foreground'
+          variant='brand'
+          className='px-6 rounded-2xl'
         >
           Explore Properties
           <ArrowRight className='ml-2 size-5' />
         </Button>
 
-        <Button
-          size='lg'
-          variant='outline'
-          className='bg-white/10 hover:bg-white/20 backdrop-blur-xl border-white/20 rounded-2xl text-white'
-        >
+        <Button size='lg' variant='glass' className='rounded-2xl'>
           List Your Property
         </Button>
       </div>

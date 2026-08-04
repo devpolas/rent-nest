@@ -22,11 +22,7 @@ export default function FooterCta() {
           </Lead>
 
           <div className='flex flex-wrap justify-center gap-4 pt-2'>
-            <Button
-              asChild
-              size='lg'
-              className='bg-brand hover:bg-brand/90 rounded-xl text-brand-foreground'
-            >
+            <Button asChild size='lg' variant='brand' className='rounded-xl'>
               <Link href='/properties'>
                 Explore Properties
                 <ArrowRight className='ml-2 size-5' />
