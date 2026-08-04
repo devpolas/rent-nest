@@ -19,7 +19,7 @@ export default function PropertyDetails({
   reviews: ReviewResponse[];
 }) {
   return (
-    <>
+    <div className='px-4'>
       <PropertyGallery images={property.images} status={property.status} />
 
       <div className='gap-10 grid lg:grid-cols-3'>
@@ -37,6 +37,6 @@ export default function PropertyDetails({
 
         <PropertySidebar property={property} />
       </div>
-    </>
+    </div>
   );
 }

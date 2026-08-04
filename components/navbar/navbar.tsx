@@ -11,7 +11,7 @@ import DashboardButton from "./dashboard-button";
 export default function Navbar() {
   const { isAuthenticated, isLoading } = useAuth();
   return (
-    <header className='top-0 z-50 sticky bg-background/80 backdrop-blur border-b w-full'>
+    <header className='top-0 z-50 sticky bg-background/80 backdrop-blur px-4 border-b w-full'>
       <div className='flex justify-between items-center mx-auto w-full h-16 container'>
         {/* Logo */}
         <Logo />
