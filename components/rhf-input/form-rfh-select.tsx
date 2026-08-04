@@ -20,13 +20,15 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { namePerfect } from "@/utils/helpers";
 
-type Option = {
+export type Option = {
   label: string;
   value: string;
+  icon?: LucideIcon;
 };
 
 type FormRhfSelectProps<T extends FieldValues> = {
@@ -105,6 +107,7 @@ export function FormRhfSelect<T extends FieldValues>({
                 <SelectGroup>
                   {options.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
+                      {option.icon && <SelectIcon icon={option.icon} />}
                       {namePerfect(option.label)}
                     </SelectItem>
                   ))}
@@ -118,4 +121,8 @@ export function FormRhfSelect<T extends FieldValues>({
       />
     </FieldGroup>
   );
+}
+
+function SelectIcon({ icon: Icon }: { icon: LucideIcon }) {
+  return <Icon className='mr-1 size-4' />;
 }
