@@ -1,4 +1,5 @@
 import {
+  ArrowRight,
   Clock,
   Headphones,
   Mail,
@@ -9,6 +10,7 @@ import {
   Send,
   ShieldCheck,
 } from "lucide-react";
+
 import {
   Heading1,
   Heading2,
@@ -31,155 +33,179 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
+import HeroBackground from "../home/hero/hero-background";
 import SupportItem from "./support-item";
 
 export default function Contact() {
   return (
-    <div className='space-y-20 mx-auto py-16 container'>
+    <div className='space-y-20 pb-24'>
       {/* Hero */}
-      <section className='bg-brand-surface py-20 rounded-3xl text-center'>
-        <div className='space-y-5 mx-auto max-w-3xl'>
-          <Badge className='bg-brand/10 text-brand'>Contact Rent Nest</Badge>
+      <section className='relative overflow-hidden'>
+        <HeroBackground
+          image='/images/hero/office.png'
+          alt='Rent Nest support office'
+        />
 
-          <Heading1>We are here to help you find your perfect home</Heading1>
+        <div className='z-10 relative mx-auto px-4 py-24 lg:py-32 container'>
+          <div className='space-y-5 mx-auto max-w-3xl text-center'>
+            <div className='inline-flex items-center px-4 py-2 rounded-full glass'>
+              <span className='bg-brand-success mr-2 rounded-full size-2' />
+              <span className='text-white/80 text-sm'>Contact Rent Nest</span>
+            </div>
 
-          <Lead>
-            Have questions about properties, rental requests, or becoming a
-            landlord? Our team is ready to help.
-          </Lead>
+            <Heading1 className='text-white'>
+              We are here to help you find your{" "}
+              <span className='bg-clip-text bg-gradient-to-r from-brand to-brand-success text-transparent'>
+                perfect home
+              </span>
+            </Heading1>
+
+            <Lead className='mx-auto max-w-2xl text-white/80'>
+              Have questions about properties, rental requests, or becoming a
+              landlord? Our team is ready to help.
+            </Lead>
+          </div>
         </div>
       </section>
 
       {/* Contact Information */}
-      <section className='gap-6 grid md:grid-cols-3'>
-        <ContactCard
-          icon={Mail}
-          title='Email Support'
-          value='support@rentnest.com'
-          description='Get help from our support team.'
-        />
+      <section className='mx-auto px-4 container'>
+        <div className='gap-6 grid md:grid-cols-3'>
+          <ContactCard
+            icon={Mail}
+            title='Email Support'
+            value='support@rentnest.com'
+            description='Get help from our support team any time.'
+          />
 
-        <ContactCard
-          icon={Phone}
-          title='Phone Support'
-          value='+880 1234-567890'
-          description='Available during business hours.'
-        />
+          <ContactCard
+            icon={Phone}
+            title='Phone Support'
+            value='+880 1234-567890'
+            description='Available during business hours.'
+          />
 
-        <ContactCard
-          icon={MapPin}
-          title='Office Location'
-          value='Dhaka, Bangladesh'
-          description='Visit our office anytime.'
-        />
+          <ContactCard
+            icon={MapPin}
+            title='Office Location'
+            value='Dhaka, Bangladesh'
+            description='Visit our headquarters anytime.'
+          />
+        </div>
       </section>
 
       {/* Main Contact Area */}
-      <section className='gap-8 grid lg:grid-cols-5'>
-        {/* Form */}
-        <Card className='lg:col-span-3 bg-brand-surface'>
-          <CardHeader>
-            <CardTitle>Send us a message</CardTitle>
+      <section className='mx-auto px-4 container'>
+        <div className='gap-8 grid lg:grid-cols-5'>
+          {/* Form */}
+          <Card className='lg:col-span-3 glass-card'>
+            <CardHeader>
+              <CardTitle className='text-2xl'>Send us a message</CardTitle>
 
-            <CardDescription>
-              Fill out the form and we will get back to you soon.
-            </CardDescription>
-          </CardHeader>
+              <CardDescription>
+                Fill out the form and we will get back to you soon.
+              </CardDescription>
+            </CardHeader>
 
-          <CardContent>
-            <form className='space-y-5'>
-              <div className='gap-5 grid md:grid-cols-2'>
-                <div className='space-y-2'>
-                  <Label>Name</Label>
+            <CardContent>
+              <form className='space-y-5'>
+                <div className='gap-5 grid md:grid-cols-2'>
+                  <div className='space-y-2'>
+                    <Label>Name</Label>
+                    <Input placeholder='Your name' />
+                  </div>
 
-                  <Input placeholder='Your name' />
+                  <div className='space-y-2'>
+                    <Label>Email</Label>
+                    <Input type='email' placeholder='your@email.com' />
+                  </div>
                 </div>
 
                 <div className='space-y-2'>
-                  <Label>Email</Label>
-
-                  <Input type='email' placeholder='your@email.com' />
-                </div>
-              </div>
-
-              <div className='space-y-2'>
-                <Label>Subject</Label>
-
-                <Input placeholder='How can we help?' />
-              </div>
-
-              <div className='space-y-2'>
-                <Label>Message</Label>
-
-                <Textarea
-                  placeholder='
-                Write your message here...
-                '
-                  className='min-h-32'
-                />
-              </div>
-
-              <Button
-                size='lg'
-                className='bg-brand hover:bg-brand/90 w-full text-brand-foreground'
-              >
-                <Send className='mr-2 size-4' />
-                Send Message
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Sidebar */}
-        <div className='space-y-6 lg:col-span-2'>
-          {/* Support */}
-          <Card className='bg-brand-surface'>
-            <CardContent className='space-y-5 p-6'>
-              <div className='flex items-center gap-3'>
-                <div className='bg-brand-success/20 p-3 rounded-full'>
-                  <Headphones className='size-6 text-brand-success' />
+                  <Label>Subject</Label>
+                  <Input placeholder='How can we help?' />
                 </div>
 
-                <div>
-                  <Large>Customer Support</Large>
-
-                  <Muted>We usually reply within 24 hours.</Muted>
+                <div className='space-y-2'>
+                  <Label>Message</Label>
+                  <Textarea
+                    placeholder='Write your message here...'
+                    className='min-h-32'
+                  />
                 </div>
-              </div>
 
-              <Separator />
-
-              <div className='space-y-3'>
-                <SupportItem icon={Clock} text='Monday - Friday, 9AM - 6PM' />
-
-                <SupportItem icon={MessageCircle} text='Live chat available' />
-
-                <SupportItem icon={ShieldCheck} text='Secure communication' />
-              </div>
+                <Button
+                  size='lg'
+                  className='bg-brand hover:bg-brand/90 w-full rounded-2xl text-brand-foreground'
+                >
+                  <Send className='mr-2 size-4' />
+                  Send Message
+                </Button>
+              </form>
             </CardContent>
           </Card>
 
-          {/* FAQ */}
-          <Card className='bg-brand-surface'>
-            <CardContent className='space-y-4 p-6'>
-              <Heading4>Frequently Asked</Heading4>
+          {/* Sidebar */}
+          <div className='space-y-6 lg:col-span-2'>
+            {/* Support */}
+            <Card className='glass-card'>
+              <CardContent className='space-y-5 p-6'>
+                <div className='flex items-center gap-3'>
+                  <div className='flex justify-center items-center bg-brand-success/20 rounded-full size-12 shrink-0'>
+                    <Headphones className='size-6 text-brand-success' />
+                  </div>
 
-              <Muted>Looking for quick answers?</Muted>
+                  <div>
+                    <Large>Customer Support</Large>
+                    <Muted>We usually reply within 24 hours.</Muted>
+                  </div>
+                </div>
 
-              <Button variant='outline' className='w-full'>
-                Visit FAQ Center
-              </Button>
-            </CardContent>
-          </Card>
+                <Separator />
+
+                <div className='space-y-3'>
+                  <SupportItem icon={Clock} text='Monday - Friday, 9AM - 6PM' />
+                  <SupportItem
+                    icon={MessageCircle}
+                    text='Live chat available'
+                  />
+                  <SupportItem
+                    icon={ShieldCheck}
+                    text='Secure communication'
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* FAQ */}
+            <Card className='glass-card'>
+              <CardContent className='space-y-4 p-6'>
+                <Heading4>Frequently Asked</Heading4>
+
+                <Muted>
+                  Looking for quick answers? Browse our help center for common
+                  questions.
+                </Muted>
+
+                <Button variant='outline' className='rounded-2xl w-full'>
+                  Visit FAQ Center
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
       {/* Map / Location */}
-      <section>
-        <Card className='bg-brand-surface overflow-hidden'>
-          <div className='flex justify-center items-center bg-background h-80'>
-            <div className='text-center'>
-              <MapPinned className='mx-auto size-12 text-brand' />
+      <section className='mx-auto px-4 container'>
+        <Card className='glass-card overflow-hidden'>
+          <div className='relative flex justify-center items-center bg-brand-surface h-80'>
+            <div className='top-0 left-1/4 absolute bg-brand/15 blur-[120px] rounded-full size-72' />
+
+            <div className='relative space-y-2 text-center'>
+              <div className='flex justify-center items-center bg-brand mx-auto rounded-2xl size-16 text-brand-foreground'>
+                <MapPinned className='size-8' />
+              </div>
 
               <Heading4>Rent Nest Headquarters</Heading4>
 
@@ -190,18 +216,25 @@ export default function Contact() {
       </section>
 
       {/* CTA */}
-      <section className='bg-brand px-6 py-14 rounded-3xl text-brand-foreground text-center'>
-        <Heading2 className='border-0 text-brand-foreground'>
-          Ready to find your next home?
-        </Heading2>
+      <section className='mx-auto px-4 container'>
+        <div className='relative bg-brand px-6 py-14 md:py-16 rounded-3xl overflow-hidden text-center'>
+          <div className='top-0 right-0 absolute bg-white/10 blur-[120px] rounded-full size-80' />
 
-        <Lead className='text-brand-foreground/80'>
-          Explore thousands of rental possibilities with Rent Nest.
-        </Lead>
+          <div className='relative space-y-4'>
+            <Heading2 className='border-0 text-brand-foreground'>
+              Ready to find your next home?
+            </Heading2>
 
-        <Button size='lg' variant='secondary' className='mt-6'>
-          Browse Properties
-        </Button>
+            <Lead className='mx-auto max-w-xl text-brand-foreground/80'>
+              Explore thousands of rental possibilities with Rent Nest.
+            </Lead>
+
+            <Button size='lg' variant='secondary' className='mt-2 rounded-2xl'>
+              Browse Properties
+              <ArrowRight className='ml-2 size-5' />
+            </Button>
+          </div>
+        </div>
       </section>
     </div>
   );
