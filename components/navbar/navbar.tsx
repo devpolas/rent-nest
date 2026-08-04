@@ -11,25 +11,27 @@ import DashboardButton from "./dashboard-button";
 export default function Navbar() {
   const { isAuthenticated, isLoading } = useAuth();
   return (
-    <header className='top-0 z-50 sticky bg-background/80 backdrop-blur px-4 border-b w-full'>
-      <div className='flex justify-between items-center mx-auto w-full h-16 container'>
-        {/* Logo */}
-        <Logo />
-        {/* Desktop */}
-        <NavbarLinks />
-        <div className='flex items-center gap-2'>
-          <ThemeSwitcher />
-          <div className='hidden md:flex'>
-            {isLoading ? (
-              <LoadingSpinner />
-            ) : isAuthenticated ? (
-              <DashboardButton />
-            ) : (
-              <AuthButtons />
-            )}
-          </div>
+    <header className='top-0 z-50 sticky w-full'>
+      <div className='glass bg-brand/5 supports-[backdrop-filter]:bg-brand/5 border-x-0 border-t-0 border-b border-brand/15'>
+        <div className='flex justify-between items-center gap-2 mx-auto px-4 sm:px-6 w-full h-14 sm:h-16 container'>
+          {/* Logo */}
+          <Logo />
+          {/* Desktop */}
+          <NavbarLinks />
+          <div className='flex items-center gap-1.5 sm:gap-2'>
+            <ThemeSwitcher />
+            <div className='hidden md:flex'>
+              {isLoading ? (
+                <LoadingSpinner />
+              ) : isAuthenticated ? (
+                <DashboardButton />
+              ) : (
+                <AuthButtons />
+              )}
+            </div>
 
-          <MobileNavbar />
+            <MobileNavbar />
+          </div>
         </div>
       </div>
     </header>

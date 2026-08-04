@@ -7,10 +7,7 @@ export default function AuthButtons() {
       <Button variant='outline' asChild>
         <Link href='/signin'>Sign In</Link>
       </Button>
-      <Button
-        className='bg-brand hover:bg-brand/90 text-brand-foreground'
-        asChild
-      >
+      <Button variant='brand' asChild>
         <Link href='/signup'>Get Started</Link>
       </Button>
     </div>

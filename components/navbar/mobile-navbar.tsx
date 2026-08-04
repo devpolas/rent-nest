@@ -32,7 +32,10 @@ export default function MobileNavbar() {
         </Button>
       </SheetTrigger>
 
-      <SheetContent side='right' className='flex flex-col w-72'>
+      <SheetContent
+        side='right'
+        className='flex flex-col gap-6 bg-brand/5 supports-[backdrop-filter]:bg-background/70 backdrop-blur-xl backdrop-saturate-150 border-brand/15 w-72'
+      >
         <SheetHeader>
           <SheetTitle>
             <Logo />
@@ -54,10 +57,7 @@ export default function MobileNavbar() {
 
         <div className='mt-auto'>
           <SheetClose asChild>
-            <Button
-              asChild
-              className='bg-brand hover:bg-brand/90 w-full text-brand-foreground'
-            >
+            <Button asChild variant='brand' className='w-full'>
               {isLoading ? (
                 <LoadingSpinner />
               ) : isAuthenticated ? (
