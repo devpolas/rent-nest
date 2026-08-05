@@ -95,14 +95,14 @@ export const PropertyDetailsUpdateSchema = z.object({
 });
 
 export type PropertyInputType = z.input<typeof PropertySchema>;
-export type PropertyUpdateInputType = z.infer<typeof PropertyUpdateSchema>;
+export type PropertyUpdateInputType = z.input<typeof PropertyUpdateSchema>;
 export type PropertyUpdateAdminInputType = z.infer<
   typeof PropertyAdminUpdateSchema
 >;
 
-export type PropertyDetailsType = z.infer<typeof PropertyDetailsSchema>;
-export type PropertyDetailsUpdateType = z.infer<
+export type PropertyDetailsType = z.input<typeof PropertyDetailsSchema>;
+export type PropertyDetailsUpdateType = z.input<
   typeof PropertyDetailsUpdateSchema
 >;
 
-export type PropertyQuery = z.infer<typeof PropertyQuerySchema>;
+export type PropertyQuery = z.input<typeof PropertyQuerySchema>;

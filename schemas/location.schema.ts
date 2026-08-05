@@ -47,5 +47,5 @@ export const LocationUpdateSchema = LocationBaseSchema.partial().extend({
   type: LocationTypeSchema.optional(),
 });
 
-export type LocationCreateInput = z.infer<typeof LocationCreateSchema>;
-export type LocationUpdateInput = z.infer<typeof LocationUpdateSchema>;
+export type LocationCreateInput = z.input<typeof LocationCreateSchema>;
+export type LocationUpdateInput = z.input<typeof LocationUpdateSchema>;
