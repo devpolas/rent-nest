@@ -1,10 +1,10 @@
 "use client";
 
-import { dashboardMenu } from "@/config/dashboard-menu";
-import { useAuthStore } from "@/store/auth-store";
+import { dashboardMenu, DashboardSidebar } from "@/config/dashboard-menu";
+import useAuth from "../auth/use-auth";
 
-export function useDashboardMenu() {
-  const user = useAuthStore((s) => s.user);
-  if (!user) return [];
+export function useDashboardMenu(): DashboardSidebar | null {
+  const { user } = useAuth();
+  if (!user) return null;
   return dashboardMenu[user.role];
 }

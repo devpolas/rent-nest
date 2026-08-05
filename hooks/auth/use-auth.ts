@@ -13,7 +13,6 @@ export default function useAuth() {
   const {
     data: user,
     isLoading,
-    isPending,
     error,
     refetch,
   } = useQuery({
@@ -28,6 +27,8 @@ export default function useAuth() {
     staleTime: 1000 * 60 * 5, // ⚡ Fresh for 5 minutes: ZERO refetches during this window!
     gcTime: 1000 * 60 * 30, // Retained in memory for 30 minutes
     retry: false, // Don't retry endlessly if unauthenticated (401)
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   // 2. Logout Mutation
@@ -36,14 +37,13 @@ export default function useAuth() {
     onSuccess: () => {
       // Instantly clear user from query cache
       queryClient.setQueryData(AUTH_QUERY_KEY, null);
-      queryClient.clear();
     },
   });
 
   return {
     user: user ?? null,
     isAuthenticated: !!user,
-    isLoading: isLoading || isPending,
+    isLoading: isLoading,
     error: error ? error.message : null,
     refetchUser: refetch,
     logout: logoutMutation.mutateAsync,
