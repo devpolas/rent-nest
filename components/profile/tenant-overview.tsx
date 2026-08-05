@@ -14,8 +14,8 @@ export default function TenantOverview({ user }: Props) {
       </CardHeader>
 
       <CardContent className='gap-4 grid grid-cols-2'>
-        <StatCard label='Requests' value={user.requestCount ?? 0} />
-        <StatCard label='Favorites' value={user.favoriteCount ?? 0} />
+        {/* <StatCard label='Requests' value={user.requestCount ?? 0} /> */}
+        {/* <StatCard label='Favorites' value={user.favoriteCount ?? 0} /> */}
       </CardContent>
     </Card>
   );

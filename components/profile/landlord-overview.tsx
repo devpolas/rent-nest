@@ -14,8 +14,8 @@ export default function LandlordOverview({ user }: Props) {
       </CardHeader>
 
       <CardContent className='gap-4 grid grid-cols-2'>
-        <StatCard label='Properties' value={user.propertyCount ?? 0} />
-        <StatCard label='Requests' value={user.requestCount ?? 0} />
+        {/* <StatCard label='Properties' value={user.propertyCount ?? 0} /> */}
+        {/* <StatCard label='Requests' value={user.requestCount ?? 0} /> */}
       </CardContent>
     </Card>
   );
