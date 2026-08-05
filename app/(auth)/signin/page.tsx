@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 import Logo from "@/components/logo/logo";
-import ContinueWithGoogle from "@/components/social-auth-buttons/continue-with-google";
+import ContinueWithGoogle from "@/components/button/social-auth-buttons/continue-with-google";
 import { Heading4 } from "@/components/typography/typography";
 
 import {

@@ -1,6 +1,6 @@
-import ContinueWithGoogle from "@/components/social-auth-buttons/continue-with-google";
+import ContinueWithGoogle from "@/components/button/social-auth-buttons/continue-with-google";
 import Logo from "@/components/logo/logo";
-import { Heading4, Paragraph } from "@/components/typography/typography";
+import { Heading4 } from "@/components/typography/typography";
 
 import {
   Card,
