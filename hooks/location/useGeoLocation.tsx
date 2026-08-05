@@ -124,9 +124,6 @@ export function useGeoLocation(defaultLocation: Coordinates | null = null) {
                 addressdetails: 1,
                 "accept-language": "en",
               },
-              headers: {
-                "User-Agent": "RentNest/1.0",
-              },
             },
           );
 
