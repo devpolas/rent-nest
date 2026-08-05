@@ -1,21 +1,33 @@
 import { useState } from "react";
 import axios from "axios";
-
 interface Coordinates {
   lat: number;
   lng: number;
 }
+interface NominatimAddress {
+  country?: string;
+  state?: string;
+  county?: string;
 
-interface GeoAddress {
-  countryName?: string;
-  principalSubdivision?: string;
-  district?: string;
   city?: string;
-  locality?: string;
-  postcode?: string;
-  formattedAddress?: string;
-}
+  town?: string;
+  municipality?: string;
 
+  village?: string;
+  hamlet?: string;
+  suburb?: string;
+  neighbourhood?: string;
+  quarter?: string;
+  residential?: string;
+
+  postcode?: string;
+}
+interface NominatimResponse {
+  lat: string;
+  lon: string;
+  display_name: string;
+  address: NominatimAddress;
+}
 export interface PropertyLocationPayload {
   latitude: string;
   longitude: string;
@@ -45,19 +57,27 @@ function getGeoErrorMessage(error: GeolocationPositionError) {
 
 function mapGeoAddressToLocation(
   coordinates: Coordinates,
-  address: GeoAddress,
+  data: NominatimResponse,
 ): PropertyLocationPayload {
+  const address = data.address;
+
   return {
     latitude: coordinates.lat.toString(),
     longitude: coordinates.lng.toString(),
-
-    country: address.countryName ?? "",
-    division: address.principalSubdivision ?? "",
-    district: address.district ?? "",
-    city: address.city ?? "",
-    village: address.locality ?? "",
+    country: address.country ?? "",
+    division: address.state?.replace(" Division", "") ?? "",
+    district: address.county?.replace(" District", "") ?? "",
+    city: address.city ?? address.town ?? address.municipality ?? "",
+    village:
+      address.village ??
+      address.hamlet ??
+      address.suburb ??
+      address.neighbourhood ??
+      address.quarter ??
+      address.residential ??
+      "",
     postalCode: address.postcode ?? "",
-    addressLine: address.formattedAddress,
+    addressLine: data.display_name,
   };
 }
 
@@ -68,7 +88,7 @@ export function useGeoLocation(defaultLocation: Coordinates | null = null) {
     defaultLocation,
   );
 
-  const [address, setAddress] = useState<GeoAddress | null>(null);
+  const [address, setAddress] = useState<NominatimResponse | null>(null);
 
   const [locationPayload, setLocationPayload] =
     useState<PropertyLocationPayload | null>(null);
@@ -94,21 +114,23 @@ export function useGeoLocation(defaultLocation: Coordinates | null = null) {
         setCoordinates(coords);
 
         try {
-          const params = new URLSearchParams({
-            latitude: coords.lat.toString(),
-            longitude: coords.lng.toString(),
-            localityLanguage: "en",
-          });
-
-          const response = await axios(
-            `${process.env.NEXT_PUBLIC_LOCATION_API_BASE_URL!}?${params.toString()}`,
+          const response = await axios.get<NominatimResponse>(
+            `${process.env.NEXT_PUBLIC_LOCATION_API_BASE_URL}/reverse`,
+            {
+              params: {
+                lat: coords.lat,
+                lon: coords.lng,
+                format: "jsonv2",
+                addressdetails: 1,
+                "accept-language": "en",
+              },
+              headers: {
+                "User-Agent": "RentNest/1.0",
+              },
+            },
           );
 
-          if (!response.data) {
-            throw new Error("Failed to fetch address");
-          }
-
-          const geoAddress: GeoAddress = await response.data;
+          const geoAddress = response.data;
 
           setAddress(geoAddress);
 
@@ -125,12 +147,10 @@ export function useGeoLocation(defaultLocation: Coordinates | null = null) {
           setIsLoading(false);
         }
       },
-
       (error) => {
         setError(getGeoErrorMessage(error));
         setIsLoading(false);
       },
-
       {
         enableHighAccuracy: true,
         timeout: 10000,
@@ -141,15 +161,10 @@ export function useGeoLocation(defaultLocation: Coordinates | null = null) {
 
   return {
     isLoading,
-
     coordinates,
     address,
-
-    // Ready for createLocation action
     locationPayload,
-
     error,
-
     getPosition,
   };
 }
