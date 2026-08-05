@@ -14,23 +14,30 @@ import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
 import Logo from "../logo/logo";
 import { ThemeSwitcher } from "../theme/theme-switcher";
-import { useDashboardMenu } from "@/hooks/dashboard/use-dashboard";
-import useAuth from "@/hooks/auth/use-auth";
-import Loading from "@/app/loading";
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user, isLoading } = useAuth();
-  const menu = useDashboardMenu();
-  if (isLoading || !user || !menu) {
-    return (
-      <Sidebar collapsible='offcanvas' {...props}>
-        <div className='flex justify-center items-center'>
-          <Loading />
-        </div>
-      </Sidebar>
-    );
-  }
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  menu: {
+    navMain: {
+      title: string;
+      url: string;
+      icon: React.ReactNode;
+    }[];
 
+    navSecondary: {
+      title: string;
+      url: string;
+      icon: React.ReactNode;
+    }[];
+  };
+
+  user: {
+    name: string;
+    email: string;
+    avatar?: string | null;
+  };
+}
+
+export function AppSidebar({ menu, user, ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible='offcanvas' {...props}>
       <SidebarHeader>
