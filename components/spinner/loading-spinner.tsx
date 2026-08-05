@@ -7,7 +7,7 @@ function Spinner({ className, ...props }: SpinnerProps) {
     <LoaderIcon
       role='status'
       aria-label='Loading'
-      className={cn("size-4 text-brand animate-spin", className)}
+      className={cn("size-4 text-brand-foreground animate-spin", className)}
       {...props}
     />
   );

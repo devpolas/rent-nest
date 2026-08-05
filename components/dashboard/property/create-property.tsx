@@ -21,9 +21,14 @@ import FormRhfTextarea from "@/components/rhf-input/form-rfh-textarea";
 import Loading from "@/app/loading";
 import { normalizeSelectOptions } from "@/utils/normalize-property-data";
 import { FormRhfMultiCheckbox } from "@/components/rhf-input/form-rfh-multi-checkbox";
-import { useAllPropertyDetails } from "@/hooks";
+import { useAllPropertyDetails, useCreateProperty } from "@/hooks";
 import { FormRhfCombobox } from "@/components/rhf-input/form-rhf-combobox";
 import ActionButton from "@/components/button/action-button";
+import { toast } from "sonner";
+import { useState } from "react";
+import { PropertyDetailsMap } from "@/types/property";
+import { ReusableDialog } from "@/components/dialog/dialog";
+import CreatePropertyDetails from "./create-property-details";
 
 const DEFAULT_VALUES: Partial<PropertyInputType> = {
   title: "",
@@ -46,6 +51,11 @@ export default function CreateProperty() {
   const amenitiesQuery = useAllPropertyDetails("amenities");
   const featuresQuery = useAllPropertyDetails("features");
   const rulesQuery = useAllPropertyDetails("rules");
+  const { mutateAsync, isPending } = useCreateProperty();
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const [dialogCategory, setDialogCategory] = useState<
+    keyof PropertyDetailsMap | null
+  >(null);
 
   const loading =
     categoriesQuery.isLoading ||
@@ -59,12 +69,7 @@ export default function CreateProperty() {
     featuresQuery.isError ||
     rulesQuery.isError;
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<PropertyInputType>({
+  const { control, handleSubmit } = useForm<PropertyInputType>({
     resolver: zodResolver(PropertySchema),
     defaultValues: DEFAULT_VALUES,
   });
@@ -111,157 +116,246 @@ export default function CreateProperty() {
   const normalizeFeatures = normalizeSelectOptions(features);
   const normalizeRules = normalizeSelectOptions(rules);
 
+  function openDialog(detailsAction: keyof PropertyDetailsMap) {
+    setDialogCategory(detailsAction);
+    setIsOpenDialog(true);
+  }
+
+  function closeDialog(open: boolean) {
+    setIsOpenDialog(open);
+
+    if (!open) {
+      setDialogCategory(null);
+    }
+  }
+
   async function handleCreateProperty(data: PropertyInputType) {
-    console.log(data);
+    try {
+      const res = await mutateAsync({
+        payload: data,
+      });
+
+      if (res.success) {
+        toast.success(res.message);
+      }
+      if (!res.success) {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit(handleCreateProperty)} className='p-4'>
-      <Card className='px-4'>
-        <CardHeader>
-          <CardTitle>Create New Property</CardTitle>
-          <CardDescription>
-            Please enter the correct information for each field.
-          </CardDescription>
+    <>
+      <form onSubmit={handleSubmit(handleCreateProperty)} className='p-4'>
+        <Card className='px-4'>
+          <CardHeader>
+            <CardTitle>Create New Property</CardTitle>
+            <CardDescription>
+              Please enter the correct information for each field.
+            </CardDescription>
 
-          <CardAction>
-            <ActionButton
-              variant={"brand"}
-              type='submit'
-              isLoading={isSubmitting}
-              loadingText='Creating...'
-            >
-              Create Property
-            </ActionButton>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
-          <div className='gap-6 grid grid-cols-1 lg:grid-cols-2'>
-            {/* Left */}
-            <div className='space-y-4'>
-              <FormRhfInput
-                name='title'
-                type='text'
-                placeholder='Property title'
-                label='Title'
-                control={control}
-              />
+            <CardAction>
+              <ActionButton
+                variant={"brand"}
+                type='submit'
+                isLoading={isPending}
+                loadingText='Creating...'
+              >
+                Create Property
+              </ActionButton>
+            </CardAction>
+          </CardHeader>
+          <CardContent>
+            <div className='gap-6 grid grid-cols-1 lg:grid-cols-2'>
+              {/* Left */}
+              <div className='space-y-4'>
+                <FormRhfInput
+                  name='title'
+                  type='text'
+                  placeholder='Property title'
+                  label='Title'
+                  control={control}
+                />
 
-              <FormRhfInput
-                name='rent'
-                type='number'
-                placeholder='Property rent per day in USD'
-                label='Rent Per Day'
-                control={control}
-              />
+                <FormRhfInput
+                  name='rent'
+                  type='number'
+                  placeholder='Property rent per day in USD'
+                  label='Rent Per Day'
+                  control={control}
+                />
 
-              <FormRhfInput
-                name='securityDeposit'
-                type='number'
-                placeholder='Property security deposit in USD'
-                label='Security Deposit'
-                control={control}
-              />
+                <FormRhfInput
+                  name='securityDeposit'
+                  type='number'
+                  placeholder='Property security deposit in USD'
+                  label='Security Deposit'
+                  control={control}
+                />
 
-              <FormRhfInput
-                name='area'
-                type='number'
-                placeholder='Property area in square feet'
-                label='Area'
-                control={control}
-              />
+                <FormRhfInput
+                  name='area'
+                  type='number'
+                  placeholder='Property area in square feet'
+                  label='Area'
+                  control={control}
+                />
 
-              <FormRhfInput
-                name='bedrooms'
-                type='number'
-                placeholder='Bedrooms'
-                label='Bedrooms'
-                control={control}
-              />
+                <FormRhfInput
+                  name='bedrooms'
+                  type='number'
+                  placeholder='Bedrooms'
+                  label='Bedrooms'
+                  control={control}
+                />
 
-              <FormRhfInput
-                name='bathrooms'
-                type='number'
-                placeholder='Bathrooms'
-                label='Bathrooms'
-                control={control}
-              />
+                <FormRhfInput
+                  name='bathrooms'
+                  type='number'
+                  placeholder='Bathrooms'
+                  label='Bathrooms'
+                  control={control}
+                />
+              </div>
+
+              {/* Right */}
+              <div className='space-y-4'>
+                <FormRhfCombobox
+                  name='categoryId'
+                  control={control}
+                  label='Category'
+                  options={normalizeCategories}
+                  createNew={true}
+                  onCreateNew={() => openDialog("categories")}
+                  placeholder='Search category...'
+                />
+
+                <FormRhfSelect
+                  name='availability'
+                  control={control}
+                  label='Availability'
+                  options={propertyStaticData.availability}
+                  placeholder='Select availability'
+                />
+
+                <FormRhfDatePicker
+                  name='availableFrom'
+                  control={control}
+                  label='Available From'
+                  placeholder='Pick a date'
+                />
+
+                <FormRhfTextarea
+                  control={control}
+                  name='description'
+                  label='Description'
+                  placeholder='Property description'
+                  height={190}
+                />
+              </div>
             </div>
+          </CardContent>
+        </Card>
+        <Card className='mt-6'>
+          <CardHeader>
+            <CardTitle>Property Features</CardTitle>
+            <CardDescription>
+              Select all applicable amenities, features and rules.
+            </CardDescription>
+          </CardHeader>
 
-            {/* Right */}
-            <div className='space-y-4'>
-              <FormRhfCombobox
-                name='categoryId'
-                control={control}
-                label='Category'
-                options={normalizeCategories}
-                createNew={true}
-                placeholder='Search category...'
-              />
+          <CardContent className='gap-8 grid lg:grid-cols-3'>
+            <FormRhfMultiCheckbox
+              name='amenities'
+              control={control}
+              label='Amenities'
+              placeholder='Search amenities...'
+              createNew={true}
+              onCreateNew={() => openDialog("amenities")}
+              options={normalizeAmenities}
+            />
 
-              <FormRhfSelect
-                name='availability'
-                control={control}
-                label='Availability'
-                options={propertyStaticData.availability}
-                placeholder='Select availability'
-              />
+            <FormRhfMultiCheckbox
+              name='features'
+              control={control}
+              label='Features'
+              placeholder='Search features...'
+              createNew={true}
+              onCreateNew={() => openDialog("features")}
+              options={normalizeFeatures}
+            />
 
-              <FormRhfDatePicker
-                name='availableFrom'
-                control={control}
-                label='Available From'
-                placeholder='Pick a date'
-              />
+            <FormRhfMultiCheckbox
+              name='rules'
+              control={control}
+              label='Rules'
+              placeholder='Search rules...'
+              createNew={true}
+              onCreateNew={() => openDialog("rules")}
+              options={normalizeRules}
+            />
+          </CardContent>
+        </Card>
+      </form>
 
-              <FormRhfTextarea
-                control={control}
-                name='description'
-                label='Description'
-                placeholder='Property description'
-                height={190}
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-      <Card className='mt-6'>
-        <CardHeader>
-          <CardTitle>Property Features</CardTitle>
-          <CardDescription>
-            Select all applicable amenities, features and rules.
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent className='gap-8 grid lg:grid-cols-3'>
-          <FormRhfMultiCheckbox
-            name='amenities'
-            control={control}
-            label='Amenities'
-            placeholder='Search amenities...'
-            createNew={true}
-            options={normalizeAmenities}
+      {isOpenDialog && dialogCategory === "categories" && (
+        <ReusableDialog
+          size='xl'
+          isOpen={isOpenDialog}
+          onOpenChange={closeDialog}
+        >
+          <CreatePropertyDetails
+            detailsAction='categories'
+            onSuccess={() => {
+              closeDialog(false);
+            }}
           />
-
-          <FormRhfMultiCheckbox
-            name='features'
-            control={control}
-            label='Features'
-            placeholder='Search features...'
-            createNew={true}
-            options={normalizeFeatures}
+        </ReusableDialog>
+      )}
+      {isOpenDialog && dialogCategory === "amenities" && (
+        <ReusableDialog
+          size='xl'
+          isOpen={isOpenDialog}
+          onOpenChange={closeDialog}
+        >
+          <CreatePropertyDetails
+            detailsAction='amenities'
+            onSuccess={() => {
+              closeDialog(false);
+            }}
           />
-
-          <FormRhfMultiCheckbox
-            name='rules'
-            control={control}
-            label='Rules'
-            placeholder='Search rules...'
-            createNew={true}
-            options={normalizeRules}
+        </ReusableDialog>
+      )}
+      {isOpenDialog && dialogCategory === "features" && (
+        <ReusableDialog
+          size='xl'
+          isOpen={isOpenDialog}
+          onOpenChange={closeDialog}
+        >
+          <CreatePropertyDetails
+            detailsAction='features'
+            onSuccess={() => {
+              closeDialog(false);
+            }}
           />
-        </CardContent>
-      </Card>
-    </form>
+        </ReusableDialog>
+      )}
+      {isOpenDialog && dialogCategory === "rules" && (
+        <ReusableDialog
+          size='xl'
+          isOpen={isOpenDialog}
+          onOpenChange={closeDialog}
+        >
+          <CreatePropertyDetails
+            detailsAction='rules'
+            onSuccess={() => {
+              closeDialog(false);
+            }}
+          />
+        </ReusableDialog>
+      )}
+    </>
   );
 }

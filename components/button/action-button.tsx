@@ -12,6 +12,7 @@ type ActionButtonProps = {
   icon?: React.ReactNode;
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
+  size?: React.ComponentProps<typeof Button>["size"];
 };
 
 export default function ActionButton({
@@ -24,9 +25,11 @@ export default function ActionButton({
   icon,
   type = "button",
   onClick,
+  size,
 }: ActionButtonProps) {
   return (
     <Button
+      size={size}
       type={type}
       onClick={onClick}
       variant={variant}
