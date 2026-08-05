@@ -119,9 +119,9 @@ export default function CreateProperty() {
     <form onSubmit={handleSubmit(handleCreateProperty)} className='p-4'>
       <Card className='px-4'>
         <CardHeader>
-          <CardTitle>Crate New Property</CardTitle>
+          <CardTitle>Create New Property</CardTitle>
           <CardDescription>
-            Please input correct value according to fields
+            Please enter the correct information for each field.
           </CardDescription>
 
           <CardAction>
