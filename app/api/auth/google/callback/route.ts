@@ -15,8 +15,10 @@ export async function GET(req: NextRequest) {
   const location = apiRes.headers.get("location");
   const res = NextResponse.redirect(location!);
 
-  const setCookie = apiRes.headers.get("set-cookie");
-  if (setCookie) res.headers.set("set-cookie", setCookie);
+  const setCookies = apiRes.headers.getSetCookie();
+  for (const cookie of setCookies) {
+  res.headers.append("set-cookie", cookie);
+}
 
   return res;
 }

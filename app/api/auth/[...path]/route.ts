@@ -18,8 +18,12 @@ async function handler(
   });
 
   const res = new NextResponse(await apiRes.text(), { status: apiRes.status });
-  const setCookie = apiRes.headers.get("set-cookie");
-  if (setCookie) res.headers.set("set-cookie", setCookie);
+
+  const setCookies = apiRes.headers.getSetCookie();
+  for (const cookie of setCookies) {
+    res.headers.append("set-cookie", cookie);
+  }
+
   return res;
 }
 
