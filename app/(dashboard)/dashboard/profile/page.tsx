@@ -1,3 +1,5 @@
+import Profile from "@/components/profile/profile";
+
 export default function page() {
-  return <section></section>;
+  return <Profile />;
 }

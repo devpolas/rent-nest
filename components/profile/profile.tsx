@@ -1,4 +1,4 @@
-import type { MeResponse } from "@/types/user";
+"use client";
 
 import ProfileHero from "./profile-hero";
 import ProfileAbout from "./profile-about";
@@ -7,12 +7,26 @@ import ProfileSocial from "./profile-social";
 import ProfileSidebar from "./profile-sidebar";
 
 import Location from "../location/location";
+import { useMe } from "@/hooks";
+import Loading from "@/app/loading";
 
-type Props = {
-  user: MeResponse;
-};
+export default function Profile() {
+  const { data, isLoading } = useMe();
 
-export default function Profile({ user }: Props) {
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!data || !data.success || !data.data) {
+    return (
+      <div className='flex justify-center items-center py-20'>
+        {data?.message ?? "User not found"}
+      </div>
+    );
+  }
+
+  const user = data.data.user ?? {};
+
   const locations = user.profile?.locations ?? [];
 
   return (
