@@ -21,9 +21,9 @@ export default function Profile({ user }: Props) {
 
       <div className='gap-8 grid lg:grid-cols-3'>
         <main className='space-y-8 lg:col-span-2'>
-          {/* <ProfileAbout user={user} /> */}
+          <ProfileAbout user={user} />
 
-          {/* <ProfileInformation user={user} /> */}
+          <ProfileInformation user={user} />
 
           {locations.length > 0 && (
             <section className='space-y-6'>
@@ -33,10 +33,10 @@ export default function Profile({ user }: Props) {
             </section>
           )}
 
-          {/* <ProfileSocial user={user} /> */}
+          <ProfileSocial user={user} />
         </main>
 
-        {/* <ProfileSidebar user={user} /> */}
+        <ProfileSidebar user={user} />
       </div>
     </div>
   );
