@@ -1,7 +1,5 @@
-import data from "./data.json";
 import { SectionCards } from "@/components/dashboard/section-cards";
 import { ChartAreaInteractive } from "@/components/dashboard/chart-area-interactive";
-import { DataTable } from "@/components/dashboard/data-table/data-table";
 
 export default function Page() {
   return (
@@ -12,7 +10,6 @@ export default function Page() {
           <div className='px-4 lg:px-6'>
             <ChartAreaInteractive />
           </div>
-          <DataTable data={data} />
         </div>
       </div>
     </div>
