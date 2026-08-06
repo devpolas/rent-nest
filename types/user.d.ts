@@ -18,6 +18,9 @@ export interface User {
 
   role: UserRole;
   status: UserStatus;
+  
+  landlordRentalRequests: number,
+  tenantRentalRequests: number,
 
   createdAt: string;
   updatedAt: string;

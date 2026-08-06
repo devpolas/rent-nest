@@ -1,4 +1,5 @@
 import { RentalRequestStatus } from "./enums";
+import { ReviewTenantResponse } from "./review";
 
 export interface RentalRequest {
   id: string;
@@ -16,4 +17,8 @@ export interface RentalRequest {
 
   createdAt: string;
   updatedAt: string;
+}
+
+export interface RentalRequestResponse extends RentalRequest {
+  tenant: ReviewTenantResponse;
 }

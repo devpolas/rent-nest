@@ -13,14 +13,9 @@ export interface Review {
   updatedAt: string;
 }
 
-export interface ReviewResponse extends Review {
-  property: PropertyReviewResponse;
-
-  tenant: ReviewTenantResponse;
-}
-
-export interface PropertyReviewResponse extends Property {
-  _?: boolean;
+export interface PropertyReviewResponse {
+  id: string;
+  title: string;
 }
 
 export interface ReviewTenantResponse {
@@ -28,4 +23,9 @@ export interface ReviewTenantResponse {
   name: string;
   email: string;
   avatar: string | null;
+}
+
+export interface ReviewResponse extends Review {
+  property: PropertyReviewResponse;
+  tenant: ReviewTenantResponse;
 }
