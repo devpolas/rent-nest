@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { type CellContext, type RowData } from "@tanstack/react-table";
-import type { AppTableFeatures } from "../app-table";
+import type { AppTableFeatures } from "../../../lib/table/app-table";
 
 export interface ActionsColumnOptions<TData extends RowData> {
   id?: string;

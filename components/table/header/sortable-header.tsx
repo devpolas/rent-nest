@@ -1,6 +1,6 @@
 import { Column, RowData } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
-import { AppTableFeatures } from "./app-table";
+import { AppTableFeatures } from "../../../lib/table/app-table";
 
 interface SortableHeaderProps<TData extends RowData, TValue> {
   column: Column<AppTableFeatures, TData, TValue>;

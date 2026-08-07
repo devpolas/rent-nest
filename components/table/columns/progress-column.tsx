@@ -7,8 +7,8 @@ import {
 } from "@tanstack/react-table";
 
 import { Progress } from "@/components/ui/progress";
-import type { AppTableFeatures } from "../app-table";
-import { SortableHeader } from "../sortable-header";
+import type { AppTableFeatures } from "../../../lib/table/app-table";
+import { SortableHeader } from "../header/sortable-header";
 
 export interface ProgressColumnOptions<
   TData extends RowData,

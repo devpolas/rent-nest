@@ -6,8 +6,8 @@ import {
   type RowData,
 } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import type { AppTableFeatures } from "../app-table";
-import { SortableHeader } from "../sortable-header";
+import type { AppTableFeatures } from "../../../lib/table/app-table";
+import { SortableHeader } from "../header/sortable-header";
 
 export interface BadgeColumnOptions<TData extends RowData, TValue = unknown> {
   label: ReactNode;

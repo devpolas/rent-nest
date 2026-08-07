@@ -1,7 +1,7 @@
 "use client";
 
 import { type ColumnDef, type RowData } from "@tanstack/react-table";
-import { AppTableFeatures, useAppTable } from "./app-table";
+import { AppTableFeatures, useAppTable } from "../../lib/table/app-table";
 export interface UseTableOptions<TData extends RowData> {
   data: TData[];
   columns: ColumnDef<AppTableFeatures, TData, unknown>[];
@@ -28,7 +28,6 @@ export function useTable<TData extends RowData>({
 }: UseTableOptions<TData>) {
   const table = useAppTable({
     data,
-
     columns,
     initialState: {
       pagination: {

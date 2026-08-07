@@ -10,7 +10,7 @@ import {
 
 import type { RowData } from "@tanstack/react-table";
 
-import type { AppTableInstance } from "../../app-table";
+import type { AppTableInstance } from "../../../lib/table/app-table";
 
 interface TablePaginationProps<TData extends RowData> {
   table: AppTableInstance<TData>;

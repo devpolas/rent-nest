@@ -1,5 +1,5 @@
 import { RowData } from "@tanstack/react-table";
-import { createAppColumnHelper } from "./app-table";
+import { createAppColumnHelper } from "../../../lib/table/app-table";
 
 export function createSelectionColumn<T extends RowData>() {
   const helper = createAppColumnHelper<T>();

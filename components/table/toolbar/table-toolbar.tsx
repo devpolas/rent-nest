@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Settings2 } from "lucide-react";
-import type { AppTableInstance } from "./app-table";
+import type { AppTableInstance } from "../../../lib/table/app-table";
 
 interface TableToolbarProps<TData extends RowData> {
   table: AppTableInstance<TData>;

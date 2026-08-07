@@ -5,8 +5,8 @@ import {
   type HeaderContext,
   type RowData,
 } from "@tanstack/react-table";
-import type { AppTableFeatures } from "../app-table";
-import { SortableHeader } from "../sortable-header";
+import type { AppTableFeatures } from "../../../lib/table/app-table";
+import { SortableHeader } from "../header/sortable-header";
 export interface DateColumnOptions<
   TData extends RowData,
   TValue extends string | number | Date = string | number | Date,

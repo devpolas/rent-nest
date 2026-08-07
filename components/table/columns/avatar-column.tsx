@@ -5,8 +5,8 @@ import {
   type RowData,
 } from "@tanstack/react-table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import type { AppTableFeatures } from "../app-table";
-import { SortableHeader } from "../sortable-header";
+import type { AppTableFeatures } from "../../../lib/table/app-table";
+import { SortableHeader } from "../header/sortable-header";
 
 export interface AvatarColumnOptions<TData extends RowData, TValue = string> {
   label: ReactNode;

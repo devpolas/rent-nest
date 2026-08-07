@@ -6,7 +6,7 @@ import {
   TableRow,
   TableHead,
 } from "@/components/ui/table";
-import { AppTableInstance } from "./app-table";
+import { AppTableInstance } from "../../lib/table/app-table";
 
 interface TableHeaderProps<TData extends RowData> {
   table: AppTableInstance<TData>;
