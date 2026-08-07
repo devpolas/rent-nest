@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-
 import {
   type CellContext,
   type HeaderContext,
@@ -7,17 +6,21 @@ import {
 } from "@tanstack/react-table";
 import type { AppTableFeatures } from "../../../lib/table/app-table";
 import { SortableHeader } from "../header/sortable-header";
-export interface TextColumnOptions<TData extends RowData, TValue = unknown> {
+
+export interface TextColumnOptions<TData extends RowData, TValue = string> {
   label: ReactNode;
+
   sortable?: boolean;
+
   fallback?: ReactNode;
+
   render?: (
     value: TValue,
     context: CellContext<AppTableFeatures, TData, TValue>,
   ) => ReactNode;
 }
 
-export function textColumn<TData extends RowData, TValue = unknown>({
+export function textColumn<TData extends RowData, TValue = string>({
   label,
   sortable = true,
   fallback = "-",

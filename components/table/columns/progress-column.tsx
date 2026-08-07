@@ -1,23 +1,23 @@
 import { ReactNode } from "react";
-
 import {
   type CellContext,
   type HeaderContext,
   type RowData,
 } from "@tanstack/react-table";
-
 import { Progress } from "@/components/ui/progress";
 import type { AppTableFeatures } from "../../../lib/table/app-table";
 import { SortableHeader } from "../header/sortable-header";
 
 export interface ProgressColumnOptions<
   TData extends RowData,
-  TValue extends number = number,
+  TValue extends string | number = string | number,
 > {
   label: ReactNode;
   sortable?: boolean;
   fallback?: ReactNode;
   showValue?: boolean;
+  min?: number;
+  max?: number;
   renderValue?: (
     value: TValue,
     context: CellContext<AppTableFeatures, TData, TValue>,
@@ -26,12 +26,14 @@ export interface ProgressColumnOptions<
 
 export function progressColumn<
   TData extends RowData,
-  TValue extends number = number,
+  TValue extends string | number = string | number,
 >({
   label,
   sortable = true,
   fallback = "-",
   showValue = true,
+  min = 0,
+  max = 100,
   renderValue,
 }: ProgressColumnOptions<TData, TValue>) {
   return {
@@ -44,12 +46,16 @@ export function progressColumn<
         label
       );
     },
+
     cell(context: CellContext<AppTableFeatures, TData, TValue>) {
       const value = context.getValue();
-      if (value == null) {
+
+      if (value == null || value === "") {
         return fallback;
       }
-      const progress = Math.min(100, Math.max(0, Number(value)));
+
+      const progress = Math.min(max, Math.max(min, Number(value)));
+
       return (
         <div className='flex items-center gap-3 min-w-40'>
           <Progress value={progress} className='flex-1' />

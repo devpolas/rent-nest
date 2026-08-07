@@ -73,10 +73,28 @@ const sharedOptions = tableOptions({
   // App-wide sane defaults; any table can still override these per-instance.
   enableSortingRemoval: false,
   enableRowRangeSelection: true,
-});
+} as const);
 
-export const { useAppTable, createAppColumnHelper } =
+// export const { useAppTable, createAppColumnHelper } =
+//   createTableHook(sharedOptions);
+
+const { useAppTable: baseUseAppTable, createAppColumnHelper } =
   createTableHook(sharedOptions);
+
+export { createAppColumnHelper };
+
+export function useAppTable<
+  TData extends RowData,
+  TColumns extends readonly unknown[],
+>(options: {
+  data: TData[];
+  columns: TColumns;
+  initialState?: unknown;
+  enableRowSelection?: boolean;
+  enableHiding?: boolean;
+}) {
+  return baseUseAppTable(options as never);
+}
 
 export type AppTableFeatures = typeof features;
 

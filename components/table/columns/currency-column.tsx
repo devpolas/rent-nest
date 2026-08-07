@@ -1,28 +1,23 @@
 import { ReactNode } from "react";
-
 import {
   type CellContext,
   type HeaderContext,
   type RowData,
 } from "@tanstack/react-table";
+
 import type { AppTableFeatures } from "../../../lib/table/app-table";
 import { SortableHeader } from "../header/sortable-header";
+
 export interface CurrencyColumnOptions<
   TData extends RowData,
-  TValue extends number = number,
+  TValue extends string | number = string | number,
 > {
   label: ReactNode;
-
   sortable?: boolean;
-
   fallback?: ReactNode;
-
   locale?: string;
-
-  currency?: string;
-
+  currency?: Intl.NumberFormatOptions["currency"];
   minimumFractionDigits?: number;
-
   maximumFractionDigits?: number;
 
   render?: (
@@ -33,7 +28,7 @@ export interface CurrencyColumnOptions<
 
 export function currencyColumn<
   TData extends RowData,
-  TValue extends number = number,
+  TValue extends string | number = string | number,
 >({
   label,
   sortable = true,
@@ -44,6 +39,13 @@ export function currencyColumn<
   maximumFractionDigits = 2,
   render,
 }: CurrencyColumnOptions<TData, TValue>) {
+  const formatter = new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency,
+    minimumFractionDigits,
+    maximumFractionDigits,
+  });
+
   return {
     enableSorting: sortable,
 
@@ -58,7 +60,7 @@ export function currencyColumn<
     cell(context: CellContext<AppTableFeatures, TData, TValue>) {
       const value = context.getValue();
 
-      if (value == null) {
+      if (value == null || value === "") {
         return fallback;
       }
 
@@ -66,12 +68,13 @@ export function currencyColumn<
         return render(value, context);
       }
 
-      return new Intl.NumberFormat(locale, {
-        style: "currency",
-        currency,
-        minimumFractionDigits,
-        maximumFractionDigits,
-      }).format(Number(value));
+      const amount = Number(value);
+
+      if (Number.isNaN(amount)) {
+        return fallback;
+      }
+
+      return formatter.format(amount);
     },
   };
 }

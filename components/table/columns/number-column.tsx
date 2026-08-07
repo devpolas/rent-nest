@@ -1,39 +1,43 @@
 import { ReactNode } from "react";
+
 import {
   type CellContext,
   type HeaderContext,
   type RowData,
 } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
+
 import type { AppTableFeatures } from "../../../lib/table/app-table";
+
 import { SortableHeader } from "../header/sortable-header";
 
-type BadgeVariant = "default" | "secondary" | "destructive" | "outline";
-
-export interface BadgeColumnOptions<TData extends RowData, TValue> {
+export interface NumberColumnOptions<
+  TData extends RowData,
+  TValue extends string | number = string | number,
+> {
   label: ReactNode;
   sortable?: boolean;
   fallback?: ReactNode;
-  variant?: BadgeVariant;
-  format?: (
+  locale?: string;
+  minimumFractionDigits?: number;
+  maximumFractionDigits?: number;
+  render?: (
     value: TValue,
     context: CellContext<AppTableFeatures, TData, TValue>,
   ) => ReactNode;
-
-  getVariant?: (
-    value: TValue,
-    context: CellContext<AppTableFeatures, TData, TValue>,
-  ) => BadgeVariant;
 }
 
-export function badgeColumn<TData extends RowData, TValue>({
+export function numberColumn<
+  TData extends RowData,
+  TValue extends string | number = string | number,
+>({
   label,
   sortable = true,
   fallback = "-",
-  variant = "secondary",
-  format,
-  getVariant,
-}: BadgeColumnOptions<TData, TValue>) {
+  locale = "en-US",
+  minimumFractionDigits = 0,
+  maximumFractionDigits = 2,
+  render,
+}: NumberColumnOptions<TData, TValue>) {
   return {
     enableSorting: sortable,
 
@@ -52,11 +56,14 @@ export function badgeColumn<TData extends RowData, TValue>({
         return fallback;
       }
 
-      return (
-        <Badge variant={getVariant ? getVariant(value, context) : variant}>
-          {format ? format(value, context) : String(value)}
-        </Badge>
-      );
+      if (render) {
+        return render(value, context);
+      }
+
+      return new Intl.NumberFormat(locale, {
+        minimumFractionDigits,
+        maximumFractionDigits,
+      }).format(Number(value));
     },
   };
 }

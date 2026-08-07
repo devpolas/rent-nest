@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
-
 import {
   type CellContext,
   type HeaderContext,
   type RowData,
 } from "@tanstack/react-table";
+
 import { Badge } from "@/components/ui/badge";
 import type { AppTableFeatures } from "../../../lib/table/app-table";
 import { SortableHeader } from "../header/sortable-header";
@@ -17,6 +17,7 @@ export interface BooleanColumnOptions<TData extends RowData> {
   falseLabel?: ReactNode;
   trueVariant?: "default" | "secondary" | "destructive" | "outline";
   falseVariant?: "default" | "secondary" | "destructive" | "outline";
+
   render?: (
     value: boolean,
     context: CellContext<AppTableFeatures, TData, boolean>,
@@ -31,7 +32,6 @@ export function booleanColumn<TData extends RowData>({
   falseLabel = "No",
   trueVariant = "default",
   falseVariant = "secondary",
-
   render,
 }: BooleanColumnOptions<TData>) {
   return {
@@ -44,14 +44,18 @@ export function booleanColumn<TData extends RowData>({
         label
       );
     },
+
     cell(context: CellContext<AppTableFeatures, TData, boolean>) {
       const value = context.getValue();
+
       if (value == null) {
         return fallback;
       }
+
       if (render) {
         return render(value, context);
       }
+
       return (
         <Badge variant={value ? trueVariant : falseVariant}>
           {value ? trueLabel : falseLabel}
