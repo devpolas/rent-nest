@@ -10,10 +10,8 @@ type Props = {
 export default function ProfileSidebar({ user }: Props) {
   return (
     <aside>
-      <div
-        className='top-24 sticky space-y-6'
-      >
-        <AccountActions />
+      <div className='top-24 sticky space-y-4'>
+        <AccountActions user={user} />
         <RoleOverview user={user} />
       </div>
     </aside>

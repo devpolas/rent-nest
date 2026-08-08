@@ -1,88 +1,255 @@
+"use client";
+
 import Link from "next/link";
-import { ExternalLink, Share2 } from "lucide-react";
-import type { SocialProfile } from "@/types/social-profile";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label, Muted } from "@/components/typography/typography";
-import SocialPlatformIcon from "./social-platform-icon";
+import { Pencil, Plus } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
+import ActionButton from "@/components/button/action-button";
 import {
-  getSocialPlatformDescription,
-  getSocialPlatformLabel,
-} from "./social-platform-label";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+import type { SocialProfile } from "@/types/social-profile";
+import type { MeResponse } from "@/types/user";
+
+import SocialPlatformIcon from "./social-platform-icon";
+import { getSocialPlatformLabel } from "./social-platform-label";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { SocialPlatform } from "@/types/enum";
+import { useCreateSocialProfile, useUpdateSocialProfile } from "@/hooks";
+import {
+  SocialProfileCreateInput,
+  SocialProfileCreateSchema,
+} from "@/schemas/user.schema";
+import { FormRhfSelect } from "../rhf-input/form-rfh-select";
+import { FormRhfInput } from "../rhf-input/form-rhf-input";
 
 type Props = {
-  socialProfiles: SocialProfile[];
+  user: MeResponse;
 };
 
-export default function SocialProfiles({ socialProfiles }: Props) {
-  return (
-    <Card className='glass-card'>
-      <CardHeader>
-        <CardTitle className='flex items-center gap-2'>
-          <Share2 className='size-5 text-brand' />
-          Social Profiles
-        </CardTitle>
-      </CardHeader>
+const SOCIAL_PLATFORM_OPTIONS = [
+  { label: "GitHub", value: "GITHUB" },
+  { label: "LinkedIn", value: "LINKEDIN" },
+  { label: "Facebook", value: "FACEBOOK" },
+  { label: "X", value: "TWITTER" },
+  { label: "Instagram", value: "INSTAGRAM" },
+  { label: "YouTube", value: "YOUTUBE" },
+  { label: "Discord", value: "DISCORD" },
+  { label: "Telegram", value: "TELEGRAM" },
+  { label: "WhatsApp", value: "WHATSAPP" },
+  { label: "Website", value: "WEBSITE" },
+] satisfies {
+  label: string;
+  value: SocialPlatform;
+}[];
 
-      <CardContent>
-        {socialProfiles.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <div className='space-y-4'>
-            {socialProfiles.map((social) => (
-              <SocialProfileItem key={social.id} social={social} />
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+export default function ProfileSocial({ user }: Props) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [editingSocial, setEditingSocial] = useState<SocialProfile | null>(
+    null,
+  );
+
+  const socialProfiles = user.profile?.socialProfile ?? [];
+
+  const { mutateAsync: createSocialProfile, isPending: isCreating } =
+    useCreateSocialProfile();
+
+  const { mutateAsync: updateSocialProfile, isPending: isUpdating } =
+    useUpdateSocialProfile();
+
+  const isPending = isCreating || isUpdating;
+
+  const form = useForm<SocialProfileCreateInput>({
+    resolver: zodResolver(SocialProfileCreateSchema),
+    defaultValues: {
+      platform: "GITHUB",
+      url: "",
+    },
+  });
+
+  function handleAdd() {
+    setEditingSocial(null);
+
+    form.reset({
+      platform: "GITHUB",
+      url: "",
+    });
+
+    setIsOpen(true);
+  }
+
+  function handleEdit(social: SocialProfile) {
+    setEditingSocial(social);
+
+    form.reset({
+      platform: social.platform,
+      url: social.url,
+    });
+
+    setIsOpen(true);
+  }
+
+  function handleClose(open: boolean) {
+    setIsOpen(open);
+
+    if (!open) {
+      setEditingSocial(null);
+
+      form.reset({
+        platform: "GITHUB",
+        url: "",
+      });
+    }
+  }
+
+  async function onSubmit(data: SocialProfileCreateInput) {
+    try {
+      if (editingSocial) {
+        const response = await updateSocialProfile({
+          id: editingSocial.id,
+          payload: data,
+        });
+
+        if (response.success) {
+          toast.success(
+            response.message ?? "Social profile updated successfully",
+          );
+
+          handleClose(false);
+          return;
+        }
+
+        toast.error(response.message ?? "Failed to update social profile");
+
+        return;
+      }
+
+      const response = await createSocialProfile({
+        payload: data,
+      });
+
+      if (response.success) {
+        toast.success(response.message ?? "Social profile added successfully");
+
+        handleClose(false);
+        return;
+      }
+
+      toast.error(response.message ?? "Failed to add social profile");
+    } catch {
+      toast.error("Something went wrong");
+    }
+  }
+
+  return (
+    <>
+      <div className='flex flex-wrap items-center gap-2'>
+        {socialProfiles.map((social) => (
+          <SocialProfileBadge
+            key={social.id}
+            social={social}
+            onEdit={() => handleEdit(social)}
+          />
+        ))}
+
+        <ActionButton
+          type='button'
+          variant='outline'
+          size='icon'
+          className='rounded-full size-8'
+          onClick={handleAdd}
+        >
+          <Plus className='size-4' />
+        </ActionButton>
+      </div>
+
+      <Dialog open={isOpen} onOpenChange={handleClose}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {editingSocial ? "Update Social Profile" : "Add Social Profile"}
+            </DialogTitle>
+
+            <DialogDescription>
+              {editingSocial
+                ? "Update your social profile URL."
+                : "Add a social profile to your account."}
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+            <FormRhfSelect
+              name='platform'
+              label='Platform'
+              placeholder='Select platform'
+              control={form.control}
+              options={SOCIAL_PLATFORM_OPTIONS}
+            />
+
+            <FormRhfInput
+              name='url'
+              label='Profile URL'
+              placeholder='https://github.com/username'
+              control={form.control}
+            />
+
+            <div className='flex justify-end'>
+              <ActionButton
+                type='submit'
+                variant='brand'
+                disabled={isPending}
+                isLoading={isPending}
+                loadingText={editingSocial ? "Updating..." : "Adding..."}
+              >
+                {editingSocial ? "Update Social" : "Add Social"}
+              </ActionButton>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
-type SocialProfileItemProps = {
+type SocialProfileBadgeProps = {
   social: SocialProfile;
+  onEdit: () => void;
 };
 
-function SocialProfileItem({ social }: SocialProfileItemProps) {
+function SocialProfileBadge({ social, onEdit }: SocialProfileBadgeProps) {
+  const label = getSocialPlatformLabel(social.platform);
+
   return (
-    <Link
-      href={social.url}
-      target='_blank'
-      rel='noopener noreferrer'
-      aria-label={`Visit ${getSocialPlatformLabel(social.platform)}`}
-      className='group flex sm:flex-row flex-col sm:justify-between sm:items-center gap-4 hover:bg-brand/5 p-4 hover:border-brand/30 rounded-xl transition-all duration-300 glass'
-    >
-      <div className='flex items-center gap-4 min-w-0'>
-        <div className='flex justify-center items-center bg-brand/10 group-hover:bg-brand rounded-xl size-12 text-brand group-hover:text-brand-foreground group-hover:scale-105 transition-all duration-300 shrink-0'>
-          <SocialPlatformIcon platform={social.platform} />
-        </div>
+    <div className='group relative'>
+      <Link
+        href={social.url}
+        target='_blank'
+        rel='noopener noreferrer'
+        aria-label={`Visit ${label}`}
+        title={label}
+        className='flex justify-center items-center bg-background/60 hover:bg-brand/10 backdrop-blur-sm border hover:border-brand/40 rounded-full size-10 text-muted-foreground hover:text-brand hover:scale-105 transition-all duration-200'
+      >
+        <SocialPlatformIcon platform={social.platform} className='size-5' />
+      </Link>
 
-        <div className='space-y-1 min-w-0'>
-          <Label>{getSocialPlatformLabel(social.platform)}</Label>
-          <Muted className='truncate'>
-            {getSocialPlatformDescription(social.platform)}
-          </Muted>
-        </div>
-      </div>
-      <div className='flex items-center self-end sm:self-auto gap-2 text-brand transition-transform group-hover:translate-x-1 duration-300'>
-        <span className='font-medium text-sm'>Visit</span>
-        <ExternalLink className='size-4' />
-      </div>
-    </Link>
-  );
-}
-
-function EmptyState() {
-  return (
-    <div className='flex flex-col items-center py-10 text-center'>
-      <div className='bg-brand/10 mb-5 p-4 rounded-full'>
-        <Share2 className='size-7 text-brand' />
-      </div>
-
-      <Label>No Social Profiles</Label>
-
-      <Muted className='mt-2 max-w-sm'>
-        This user hasn&apos;t connected any social profiles yet.
-      </Muted>
+      <button
+        type='button'
+        onClick={onEdit}
+        aria-label={`Edit ${label}`}
+        title={`Edit ${label}`}
+        className='-top-1 -right-1 absolute flex justify-center items-center bg-background opacity-0 group-hover:opacity-100 shadow-sm border rounded-full size-5 text-muted-foreground hover:text-brand transition-opacity hover:cursor-pointer'
+      >
+        <Pencil className='size-3' />
+      </button>
     </div>
   );
 }

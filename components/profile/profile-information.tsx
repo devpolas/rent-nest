@@ -14,7 +14,7 @@ export default function ProfileInformation({ user }: Props) {
         <CardTitle>Personal Information</CardTitle>
       </CardHeader>
 
-      <CardContent className='gap-5 grid sm:grid-cols-2'>
+      <CardContent className='gap-4 grid sm:grid-cols-2'>
         <ProfileItem
           icon={Phone}
           label='Phone'

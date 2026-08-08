@@ -1,4 +1,3 @@
-import { SocialPlatform } from "@/types/enum";
 import { Globe } from "lucide-react";
 
 import {
@@ -13,33 +12,49 @@ import {
   FaYoutube,
 } from "react-icons/fa6";
 
+import { SocialPlatform } from "@/types/enum";
+
 type Props = {
   platform: SocialPlatform;
+  className?: string;
 };
 
-export default function SocialPlatformIcon({ platform }: Props) {
+export default function SocialPlatformIcon({
+  platform,
+  className = "size-5",
+}: Props) {
   switch (platform) {
     case "GITHUB":
-      return <FaGithub className='size-5' />;
+      return <FaGithub className={className} />;
+
     case "LINKEDIN":
-      return <FaLinkedin className='size-5' />;
+      return <FaLinkedin className={className} />;
+
     case "FACEBOOK":
-      return <FaFacebook className='size-5' />;
+      return <FaFacebook className={className} />;
+
     case "TWITTER":
-      return <FaXTwitter className='size-5' />;
+      return <FaXTwitter className={className} />;
+
     case "INSTAGRAM":
-      return <FaInstagram className='size-5' />;
+      return <FaInstagram className={className} />;
+
     case "YOUTUBE":
-      return <FaYoutube className='size-5' />;
+      return <FaYoutube className={className} />;
+
     case "DISCORD":
-      return <FaDiscord className='size-5' />;
+      return <FaDiscord className={className} />;
+
     case "TELEGRAM":
-      return <FaTelegram className='size-5' />;
+      return <FaTelegram className={className} />;
+
     case "WHATSAPP":
-      return <FaWhatsapp className='size-5' />;
+      return <FaWhatsapp className={className} />;
+
     case "WEBSITE":
-      return <Globe className='size-5' />;
+      return <Globe className={className} />;
+
     default:
-      return <Globe className='size-5' />;
+      return <Globe className={className} />;
   }
 }
