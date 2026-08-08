@@ -5,6 +5,7 @@ import {
   AllPropertyDetailsMap,
   Property,
   PropertyDetailsMap,
+  PropertyResponse,
 } from "@/types/property";
 import {
   CreatePropertyImageInput,
@@ -30,7 +31,7 @@ export async function getAllProperties({
   payload,
 }: {
   payload?: PropertyQuery;
-}): Promise<ApiResponse<{ properties: Property[] } | null>> {
+}): Promise<ApiResponse<{ properties: PropertyResponse[] } | null>> {
   try {
     const query = new URLSearchParams();
 
@@ -61,7 +62,7 @@ export async function getAllProperties({
 }
 
 export async function getMyAllProperties(): Promise<
-  ApiResponse<{ properties: Property[] } | null>
+  ApiResponse<{ properties: PropertyResponse[] } | null>
 > {
   try {
     const response = await axiosInstance.get("/properties/my");
@@ -143,7 +144,7 @@ export async function getPropertyById({
   id,
 }: {
   id: string;
-}): Promise<ApiResponse<{ property: Property } | null>> {
+}): Promise<ApiResponse<{ property: PropertyResponse } | null>> {
   try {
     if (!id.trim()) {
       return errorResponse("Property ID is required");

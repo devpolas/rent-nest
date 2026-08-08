@@ -10,7 +10,6 @@ export default function PropertyLocation({ property }: Props) {
   return (
     <section className='space-y-5'>
       <Heading2>Location</Heading2>
-
       <Location location={property.location} />
     </section>
   );

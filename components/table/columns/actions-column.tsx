@@ -27,21 +27,3 @@ export function actionsColumn<TData extends RowData>({
     },
   };
 }
-
-// helper.display(
-//   actionsColumn<Property>({
-//     header: "Actions",
-
-//     render({ row }) {
-//       const property = row.original;
-
-//       return (
-//         <div className='flex gap-2'>
-//           <Button>Edit</Button>
-
-//           <Button variant='destructive'>Delete</Button>
-//         </div>
-//       );
-//     },
-//   }),
-// );

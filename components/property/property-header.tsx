@@ -45,17 +45,14 @@ export default function PropertyHeader({ property }: Props) {
           <Paragraph className='mt-0'>{shortLocation}</Paragraph>
         </div>
 
-        <div className='flex items-center gap-2'>
+        <div className='flex justify-center items-center gap-2'>
           <Star className='fill-yellow-400 size-4 text-yellow-400' />
 
           <Paragraph className='mt-0'>
             {rating}
 
             {property.reviewCount > 0 && (
-              <Muted className='inline'>
-                {" "}
-                ({property.reviewCount} reviews)
-              </Muted>
+              <Muted className='inline'>({property.reviewCount} reviews)</Muted>
             )}
           </Paragraph>
         </div>

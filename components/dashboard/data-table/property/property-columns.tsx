@@ -6,6 +6,8 @@ import { createSelectionColumn } from "../../../table/header/selectable-header";
 import { numberColumn } from "@/components/table/columns/number-column";
 import { badgeColumn } from "@/components/table/columns/badge-column";
 import { dateColumn } from "@/components/table/columns/date-column";
+import { actionsColumn } from "@/components/table/columns/actions-column";
+import { PropertyActions } from "../../property/property-actions";
 
 const helper = createAppColumnHelper<Property>();
 
@@ -85,6 +87,18 @@ export const propertyColumns = [
           default:
             return "default";
         }
+      },
+    }),
+  ),
+
+  helper.display(
+    actionsColumn<Property>({
+      header: "Actions",
+
+      render({ row }) {
+        const property = row.original;
+
+        return <PropertyActions property={property} />;
       },
     }),
   ),

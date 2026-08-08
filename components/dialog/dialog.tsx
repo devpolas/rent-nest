@@ -7,7 +7,7 @@ interface ReusableDialogProps {
   isSubmitting?: boolean;
   isSubmittingText?: string;
   children: React.ReactNode;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "sm" | "md" | "lg" | "xl" | "large" | "max";
 }
 
 export function ReusableDialog({
@@ -22,6 +22,8 @@ export function ReusableDialog({
     md: "sm:max-w-md",
     lg: "sm:max-w-lg",
     xl: "sm:max-w-xl",
+    large: "sm:max-w-2xl",
+    max: "sm:max-w-4xl",
   };
 
   return (

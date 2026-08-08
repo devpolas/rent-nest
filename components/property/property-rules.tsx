@@ -26,7 +26,7 @@ export default function PropertyRules({ property }: Props) {
       ) : (
         <div className='space-y-3'>
           {property.rules.map((rule) => (
-            <RuleItem key={rule.id} name={rule.name} />
+            <RuleItem key={rule.id} name={rule.rule.name} />
           ))}
         </div>
       )}

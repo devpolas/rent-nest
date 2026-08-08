@@ -24,7 +24,7 @@ export default function PropertyFeatures({ property }: Props) {
       ) : (
         <div className='gap-4 grid sm:grid-cols-2 xl:grid-cols-3'>
           {property.features.map((feature) => (
-            <FeatureCard key={feature.id} name={feature.name} />
+            <FeatureCard key={feature.id} name={feature.feature.name} />
           ))}
         </div>
       )}

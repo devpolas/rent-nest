@@ -64,14 +64,40 @@ export interface Rule extends PropertyDetail {
   ruleNo: number;
 }
 
+interface PropertyAminity {
+  id: string;
+  propertyId: string;
+  amenityId: string;
+  createdAt: string;
+  updatedAt: string;
+  amenity: Amenity;
+}
+interface PropertyFeature {
+  id: string;
+  propertyId: string;
+  amenityId: string;
+  createdAt: string;
+  updatedAt: string;
+  feature: Feature;
+}
+
+interface PropertyRule {
+  id: string;
+  propertyId: string;
+  amenityId: string;
+  createdAt: string;
+  updatedAt: string;
+  rule: Rule;
+}
+
 export interface PropertyResponse extends Property {
   images: PropertyImage[];
   category: PropertyCategory;
   location: Location;
   landlord: Landlord;
-  amenities: Amenity[];
-  features: Feature[];
-  rules: Rule[];
+  amenities: PropertyAminity[];
+  features: PropertyFeature[];
+  rules: PropertyRule[];
 }
 
 export type PropertyDetailsMap = {
