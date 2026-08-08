@@ -17,7 +17,6 @@ export const UserStatusEnum = z.enum([
 ]);
 
 // Create / Update User
-
 export const UserSchema = z.object({
   name: z.string().min(2).max(100).optional(),
   phone: z.string().optional(),
@@ -32,18 +31,11 @@ export const AdminUserSchema = UserSchema.extend({
   status: UserStatusEnum.optional(),
 });
 
+// create or update
 export const ProfileSchema = z.object({
   profileImage: z.string().optional(),
   bio: z.string().max(1000).optional(),
-  birthdate: z.coerce.date().optional(),
-});
-
-export const ProfileUpdateSchema = z.object({
-  profileImage: z.string().optional(),
-
-  bio: z.string().max(1000).optional(),
-
-  birthdate: z.coerce.date().optional(),
+  birthdate: z.date().optional(),
 });
 
 export const SocialPlatformSchema = z.enum([
@@ -65,21 +57,19 @@ export const SocialProfileCreateSchema = z.object({
 });
 
 export const SocialProfileUpdateSchema = z.object({
-  url: z.url(),
+  url: z.url().optional(),
 });
 
-export type SocialProfileCreateInput = z.infer<
+export type SocialProfileCreateInput = z.input<
   typeof SocialProfileCreateSchema
 >;
 
-export type SocialProfileUpdateInput = z.infer<
+export type SocialProfileUpdateInput = z.input<
   typeof SocialProfileUpdateSchema
 >;
 
-export type ProfileInputType = z.infer<typeof ProfileSchema>;
+export type ProfileInputType = z.input<typeof ProfileSchema>;
+export type UserInputType = z.input<typeof UserSchema>;
 
-export type ProfileUpdateInputType = z.infer<typeof ProfileUpdateSchema>;
-
-export type UserInputType = z.infer<typeof UserSchema>;
-export type UserUpdateInputType = z.infer<typeof UserUpdateSchema>;
-export type AdminUserInputType = z.infer<typeof AdminUserSchema>;
+export type UserUpdateInputType = z.input<typeof UserUpdateSchema>;
+export type AdminUserInputType = z.input<typeof AdminUserSchema>;
