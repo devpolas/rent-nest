@@ -36,7 +36,9 @@ export default function UpdateProperty({
     bedrooms: property.bedrooms,
     bathrooms: property.bathrooms,
     area: Number(property.area),
-    availableFrom: new Date(property.availableFrom!),
+    availableFrom: property.availableFrom
+      ? new Date(property.availableFrom)
+      : new Date(),
     availability: property.availability,
     categoryId: property.categoryId,
     amenities: property.amenities.map((amenity) => amenity.amenity.id),
