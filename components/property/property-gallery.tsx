@@ -31,7 +31,7 @@ export default function PropertyGallery({ images, status }: Props) {
     <section className='gap-4 grid lg:grid-cols-4'>
       {/* Main Image */}
       <div className='relative lg:col-span-3 rounded-2xl overflow-hidden'>
-        <div className='relative aspect-16/10'>
+        <div className='relative aspect-video'>
           <Image
             src={thumbnail.url}
             alt='Property Thumbnail'

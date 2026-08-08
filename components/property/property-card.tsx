@@ -10,6 +10,7 @@ import {
   Large,
   Muted,
 } from "@/components/typography/typography";
+import Link from "next/link";
 
 type Props = {
   property: PropertyResponse;
@@ -18,10 +19,8 @@ type Props = {
 export default function PropertyCard({ property }: Props) {
   const thumbnail =
     property.images.find((image) => image.isThumbnail) ?? property.images[0];
-
   return (
-    <Card className='group hover:shadow-xl overflow-hidden transition-all hover:-translate-y-1 duration-300 glass-card'>
-      {/* Image */}
+    <Card className='group hover:shadow-xl pt-0 overflow-hidden transition-all hover:-translate-y-1 duration-300 glass-card'>
       <div className='relative aspect-4/3 overflow-hidden'>
         {thumbnail && (
           <Image
@@ -32,26 +31,19 @@ export default function PropertyCard({ property }: Props) {
           />
         )}
 
-        {/* Gradient Overlay */}
         <div className='absolute inset-0 opacity-40 brand-gradient' />
 
-        {/* Status */}
         <Badge className='top-4 left-4 absolute bg-brand-success shadow-md border-0 text-brand-success-foreground'>
           {property.availability}
         </Badge>
 
-        {/* Favorite */}
-        <Button
-          size='icon'
-          variant='secondary'
-          className='top-4 right-4 absolute bg-background/70 hover:bg-background backdrop-blur-xl border border-border/50 rounded-full'
-        >
-          <Heart className='size-5' />
-        </Button>
+        <div className='group/favorite top-4 right-4 absolute'>
+          <Heart className='fill-transparent group-hover/favorite:fill-red-500 size-5 group-hover/favorite:text-red-500 transition-all duration-200 group-hover/favorite:cursor-pointer' />
+          <span className='sr-only'>Save to favorites</span>
+        </div>
       </div>
 
       <CardContent className='space-y-5 p-5'>
-        {/* Title + Location */}
         <div className='space-y-2'>
           <Heading5 className='line-clamp-1'>{property.title}</Heading5>
 
@@ -64,41 +56,39 @@ export default function PropertyCard({ property }: Props) {
           </div>
         </div>
 
-        {/* Rating */}
         <div className='flex justify-between items-center'>
           <div className='flex items-center gap-1 bg-brand/10 px-3 py-1 rounded-full font-medium text-brand text-sm'>
             <Star className='fill-current size-4' />
-
-            {property.averageRating
-              ? Number(property.averageRating).toFixed(1)
-              : "New"}
+            {property.averageRating.toFixed(1)}
           </div>
 
-          <Muted>{property.reviewCount ?? 0} reviews</Muted>
+          <Muted>{property.reviews} reviews</Muted>
         </div>
 
-        {/* Specifications */}
         <div className='gap-2 grid grid-cols-3 p-3 rounded-xl glass-card'>
           <Feature icon={BedDouble} value={`${property.bedrooms} Beds`} />
           <Feature icon={Bath} value={`${property.bathrooms} Bath`} />
           <Feature icon={Ruler} value={`${property.area} sqft`} />
         </div>
 
-        {/* Footer */}
         <div className='flex justify-between items-end gap-3 pt-2'>
           <div>
-            <Muted>Daily Rent</Muted>
+            <Muted>Monthly Rent</Muted>
 
             <div className='flex items-baseline gap-1'>
               <Large className='text-brand'>
-                ৳{Number(property.rent).toLocaleString()}
+                ৳{property.rent.toLocaleString()}
               </Large>
 
               <Caption>/month</Caption>
             </div>
           </div>
 
-          <Button variant='brand'>View Details</Button>
+          <Button asChild variant='brand'>
+            <Link href={`/properties/property/${property.id}`}>
+              View Details
+            </Link>
+          </Button>
         </div>
       </CardContent>
     </Card>

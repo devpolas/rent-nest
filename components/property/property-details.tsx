@@ -19,19 +19,19 @@ export default function PropertyDetails({
   reviews: ReviewResponse[];
 }) {
   return (
-    <div className='px-4'>
+    <div className='space-y-4 px-4'>
       <PropertyGallery images={property.images} status={property.status} />
 
       <div className='gap-10 grid lg:grid-cols-3'>
         <main className='space-y-10 lg:col-span-2'>
           <PropertyHeader property={property} />
           <PropertyPriceCard property={property} />
+          <PropertyLocation property={property} />
           <PropertyDescription property={property} />
           <PropertySpecifications property={property} />
           <PropertyAmenities property={property} />
           <PropertyFeatures property={property} />
           <PropertyRules property={property} />
-          <PropertyLocation property={property} />
           <PropertyReviews reviews={reviews} />
         </main>
 

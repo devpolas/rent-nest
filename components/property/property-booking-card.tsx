@@ -1,11 +1,7 @@
 import { CalendarCheck, Heart, ShieldCheck } from "lucide-react";
-
 import type { PropertyResponse } from "@/types/property";
-
 import { Card, CardContent } from "@/components/ui/card";
-
 import { Button } from "@/components/ui/button";
-
 import { Heading3, Label, Muted } from "@/components/typography/typography";
 
 type Props = {
