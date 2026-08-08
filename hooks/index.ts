@@ -39,8 +39,7 @@ export * from "./user/mutations/user/use-update-user";
 export * from "./user/mutations/user/use-delete-user";
 
 // profile
-export * from "./user/mutations/profile/use-create-profile";
-export * from "./user/mutations/profile/use-update-profile";
+export * from "./user/mutations/profile/use-create-or-update-profile";
 
 // social profile
 export * from "./user/mutations/social-profile/use-create-social-profile";
