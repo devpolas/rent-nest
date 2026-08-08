@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { Label, Muted } from "../typography/typography";
 import { LocationTypeBadge } from "./location-badge";
+import { namePerfect } from "@/utils/helpers";
 
 type Props = {
   location: Location;
@@ -29,22 +30,21 @@ type LocationField = {
 };
 
 export default function Location({ location }: Props) {
-  const locationText = [
+  const locationParts = [
     location.village,
     location.city,
     location.district,
     location.division,
     location.country,
-  ]
-    .filter(Boolean)
-    .join(", ");
+  ].filter((value) => value?.trim());
+
+  const locationText = locationParts.join(", ");
+
+  const addressLine = location.addressLine?.trim()
+    ? location.addressLine
+    : locationText || "Not provided";
 
   const fields: LocationField[] = [
-    {
-      label: "Address Line",
-      value: location.addressLine ?? "Not provided",
-      icon: Home,
-    },
     {
       label: "Village",
       value: location.village,
@@ -95,7 +95,7 @@ export default function Location({ location }: Props) {
       <CardHeader className='flex flex-row justify-between items-center'>
         <CardTitle className='flex items-center gap-2'>
           <MapPin className='size-5 text-brand' />
-          Location
+          {namePerfect(location.type)} Location
         </CardTitle>
 
         <LocationTypeBadge type={location.type} />
@@ -103,7 +103,7 @@ export default function Location({ location }: Props) {
 
       <CardContent className='space-y-6'>
         <div className='p-4 rounded-xl glass'>
-          <Label>{locationText}</Label>
+          <Label>{addressLine ?? locationText}</Label>
 
           <Muted className='mt-2'>Complete Location</Muted>
         </div>
