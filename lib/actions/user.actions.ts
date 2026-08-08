@@ -3,8 +3,6 @@ import {
   AdminUserSchema,
   ProfileInputType,
   ProfileSchema,
-  ProfileUpdateInputType,
-  ProfileUpdateSchema,
   SocialProfileCreateInput,
   SocialProfileCreateSchema,
   SocialProfileUpdateInput,
