@@ -59,35 +59,21 @@ export async function deleteMe(): Promise<ApiResponse<null>> {
   }
 }
 
-//user with profile
-export async function createUserProfile({
+//user with profile create or update
+export async function createOrUpdateProfile({
   payload,
 }: {
   payload: ProfileInputType;
 }): Promise<ApiResponse<{ profile: Profile } | null>> {
   try {
     const parsed = ProfileSchema.safeParse(payload);
-    if (parsed.error) {
-      return errorResponse(handleZodError(parsed.error) || "Invalid Input");
-    }
-    const response = await axiosInstance.post("/profiles", parsed.data);
-    return response.data;
-  } catch (error) {
-    return handleApiError(error);
-  }
-}
 
-export async function updateProfile({
-  payload,
-}: {
-  payload: ProfileUpdateInputType;
-}): Promise<ApiResponse<{ profile: Profile } | null>> {
-  try {
-    const parsed = ProfileUpdateSchema.safeParse(payload);
-    if (parsed.error) {
+    if (!parsed.success) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.patch("/profiles", parsed.data);
+
+    const response = await axiosInstance.post("/profiles", parsed.data);
+
     return response.data;
   } catch (error) {
     return handleApiError(error);
