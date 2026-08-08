@@ -15,6 +15,6 @@ export interface Profile {
 }
 
 export interface ProfileWithLocationsSocialProfiles extends Profile {
-  locations: Location[]
-  socialProfiles:SocialProfile[]
+  location: Location[];
+  socialProfile: SocialProfile[];
 }
