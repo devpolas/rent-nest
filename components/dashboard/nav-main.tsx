@@ -22,17 +22,6 @@ export function NavMain({
     <SidebarGroup>
       <SidebarGroupContent className='flex flex-col gap-2'>
         <SidebarMenu>
-          <SidebarMenuItem className='flex items-center gap-2'>
-            <SidebarMenuButton
-              tooltip='Quick Create'
-              className='bg-primary hover:bg-primary/90 active:bg-primary/90 min-w-8 text-primary-foreground hover:text-primary-foreground active:text-primary-foreground duration-200 ease-linear'
-            >
-              <CirclePlusIcon />
-              <span>Quick Create</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-        <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>

@@ -39,9 +39,9 @@ export default function UpdateProperty({
     availableFrom: new Date(property.availableFrom!),
     availability: property.availability,
     categoryId: property.categoryId,
-    amenities: property.amenities.map((amenity) => amenity.id),
-    features: property.features.map((feature) => feature.id),
-    rules: property.rules.map((rule) => rule.id),
+    amenities: property.amenities.map((amenity) => amenity.amenity.id),
+    features: property.features.map((feature) => feature.feature.id),
+    rules: property.rules.map((rule) => rule.rule.id),
   };
 
   return (
