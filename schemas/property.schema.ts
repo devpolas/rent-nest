@@ -26,14 +26,14 @@ export const CreatePropertyImageSchema = z.object({
   images: z
     .array(
       z.object({
-        url: z.url(),
-        publicId: z.string().min(1),
+        url: z.url("Invalid image URL"),
+        publicId: z.string().min(1, "Image public ID is required"),
       }),
     )
-    .min(1),
+    .min(1, "At least one image is required"),
 });
 
-export type CreatePropertyImageInput = z.infer<
+export type CreatePropertyImageInput = z.input<
   typeof CreatePropertyImageSchema
 >;
 
