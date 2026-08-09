@@ -1,5 +1,6 @@
 import { ReviewResponse } from "@/types/review";
 import { PropertyResponse } from "../../types/property";
+
 import PropertyAmenities from "./property-amenities";
 import PropertyDescription from "./property-description";
 import PropertyFeatures from "./property-features";
@@ -11,19 +12,26 @@ import PropertyRules from "./property-rules";
 import PropertySidebar from "./property-sidebar";
 import PropertySpecifications from "./property-specifications";
 import PropertyReviews from "./property-reviews";
-export default function PropertyDetails({
-  property,
-  reviews,
-}: {
+
+type Props = {
   property: PropertyResponse;
   reviews: ReviewResponse[];
-}) {
+};
+
+export default function PropertyDetails({ property, reviews }: Props) {
+  const isNotActive =
+    property.status === "PENDING" || property.status === "REJECTED";
+
+  if (isNotActive) {
+    throw new Error("Property not found");
+  }
+
   return (
-    <div className='space-y-4 px-4'>
+    <div className='space-y-10'>
       <PropertyGallery images={property.images} status={property.status} />
 
       <div className='gap-10 grid lg:grid-cols-3'>
-        <main className='space-y-10 lg:col-span-2'>
+        <main className='space-y-10 lg:col-span-2 min-w-0'>
           <PropertyHeader property={property} />
           <PropertyPriceCard property={property} />
           <PropertyLocation property={property} />
@@ -35,7 +43,9 @@ export default function PropertyDetails({
           <PropertyReviews reviews={reviews} />
         </main>
 
-        <PropertySidebar property={property} />
+        <aside className='min-w-0'>
+          <PropertySidebar property={property} />
+        </aside>
       </div>
     </div>
   );
