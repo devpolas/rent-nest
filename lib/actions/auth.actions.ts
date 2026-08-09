@@ -219,6 +219,7 @@ export async function logout(): Promise<ApiResponse<null>> {
   try {
     const response = await axiosInstance.post<ApiResponse<null>>(
       "/auth/logout",
+      {},
       {
         headers: await getServerAuthHeaders(),
       },

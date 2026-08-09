@@ -40,7 +40,6 @@ export default function Profile() {
   }
 
   const user = data.data.user;
-  console.log(user);
   const locations = user.profile?.location ?? [];
 
   const homeLocation = locations.find((location) => location.type === "HOME");
@@ -59,7 +58,6 @@ export default function Profile() {
   function handleCloseLocation() {
     setIsLocation(false);
   }
-  console.log(user);
   return (
     <>
       <div className='space-y-4 px-4'>
