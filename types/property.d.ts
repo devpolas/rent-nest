@@ -90,14 +90,25 @@ interface PropertyRule {
   rule: Rule;
 }
 
-export interface PropertyResponse extends Property {
+export interface PropertyManagementResponse extends Property {
   images: PropertyImage[];
   category: PropertyCategory;
-  location: Location;
+  location: Location | null;
   landlord: Landlord;
   amenities: PropertyAminity[];
   features: PropertyFeature[];
   rules: PropertyRule[];
+}
+
+/**
+ * Public property should only be used when
+ * the property is complete enough for public display.
+ */
+export interface PropertyResponse extends Omit<
+  PropertyManagementResponse,
+  "location"
+> {
+  location: Location;
 }
 
 export type PropertyDetailsMap = {
