@@ -17,12 +17,14 @@ import {
 
 import * as z from "zod";
 import ActionButton from "@/components/button/action-button";
+import useAuth from "@/hooks/auth/use-auth";
 
 type FormValues = z.infer<typeof SigninSchema>;
 
 export default function SigninForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { refetchUser } = useAuth();
 
   const callbackUrl = searchParams.get("callbackUrl");
 
@@ -41,7 +43,6 @@ export default function SigninForm() {
   async function handleSignIn(data: FormValues) {
     try {
       const response = await signin(data);
-
       if (!response.success) {
         if (response.message === "Please verify your email before login") {
           saveCallbackUrl(callbackUrl ?? "/");
@@ -55,10 +56,26 @@ export default function SigninForm() {
       }
 
       const redirectUrl = callbackUrl ?? getCallbackUrl();
+
       clearCallbackUrl();
+
+      /**
+       * signin() should have set the auth cookies.
+       *
+       * Now force React Query to fetch /me again.
+       */
+      const user = await refetchUser();
+      if (!user) {
+        toast.error("Login succeeded, but your session could not be loaded.");
+        return;
+      }
       toast.success(response.message ?? "Welcome back to Rent Nest 🎉");
+      /**
+       * Refresh Server Components so they see
+       * the new authentication cookies.
+       */
       router.refresh();
-      router.push(redirectUrl);
+      router.replace(redirectUrl);
     } catch {
       toast.error("Something went wrong. Please try again.");
     }
