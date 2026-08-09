@@ -26,7 +26,7 @@ export default function PropertyPriceCard({ property }: Props) {
                 ৳{property.rent.toLocaleString()}
               </Heading3>
 
-              <Muted>/month</Muted>
+              <Muted>/day</Muted>
             </div>
           </div>
 

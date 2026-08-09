@@ -67,7 +67,7 @@ export default function PropertyOverviewCard({ property }: Props) {
 
           <InformationItem
             icon={<Wallet className='size-4 text-muted-foreground' />}
-            label='Monthly rent'
+            label='Daily rent'
             value={`৳${Number(property.rent).toLocaleString()}`}
           />
 

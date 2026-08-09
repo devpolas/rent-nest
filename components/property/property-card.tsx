@@ -73,7 +73,7 @@ export default function PropertyCard({ property }: Props) {
 
         <div className='flex justify-between items-end gap-3 pt-2'>
           <div>
-            <Muted>Monthly Rent</Muted>
+            <Muted>Daily Rent</Muted>
 
             <div className='flex items-baseline gap-1'>
               <Large className='text-brand'>
