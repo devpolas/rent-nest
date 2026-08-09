@@ -16,6 +16,7 @@ import type { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/handle-api-error";
 import { handleZodError } from "@/utils/handle-zod-errors";
 import { errorResponse } from "@/utils/api-response";
+import { getServerAuthHeaders } from "../axios/server-headers";
 
 export async function createRentalRequest({
   payload,
@@ -29,7 +30,9 @@ export async function createRentalRequest({
       return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
 
-    const response = await axiosInstance.post("/rental-requests", parsed.data);
+    const response = await axiosInstance.post("/rental-requests", parsed.data, {
+      headers: await getServerAuthHeaders(),
+    });
 
     return response.data;
   } catch (error) {
@@ -58,6 +61,9 @@ export async function updateRentalRequestByTenant({
     const response = await axiosInstance.patch(
       `/rental-requests/${id}`,
       parsed.data,
+      {
+        headers: await getServerAuthHeaders(),
+      },
     );
 
     return response.data;
@@ -87,6 +93,9 @@ export async function updateRentalRequestByOwnerOrAdmin({
     const response = await axiosInstance.patch(
       `/rental-requests/${id}`,
       parsed.data,
+      {
+        headers: await getServerAuthHeaders(),
+      },
     );
 
     return response.data;
@@ -99,7 +108,9 @@ export async function getRentalRequests(): Promise<
   ApiResponse<{ rents: RentalRequest[] } | null>
 > {
   try {
-    const response = await axiosInstance.get("/rental-requests");
+    const response = await axiosInstance.get("/rental-requests", {
+      headers: await getServerAuthHeaders(),
+    });
 
     return response.data;
   } catch (error) {
@@ -117,7 +128,9 @@ export async function getRentalRequestById({
       return errorResponse("Rental request ID is required");
     }
 
-    const response = await axiosInstance.get(`/rental-requests/${id}`);
+    const response = await axiosInstance.get(`/rental-requests/${id}`, {
+      headers: await getServerAuthHeaders(),
+    });
 
     return response.data;
   } catch (error) {
@@ -135,7 +148,9 @@ export async function deleteRentalRequest({
       return errorResponse("Rental request ID is required");
     }
 
-    const response = await axiosInstance.delete(`/rental-requests/${id}`);
+    const response = await axiosInstance.delete(`/rental-requests/${id}`, {
+      headers: await getServerAuthHeaders(),
+    });
 
     return response.data;
   } catch (error) {

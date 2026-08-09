@@ -18,6 +18,7 @@ import { cookies } from "next/headers";
 import { Time } from "@/utils/helpers";
 import Jwt from "jsonwebtoken";
 import { ApiResponse } from "../../types/response";
+import { getServerAuthHeaders } from "../axios/server-headers";
 
 interface AccountSession {
   userId: string;
@@ -218,7 +219,9 @@ export async function logout(): Promise<ApiResponse<null>> {
   try {
     const response = await axiosInstance.post<ApiResponse<null>>(
       "/auth/logout",
-      {},
+      {
+        headers: await getServerAuthHeaders(),
+      },
     );
     return response.data;
   } catch (error) {
@@ -236,6 +239,9 @@ export async function logoutDeviceBySessionId(
   try {
     const response = await axiosInstance.delete<ApiResponse<null>>(
       `/auth/sessions/${session}`,
+      {
+        headers: await getServerAuthHeaders(),
+      },
     );
     return response.data;
   } catch (error) {
@@ -248,6 +254,9 @@ export async function logoutFromOtherDevices(): Promise<ApiResponse<null>> {
   try {
     const response = await axiosInstance.post<ApiResponse<null>>(
       "/auth/logout-other-devices",
+      {
+        headers: await getServerAuthHeaders(),
+      },
     );
     return response.data;
   } catch (error) {
@@ -274,7 +283,9 @@ export async function getFreshToken(): Promise<
 > {
   try {
     const cookieStore = await cookies();
-    const response = await axiosInstance.get("/auth/refresh-token");
+    const response = await axiosInstance.get("/auth/refresh-token", {
+      headers: await getServerAuthHeaders(),
+    });
     const setCookie = response.headers["set-cookie"] as string[] | undefined;
 
     if (setCookie) {

@@ -1,4 +1,6 @@
+"use server";
 import axiosInstance from "../axios/axios";
+import { getServerAuthHeaders } from "../axios/server-headers";
 
 type ImageUploadResponse = {
   url: string;
@@ -18,7 +20,9 @@ const uploadImages = async (images: File[]): Promise<ImageUploadResponse[]> => {
 
   const { data } = await axiosInstance.post<{
     data: UploadResponse;
-  }>("/images/upload", formData);
+  }>("/images/upload", formData, {
+    headers: await getServerAuthHeaders(),
+  });
 
   if (!data.data.images?.length) {
     throw new Error("Image upload failed");

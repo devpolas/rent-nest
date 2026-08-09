@@ -5,12 +5,15 @@ import type { ApiResponse } from "@/types/response";
 import type { PaymentHistory } from "@/types/payment";
 import { handleApiError } from "@/utils/handle-api-error";
 import { errorResponse } from "@/utils/api-response";
+import { getServerAuthHeaders } from "../axios/server-headers";
 
 export async function getPaymentHistories(): Promise<
   ApiResponse<{ paymentHistory: PaymentHistory[] } | null>
 > {
   try {
-    const response = await axiosInstance.get("/payments");
+    const response = await axiosInstance.get("/payments", {
+      headers: await getServerAuthHeaders(),
+    });
 
     return response.data;
   } catch (error) {
@@ -30,6 +33,9 @@ export async function getPaymentHistoryById({
 
     const response = await axiosInstance.get(
       `/payments/transaction/${transactionId}`,
+      {
+        headers: await getServerAuthHeaders(),
+      },
     );
 
     return response.data;
@@ -48,7 +54,9 @@ export async function getPaymentSession({
       return errorResponse("Session ID is required");
     }
 
-    const response = await axiosInstance.get(`/payments/session/${sessionId}`);
+    const response = await axiosInstance.get(`/payments/session/${sessionId}`, {
+      headers: await getServerAuthHeaders(),
+    });
 
     return response.data;
   } catch (error) {
@@ -69,6 +77,9 @@ export async function makePayment({
     const response = await axiosInstance.post(
       `/rentals/${rentRequestId}/payment`,
       {},
+      {
+        headers: await getServerAuthHeaders(),
+      },
     );
 
     return response.data;

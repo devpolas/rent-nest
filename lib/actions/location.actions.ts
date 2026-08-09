@@ -1,3 +1,4 @@
+"use server";
 import {
   LocationCreateInput,
   LocationCreateSchema,
@@ -9,6 +10,7 @@ import { errorResponse } from "@/utils/api-response";
 import { handleApiError } from "@/utils/handle-api-error";
 import { handleZodError } from "@/utils/handle-zod-errors";
 import axiosInstance from "../axios/axios";
+import { getServerAuthHeaders } from "../axios/server-headers";
 
 export async function createLocation({
   payload,
@@ -20,7 +22,9 @@ export async function createLocation({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.post("/locations", parsed.data);
+    const response = await axiosInstance.post("/locations", parsed.data, {
+      headers: await getServerAuthHeaders(),
+    });
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -39,7 +43,13 @@ export async function updateLocation({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.patch(`/locations/${id}`, parsed.data);
+    const response = await axiosInstance.patch(
+      `/locations/${id}`,
+      parsed.data,
+      {
+        headers: await getServerAuthHeaders(),
+      },
+    );
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -52,7 +62,9 @@ export async function deleteLocation({
   id: string;
 }): Promise<ApiResponse<null>> {
   try {
-    const response = await axiosInstance.delete(`/locations/${id}`);
+    const response = await axiosInstance.delete(`/locations/${id}`, {
+      headers: await getServerAuthHeaders(),
+    });
     return response.data;
   } catch (error) {
     return handleApiError(error);
