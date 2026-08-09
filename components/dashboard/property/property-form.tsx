@@ -292,6 +292,7 @@ export default function PropertyForm({
             onSuccess={() => {
               closeDialog(false);
             }}
+            refresh={() => categoriesQuery.refetch()}
           />
         </ReusableDialog>
       )}
@@ -306,6 +307,7 @@ export default function PropertyForm({
             onSuccess={() => {
               closeDialog(false);
             }}
+            refresh={() => amenitiesQuery.refetch()}
           />
         </ReusableDialog>
       )}
@@ -320,6 +322,7 @@ export default function PropertyForm({
             onSuccess={() => {
               closeDialog(false);
             }}
+            refresh={() => featuresQuery.refetch()}
           />
         </ReusableDialog>
       )}
@@ -334,6 +337,7 @@ export default function PropertyForm({
             onSuccess={() => {
               closeDialog(false);
             }}
+            refresh={() => rulesQuery.refetch()}
           />
         </ReusableDialog>
       )}

@@ -22,7 +22,15 @@ import { toast } from "sonner";
 
 export default function CreatePropertyDetails<
   T extends keyof PropertyDetailsMap,
->({ detailsAction, onSuccess }: { detailsAction: T; onSuccess?: () => void }) {
+>({
+  detailsAction,
+  onSuccess,
+  refresh,
+}: {
+  detailsAction: T;
+  onSuccess?: () => void;
+  refresh: () => void;
+}) {
   const { mutateAsync, isPending } = useCreatePropertyDetails();
   const {
     control,
@@ -44,6 +52,7 @@ export default function CreatePropertyDetails<
       });
       if (res.success) {
         toast.success(res.message);
+        await refresh?.();
         onSuccess?.();
       }
       if (!res.success) {
