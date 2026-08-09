@@ -1,5 +1,6 @@
 import type { ElementType } from "react";
 import {
+  Edit,
   Globe,
   Hash,
   Home,
@@ -18,9 +19,11 @@ import { Separator } from "@/components/ui/separator";
 import { Label, Muted } from "../typography/typography";
 import { LocationTypeBadge } from "./location-badge";
 import { namePerfect } from "@/utils/helpers";
+import { Button } from "../ui/button";
 
 type Props = {
   location: Location;
+  onEdit?: (location: Location) => void;
 };
 
 type LocationField = {
@@ -29,7 +32,7 @@ type LocationField = {
   icon: ElementType;
 };
 
-export default function Location({ location }: Props) {
+export default function Location({ location, onEdit }: Props) {
   const locationParts = [
     location.village,
     location.city,
@@ -92,17 +95,30 @@ export default function Location({ location }: Props) {
 
   return (
     <Card className='glass-card'>
-      <CardHeader className='flex flex-row justify-between items-center'>
-        <CardTitle className='flex items-center gap-2'>
-          <MapPin className='size-5 text-brand' />
-          {namePerfect(location.type)} Location
-        </CardTitle>
+      <CardHeader>
+        <div className='flex justify-between items-center gap-2'>
+          <div className='flex items-center gap-2'>
+            <CardTitle>
+              <LocationTypeBadge type={location.type} />
+            </CardTitle>
+          </div>
 
-        <LocationTypeBadge type={location.type} />
+          {onEdit && (
+            <Button
+              type='button'
+              variant='outline'
+              size='sm'
+              onClick={() => onEdit?.(location)}
+            >
+              <Edit className='mr-2 size-4' />
+              Edit
+            </Button>
+          )}
+        </div>
       </CardHeader>
 
-      <CardContent className='space-y-6'>
-        <div className='p-4 rounded-xl glass'>
+      <CardContent className='space-y-2'>
+        <div className='p-2 rounded-xl glass'>
           <Label>{addressLine ?? locationText}</Label>
 
           <Muted className='mt-2'>Complete Location</Muted>
@@ -110,7 +126,7 @@ export default function Location({ location }: Props) {
 
         <Separator />
 
-        <div className='gap-4 grid md:grid-cols-2'>
+        <div className='gap-2 grid md:grid-cols-2'>
           {fields.map((field) => (
             <LocationItem
               key={field.label}
@@ -125,7 +141,7 @@ export default function Location({ location }: Props) {
           <>
             <Separator />
 
-            <div className='gap-4 grid md:grid-cols-2'>
+            <div className='gap-2 grid md:grid-cols-2'>
               {coordinates.map((coordinate) => (
                 <LocationItem
                   key={coordinate.label}
@@ -150,7 +166,7 @@ type LocationItemProps = {
 
 function LocationItem({ icon: Icon, label, value }: LocationItemProps) {
   return (
-    <div className='flex items-start gap-3 p-4 rounded-xl glass'>
+    <div className='flex items-start gap-2 p-2 rounded-xl glass'>
       <div className='bg-brand/10 p-2 rounded-lg'>
         <Icon className='size-4 text-brand' />
       </div>

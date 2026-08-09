@@ -21,10 +21,12 @@ export default function CreateLocation({
   type,
   profileId,
   onClose,
+  refresh,
 }: {
   type: LocationType;
   profileId?: string;
   onClose?: () => void;
+  refresh?: () => void;
 }) {
   const { mutateAsync, isPending } = useCreateLocation();
   async function onSubmit(data: LocationCreateInput) {
@@ -35,6 +37,7 @@ export default function CreateLocation({
           response.message ?? `${namePerfect(type)} created successfully`,
         );
         onClose?.();
+        refresh?.();
         return;
       }
       toast.error(response.message ?? "Failed to create location");

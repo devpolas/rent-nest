@@ -58,7 +58,7 @@ export default function SigninForm() {
       clearCallbackUrl();
       toast.success(response.message ?? "Welcome back to Rent Nest 🎉");
       router.refresh();
-      router.replace(redirectUrl);
+      router.push(redirectUrl);
     } catch {
       toast.error("Something went wrong. Please try again.");
     }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import ProfileHero from "./profile-hero";
 import ProfileAbout from "./profile-about";
@@ -10,20 +10,37 @@ import ProfileSidebar from "./profile-sidebar";
 
 import Location from "../location/location";
 import CreateLocation from "../location/create-location";
+import UpdateLocation from "../location/update-location";
 import { ReusableDialog } from "../dialog/dialog";
 
 import { useMe } from "@/hooks";
 import Loading from "@/app/loading";
-
 import { Button } from "@/components/ui/button";
+
+import type { Location as LocationType } from "@/types/location";
 
 type LocationFormType = "HOME" | "CURRENT" | "WORK";
 
+type LocationDialogMode = "create" | "update";
+
+type LocationItem = {
+  type: LocationFormType;
+  location: LocationType | undefined;
+};
+
 export default function Profile() {
-  const [isLocation, setIsLocation] = useState(false);
+  const [locationDialogOpen, setLocationDialogOpen] = useState(false);
+
+  const [locationDialogMode, setLocationDialogMode] =
+    useState<LocationDialogMode>("create");
+
   const [locationType, setLocationType] = useState<LocationFormType>("HOME");
 
-  const { data, isLoading } = useMe();
+  const [selectedLocation, setSelectedLocation] = useState<LocationType | null>(
+    null,
+  );
+
+  const { data, isLoading, refetch } = useMe();
 
   if (isLoading) {
     return <Loading />;
@@ -31,7 +48,7 @@ export default function Profile() {
 
   if (!data || !data.success || !data.data) {
     return (
-      <div className='flex justify-center items-center min-h-[300px]'>
+      <div className='flex justify-center items-center min-h-[400px]'>
         <p className='text-muted-foreground'>
           {data?.message ?? "User not found"}
         </p>
@@ -40,7 +57,17 @@ export default function Profile() {
   }
 
   const user = data.data.user;
-  const locations = user.profile?.location ?? [];
+  const profile = user.profile;
+
+  if (!profile) {
+    return (
+      <div className='flex justify-center items-center min-h-[400px]'>
+        <p className='text-muted-foreground'>Profile not found</p>
+      </div>
+    );
+  }
+
+  const locations = profile.location ?? [];
 
   const homeLocation = locations.find((location) => location.type === "HOME");
 
@@ -50,67 +77,115 @@ export default function Profile() {
 
   const workLocation = locations.find((location) => location.type === "WORK");
 
-  function handleOpenLocation(type: LocationFormType) {
+  const locationItems: LocationItem[] = [
+    {
+      type: "HOME",
+      location: homeLocation,
+    },
+    {
+      type: "CURRENT",
+      location: currentLocation,
+    },
+    {
+      type: "WORK",
+      location: workLocation,
+    },
+  ];
+
+  const existingLocationCount = locationItems.filter(
+    (item) => item.location !== undefined,
+  ).length;
+
+  function handleAddLocation(type: LocationFormType) {
     setLocationType(type);
-    setIsLocation(true);
+    setSelectedLocation(null);
+    setLocationDialogMode("create");
+    setLocationDialogOpen(true);
   }
 
-  function handleCloseLocation() {
-    setIsLocation(false);
+  function handleEditLocation(location: LocationType) {
+    setSelectedLocation(location);
+    setLocationType(location.type as LocationFormType);
+    setLocationDialogMode("update");
+    setLocationDialogOpen(true);
   }
+
+  function handleLocationDialogChange(open: boolean) {
+    setLocationDialogOpen(open);
+
+    if (!open) {
+      setSelectedLocation(null);
+      setLocationDialogMode("create");
+    }
+  }
+
   return (
     <>
-      <div className='space-y-4 px-4'>
+      <div className='space-y-6 mx-auto px-4 py-6 container'>
         <ProfileHero user={user} />
-
-        <div className='gap-4 grid lg:grid-cols-3'>
-          <main className='space-y-4 lg:col-span-2'>
+        <div className='gap-6 grid lg:grid-cols-3'>
+          <main className='space-y-6 lg:col-span-2 min-w-0'>
             <ProfileAbout user={user} />
-
             <ProfileInformation user={user} />
 
             {/* Locations */}
-            <section className='space-y-4'>
+            <section className='space-y-4 min-w-0'>
               <div>
                 <h2 className='font-semibold text-xl'>Locations</h2>
-
                 <p className='text-muted-foreground text-sm'>
                   Manage your saved locations.
                 </p>
               </div>
-
-              <div className='gap-4 grid md:grid-cols-2'>
-                {/* Home */}
-                {homeLocation ? (
-                  <Location location={homeLocation} />
-                ) : (
-                  <AddLocationCard type='HOME' onAdd={handleOpenLocation} />
-                )}
-
-                {/* Current */}
-                {currentLocation ? (
-                  <Location location={currentLocation} />
-                ) : (
-                  <AddLocationCard type='CURRENT' onAdd={handleOpenLocation} />
-                )}
-
-                {/* Work */}
-                {workLocation ? (
-                  <Location location={workLocation} />
-                ) : (
-                  <AddLocationCard type='WORK' onAdd={handleOpenLocation} />
-                )}
+              <div className='space-y-4'>
+                {locationItems.map(({ type, location }) => (
+                  <div key={type} className='min-w-0'>
+                    {location ? (
+                      <Location
+                        location={location}
+                        onEdit={handleEditLocation}
+                      />
+                    ) : (
+                      <AddLocationCard type={type} onAdd={handleAddLocation} />
+                    )}
+                  </div>
+                ))}
               </div>
             </section>
           </main>
 
-          <ProfileSidebar user={user} />
+          {/* Sidebar */}
+          <aside className='lg:col-span-1 min-w-0'>
+            <div className='lg:top-6 lg:sticky'>
+              <ProfileSidebar user={user} />
+            </div>
+          </aside>
         </div>
       </div>
 
-      {/* Create Location Dialog */}
-      <ReusableDialog isOpen={isLocation} onOpenChange={handleCloseLocation}>
-        <CreateLocation profileId={user.profile.id} type={locationType} />
+      {/* Location Dialog */}
+      <ReusableDialog
+        isOpen={locationDialogOpen}
+        onOpenChange={handleLocationDialogChange}
+      >
+        {locationDialogMode === "create" ? (
+          <CreateLocation
+            profileId={profile.id}
+            type={locationType}
+            onClose={() => {
+              handleLocationDialogChange(false);
+            }}
+            refresh={refetch}
+          />
+        ) : selectedLocation ? (
+          <UpdateLocation
+            location={selectedLocation}
+            profileId={profile.id}
+            onClose={() => {
+              handleLocationDialogChange(false);
+            }}
+            refresh={refetch}
+          />
+        ) : null}
       </ReusableDialog>
     </>
   );
@@ -122,34 +197,32 @@ type AddLocationCardProps = {
 };
 
 function AddLocationCard({ type, onAdd }: AddLocationCardProps) {
-  const labels = {
+  const labels: Record<LocationFormType, string> = {
     HOME: "Home Location",
     CURRENT: "Current Location",
     WORK: "Work Location",
   };
 
   return (
-    <div className='flex flex-col justify-center items-center p-6 border border-dashed rounded-xl min-h-[180px] text-center'>
-      <div className='flex justify-center items-center bg-muted mb-3 rounded-full size-10'>
-        <MapPin className='size-5 text-muted-foreground' />
-      </div>
-
+    <div className='flex flex-col justify-center items-center p-6 border border-dashed rounded-xl min-h-[220px]'>
       <h3 className='font-medium'>{labels[type]}</h3>
 
       <p className='mt-1 text-muted-foreground text-sm'>
         No {type.toLowerCase()} location added yet.
       </p>
 
-      <Button
-        type='button'
-        variant='outline'
-        size='sm'
-        className='mt-4'
-        onClick={() => onAdd(type)}
-      >
-        <Plus className='mr-2 size-4' />
-        Add Location
-      </Button>
+      <div>
+        <Button
+          type='button'
+          variant='outline'
+          size='sm'
+          className='mt-4'
+          onClick={() => onAdd(type)}
+        >
+          <Plus className='mr-2 size-4' />
+          Add Location
+        </Button>
+      </div>
     </div>
   );
 }

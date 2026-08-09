@@ -9,12 +9,14 @@ interface UpdateLocationProps {
   location: Location;
   profileId?: string;
   onClose?: () => void;
+  refresh?: () => void;
 }
 
 export default function UpdateLocation({
   location,
   profileId,
   onClose,
+  refresh,
 }: UpdateLocationProps) {
   const { mutateAsync, isPending } = useUpdateLocation();
 
@@ -31,6 +33,7 @@ export default function UpdateLocation({
             `${namePerfect(location.type)} updated successfully`,
         );
         onClose?.();
+        refresh?.();
         return;
       }
 
