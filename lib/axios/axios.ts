@@ -8,4 +8,14 @@ const axiosInstance = axios.create({
   },
 });
 
+axiosInstance.interceptors.request.use((config) => {
+  config.headers["X-Client-Session"] = JSON.stringify({
+    // client-side metadata you explicitly want to send
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    language: navigator.language,
+  });
+
+  return config;
+});
+
 export default axiosInstance;

@@ -59,7 +59,7 @@ export default function Profile() {
   function handleCloseLocation() {
     setIsLocation(false);
   }
-
+  console.log(user);
   return (
     <>
       <div className='space-y-4 px-4'>
