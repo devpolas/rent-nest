@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Edit } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import type { PropertyManagementResponse } from "@/types/property";
@@ -11,10 +11,15 @@ import PropertyManagementActions from "./property-management-actions";
 
 type Props = {
   property: PropertyManagementResponse;
+  onManageLocation: () => void;
   onBack: () => void;
 };
 
-export default function PropertyManagementHeader({ property, onBack }: Props) {
+export default function PropertyManagementHeader({
+  property,
+  onManageLocation,
+  onBack,
+}: Props) {
   const router = useRouter();
 
   return (
@@ -45,7 +50,7 @@ export default function PropertyManagementHeader({ property, onBack }: Props) {
 
         <PropertyManagementActions
           property={property}
-          onRefresh={() => router.refresh()}
+          onManageLocation={onManageLocation}
         />
       </div>
     </header>

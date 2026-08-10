@@ -11,6 +11,7 @@ import PropertyImagesProgress from "./property-images-progress";
 
 import { createPropertyImages } from "@/lib/actions/property.actions";
 import { uploadImagesToBackend } from "@/lib/actions/image.action";
+import { Badge } from "@/components/ui/badge";
 
 export const MAX_PROPERTY_IMAGES = 10;
 
@@ -171,7 +172,7 @@ export default function PropertyImagesUploader({
   };
 
   return (
-    <Card>
+    <Card className='p-4'>
       <CardHeader>
         <CardTitle className='text-base'>Add Photos</CardTitle>
       </CardHeader>
@@ -183,9 +184,10 @@ export default function PropertyImagesUploader({
           uploading={uploading}
         />
 
-        <button
+        <Button
           type='button'
           disabled={!canUpload}
+          variant={"outline"}
           onClick={openFilePicker}
           className='flex flex-col justify-center items-center hover:bg-muted/50 disabled:opacity-50 p-8 border border-dashed rounded-xl w-full min-h-64 text-center transition-colors disabled:pointer-events-none'
         >
@@ -212,8 +214,8 @@ export default function PropertyImagesUploader({
           </p>
 
           {!uploading && remainingSlots > 0 && (
-            <Button
-              type='button'
+            <Badge
+              role='button'
               className='mt-5'
               onClick={(event) => {
                 event.stopPropagation();
@@ -222,13 +224,13 @@ export default function PropertyImagesUploader({
             >
               <ImagePlus className='mr-2 size-4' />
               Choose Photos
-            </Button>
+            </Badge>
           )}
 
           <p className='mt-4 text-muted-foreground text-xs'>
             JPG, PNG, WEBP or AVIF · Maximum 2MB per image · Up to 10 photos
           </p>
-        </button>
+        </Button>
 
         <input
           ref={inputRef}

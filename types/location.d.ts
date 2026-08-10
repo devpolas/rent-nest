@@ -17,7 +17,8 @@ export interface Location {
 
   addressLine: string | null;
 
-  profileId: string;
+  profileId?: string;
+  propertyId?: string;
 
   createdAt: string;
   updatedAt: string;

@@ -2,16 +2,46 @@
 
 import { toast } from "sonner";
 import PropertyForm from "./property-form";
-import { useUpdateProperty } from "@/hooks";
+import { useProperty, useUpdateProperty } from "@/hooks";
 import { PropertyInputType } from "../../../schemas/property.schema";
-import { PropertyResponse } from "@/types/property";
+import Loading from "@/app/loading";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
-export default function UpdateProperty({
-  property,
-}: {
-  property: PropertyResponse;
-}) {
+export default function UpdateProperty({ propertyId }: { propertyId: string }) {
+  const router = useRouter();
   const { mutateAsync: updateProperty, isPending } = useUpdateProperty();
+  const { data: propertyResponse, isLoading } = useProperty(propertyId);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (
+    !propertyResponse ||
+    !propertyResponse.success ||
+    !propertyResponse.data
+  ) {
+    return (
+      <div className='flex justify-center items-center min-h-[400px]'>
+        <p className='text-muted-foreground'>
+          {propertyResponse?.message ?? "User not found"}
+        </p>
+      </div>
+    );
+  }
+
+  const property = propertyResponse.data.property;
+
+  if (!property) {
+    return (
+      <div className='flex justify-center items-center min-h-[400px]'>
+        <p className='text-muted-foreground'>Profile not found</p>
+      </div>
+    );
+  }
+
   async function handleUpdate(data: PropertyInputType) {
     try {
       const response = await updateProperty({
@@ -23,6 +53,7 @@ export default function UpdateProperty({
         return;
       }
       toast.success(response.message);
+      router.push(`/dashboard/properties/${propertyId}`);
     } catch {
       toast.error("Something went wrong");
     }
@@ -47,11 +78,24 @@ export default function UpdateProperty({
   };
 
   return (
-    <PropertyForm
-      mode='update'
-      defaultValues={defaultValues}
-      isPending={isPending}
-      onSubmit={handleUpdate}
-    />
+    <>
+      <div className='p-4'>
+        <Button
+          variant='ghost'
+          size='sm'
+          className='-ml-2'
+          onClick={() => router.back()}
+        >
+          <ArrowLeft className='mr-2 size-4' />
+          Back to Property
+        </Button>
+      </div>
+      <PropertyForm
+        mode='update'
+        defaultValues={defaultValues}
+        isPending={isPending}
+        onSubmit={handleUpdate}
+      />
+    </>
   );
 }

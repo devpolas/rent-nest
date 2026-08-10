@@ -67,7 +67,7 @@ export async function getMyAllProperties(): Promise<
   ApiResponse<{ properties: PropertyResponse[] } | null>
 > {
   try {
-    const response = await axiosInstance.get("/properties/my", {
+    const response = await axiosInstance.get("/properties/my-properties", {
       headers: await getServerAuthHeaders(),
     });
     return response.data;

@@ -11,13 +11,17 @@ import { Separator } from "@/components/ui/separator";
 
 type Props = {
   property: PropertyManagementResponse;
-  onChanged?: () => void;
+  onEditLocation: () => void;
+  onAddLocation: () => void;
 };
 
-export default function PropertyLocationCard({ property }: Props) {
+export default function PropertyLocationCard({
+  property,
+  onEditLocation,
+  onAddLocation,
+}: Props) {
   const router = useRouter();
   const location = property.location;
-  const locationPath = `/dashboard/properties/${property.id}/location`;
 
   return (
     <Card>
@@ -35,7 +39,7 @@ export default function PropertyLocationCard({ property }: Props) {
             <Button
               variant='outline'
               size='sm'
-              onClick={() => router.push(locationPath)}
+              onClick={() => onEditLocation()}
             >
               <Edit className='mr-2 size-4' />
               Edit
@@ -84,7 +88,7 @@ export default function PropertyLocationCard({ property }: Props) {
               Add the property&apos;s location so tenants can find it.
             </p>
 
-            <Button className='mt-5' onClick={() => router.push(locationPath)}>
+            <Button className='mt-5' onClick={() => onAddLocation()}>
               <Plus className='mr-2 size-4' />
               Add Location
             </Button>

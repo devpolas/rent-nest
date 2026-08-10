@@ -1,6 +1,8 @@
 "use client";
 
+import * as React from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+
 interface ReusableDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -33,7 +35,14 @@ export function ReusableDialog({
     >
       <DialogContent
         className={`
+          w-[calc(100%-2rem)]
+          max-w-none
+          sm:w-full
           ${sizeClasses[size]}
+
+          max-h-[calc(100vh-2rem)]
+          overflow-y-auto
+
           border-brand/10
           shadow-xl
         `}

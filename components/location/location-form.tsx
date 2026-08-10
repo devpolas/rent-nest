@@ -11,11 +11,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import { useGeoLocation } from "@/hooks/location/useGeoLocation";
+
 import {
-  LocationCreateInput,
-  LocationCreateSchema,
+  LocationFormSchema,
+  LocationFormValues,
 } from "@/schemas/location.schema";
+
 import { LocationType } from "@/types/enum";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
@@ -24,11 +27,10 @@ import { toast } from "sonner";
 
 interface LocationFormProps {
   type: LocationType;
-  onSubmit: (data: LocationCreateInput) => void | Promise<void>;
-  defaultValues?: Partial<LocationCreateInput>;
+  onSubmit: (data: LocationFormValues) => void | Promise<void>;
+  defaultValues?: Partial<LocationFormValues>;
   mode?: "create" | "update";
   isPending?: boolean;
-  profileId?: string;
 }
 
 export default function LocationForm({
@@ -37,33 +39,26 @@ export default function LocationForm({
   defaultValues,
   mode = "create",
   isPending = false,
-  profileId,
 }: LocationFormProps) {
   const { isLoading, error, getPosition, locationPayload } = useGeoLocation();
-  const isPropertyLocation = type === "PROPERTY";
-
-  const locationDefaultValues: Partial<LocationCreateInput> = {
+  const locationDefaultValues: Partial<LocationFormValues> = {
     ...defaultValues,
     type,
-    ...(isPropertyLocation ? {} : { profileId }),
   };
 
-  const { control, handleSubmit, reset } = useForm<LocationCreateInput>({
-    resolver: zodResolver(LocationCreateSchema),
+  const { control, handleSubmit, reset } = useForm<LocationFormValues>({
+    resolver: zodResolver(LocationFormSchema),
     defaultValues: locationDefaultValues,
   });
 
   useEffect(() => {
     if (!locationPayload) return;
-
     reset({
       ...locationPayload,
       type,
-      ...(isPropertyLocation ? {} : { profileId }),
     });
-
     toast.success("Location detected successfully");
-  }, [locationPayload, type, profileId, isPropertyLocation, reset]);
+  }, [locationPayload, type, reset]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

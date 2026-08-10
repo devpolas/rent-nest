@@ -1,49 +1,67 @@
+"use client";
+
 import { useUpdateLocation } from "@/hooks";
-import LocationForm from "./location-from";
-import { LocationCreateInput } from "@/schemas/location.schema";
+import {
+  LocationFormValues,
+  LocationUpdateInput,
+} from "@/schemas/location.schema";
 import { toast } from "sonner";
 import { namePerfect } from "@/utils/helpers";
-import { Location } from "@/types/location";
+import type { Location } from "@/types/location";
+import LocationForm from "./location-form";
 
 interface UpdateLocationProps {
   location: Location;
-  profileId?: string;
   onClose?: () => void;
   refresh?: () => void;
 }
 
 export default function UpdateLocation({
   location,
-  profileId,
   onClose,
   refresh,
 }: UpdateLocationProps) {
   const { mutateAsync, isPending } = useUpdateLocation();
 
-  async function onSubmit(data: LocationCreateInput) {
+  async function onSubmit(data: LocationFormValues) {
     try {
+      const payload: LocationUpdateInput = {
+        latitude: data.latitude,
+        longitude: data.longitude,
+        country: data.country,
+        division: data.division,
+        district: data.district,
+        city: data.city,
+        village: data.village,
+        postalCode: data.postalCode,
+        addressLine: data.addressLine,
+      };
+
       const response = await mutateAsync({
         id: location.id,
-        payload: data,
+        payload,
       });
 
-      if (response.success) {
-        toast.success(
-          response.message ??
-            `${namePerfect(location.type)} updated successfully`,
-        );
-        onClose?.();
-        refresh?.();
+      if (!response.success) {
+        toast.error(response.message ?? "Failed to update location.");
+
         return;
       }
 
-      toast.error(response.message ?? "Failed to update location");
+      toast.success(
+        response.message ??
+          `${namePerfect(location.type)} updated successfully`,
+      );
+
+      onClose?.();
+      refresh?.();
     } catch {
-      toast.error("Something went wrong");
+      toast.error("Something went wrong while updating location.");
     }
   }
 
-  const defaultValues: Partial<LocationCreateInput> = {
+  const defaultValues: Partial<LocationFormValues> = {
+    type: location.type,
     country: location.country,
     division: location.division,
     district: location.district,
@@ -60,9 +78,8 @@ export default function UpdateLocation({
       type={location.type}
       mode='update'
       defaultValues={defaultValues}
-      profileId={profileId}
-      isPending={isPending}
       onSubmit={onSubmit}
+      isPending={isPending}
     />
   );
 }

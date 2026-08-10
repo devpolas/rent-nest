@@ -16,10 +16,13 @@ import {
 
 type Props = {
   property: PropertyManagementResponse;
-  onRefresh?: () => void;
+  onManageLocation: () => void;
 };
 
-export default function PropertyManagementActions({ property }: Props) {
+export default function PropertyManagementActions({
+  property,
+  onManageLocation,
+}: Props) {
   const router = useRouter();
   const propertyBasePath = `/dashboard/properties/${property.id}`;
 
@@ -48,9 +51,7 @@ export default function PropertyManagementActions({ property }: Props) {
             Manage Photos
           </DropdownMenuItem>
 
-          <DropdownMenuItem
-            onClick={() => router.push(`${propertyBasePath}/location`)}
-          >
+          <DropdownMenuItem onClick={() => onManageLocation()}>
             <MapPin className='mr-2 size-4' />
             Manage Location
           </DropdownMenuItem>

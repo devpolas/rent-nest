@@ -92,10 +92,6 @@ export default function Profile() {
     },
   ];
 
-  const existingLocationCount = locationItems.filter(
-    (item) => item.location !== undefined,
-  ).length;
-
   function handleAddLocation(type: LocationFormType) {
     setLocationType(type);
     setSelectedLocation(null);
@@ -179,7 +175,6 @@ export default function Profile() {
         ) : selectedLocation ? (
           <UpdateLocation
             location={selectedLocation}
-            profileId={profile.id}
             onClose={() => {
               handleLocationDialogChange(false);
             }}
