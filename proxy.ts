@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import {
   getFreshToken,
   getSession,
@@ -23,14 +24,15 @@ export async function proxy(request: NextRequest) {
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
-  const isProtectedRoute = pathname.startsWith(PROTECTED_PREFIX);
+  const isProtectedRoute =
+    pathname === PROTECTED_PREFIX ||
+    pathname.startsWith(`${PROTECTED_PREFIX}/`);
 
   const callbackUrl = encodeURIComponent(`${pathname}${search}`);
 
   let session = await getSession();
 
-  // Try refreshing the access token if no valid session exists.
-  if (!session) {
+  if (!session && isProtectedRoute) {
     const refreshed = await getFreshToken();
 
     if (refreshed) {
@@ -38,18 +40,15 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // Redirect unauthenticated users away from protected pages.
   if (!session && isProtectedRoute) {
     await logout();
-
     return NextResponse.redirect(
       new URL(`/signin?callbackUrl=${callbackUrl}`, request.url),
     );
   }
 
-  // Prevent authenticated users from visiting auth pages.
   if (session && isPublicRoute) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();

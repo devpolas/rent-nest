@@ -282,11 +282,7 @@ export default function PropertyForm({
       </form>
 
       {isOpenDialog && dialogCategory === "categories" && (
-        <ReusableDialog
-          size='xl'
-          isOpen={isOpenDialog}
-          onOpenChange={closeDialog}
-        >
+        <ReusableDialog isOpen={isOpenDialog} onOpenChange={closeDialog}>
           <CreatePropertyDetails
             detailsAction='categories'
             onSuccess={() => {
@@ -297,11 +293,7 @@ export default function PropertyForm({
         </ReusableDialog>
       )}
       {isOpenDialog && dialogCategory === "amenities" && (
-        <ReusableDialog
-          size='xl'
-          isOpen={isOpenDialog}
-          onOpenChange={closeDialog}
-        >
+        <ReusableDialog isOpen={isOpenDialog} onOpenChange={closeDialog}>
           <CreatePropertyDetails
             detailsAction='amenities'
             onSuccess={() => {
@@ -312,11 +304,7 @@ export default function PropertyForm({
         </ReusableDialog>
       )}
       {isOpenDialog && dialogCategory === "features" && (
-        <ReusableDialog
-          size='xl'
-          isOpen={isOpenDialog}
-          onOpenChange={closeDialog}
-        >
+        <ReusableDialog isOpen={isOpenDialog} onOpenChange={closeDialog}>
           <CreatePropertyDetails
             detailsAction='features'
             onSuccess={() => {
@@ -327,11 +315,7 @@ export default function PropertyForm({
         </ReusableDialog>
       )}
       {isOpenDialog && dialogCategory === "rules" && (
-        <ReusableDialog
-          size='xl'
-          isOpen={isOpenDialog}
-          onOpenChange={closeDialog}
-        >
+        <ReusableDialog isOpen={isOpenDialog} onOpenChange={closeDialog}>
           <CreatePropertyDetails
             detailsAction='rules'
             onSuccess={() => {

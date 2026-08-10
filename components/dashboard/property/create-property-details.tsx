@@ -65,8 +65,8 @@ export default function CreatePropertyDetails<
   }
 
   return (
-    <form onSubmit={handleSubmit(handleCreatePropertyDetails)} className='p-4'>
-      <Card className='px-4'>
+    <form onSubmit={handleSubmit(handleCreatePropertyDetails)}>
+      <Card>
         <CardHeader>
           <CardTitle>Create New {namePerfect(detailsAction)}</CardTitle>
           <CardDescription>

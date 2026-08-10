@@ -9,7 +9,6 @@ interface ReusableDialogProps {
   isSubmitting?: boolean;
   isSubmittingText?: string;
   children: React.ReactNode;
-  size?: "sm" | "md" | "lg" | "xl" | "large" | "max";
 }
 
 export function ReusableDialog({
@@ -17,33 +16,14 @@ export function ReusableDialog({
   onOpenChange,
   isSubmitting = false,
   children,
-  size = "md",
 }: ReusableDialogProps) {
-  const sizeClasses = {
-    sm: "sm:max-w-sm",
-    md: "sm:max-w-md",
-    lg: "sm:max-w-lg",
-    xl: "sm:max-w-xl",
-    large: "sm:max-w-2xl",
-    max: "sm:max-w-4xl",
-  };
-
   return (
     <Dialog
       open={isOpen}
       onOpenChange={isSubmitting ? undefined : onOpenChange}
     >
-      <DialogContent
-        className={`${sizeClasses[size]}
-
-          max-h-[calc(100vh-2rem)]
-          overflow-y-auto
-
-          border-brand/10
-          shadow-xl
-        `}
-      >
-        {children}
+      <DialogContent className='shadow-xl border-brand/10 overflow-y-auto glass-brand'>
+        <span className='p-4'>{children}</span>
       </DialogContent>
     </Dialog>
   );
