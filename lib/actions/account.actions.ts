@@ -2,10 +2,8 @@
 
 import axiosServerInstance from "@/lib/axios/axios-server";
 import { ApiResponse } from "@/types/response";
-import { AccountSession } from "@/types/session";
 import { handleApiError } from "@/utils/handle-api-error";
 import { cookies } from "next/headers";
-import Jwt from "jsonwebtoken";
 import { Time } from "@/utils/helpers";
 import { SigninPayload, SigninSchema } from "@/schemas/auth.schema";
 import { errorResponse } from "@/utils/api-response";
@@ -105,38 +103,5 @@ export async function logoutFromOtherDevices(): Promise<ApiResponse<null>> {
     return response.data;
   } catch (error) {
     return handleApiError(error);
-  }
-}
-
-// ================= session =================
-export async function getSession(): Promise<AccountSession | null> {
-  try {
-    const token = (await cookies()).get("accessToken")?.value;
-    if (!token) return null;
-    return Jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as AccountSession;
-  } catch {
-    return null;
-  }
-}
-
-export async function getFreshToken(): Promise<
-  | ApiResponse<{
-      accessToken: string;
-    }>
-  | boolean
-> {
-  try {
-    const cookieStore = await cookies();
-    const response = await axiosServerInstance.get("/auth/refresh-token", {});
-    const setCookie = response.headers["set-cookie"] as string[] | undefined;
-
-    if (setCookie) {
-      for (const cookie of setCookie) {
-        saveCookie(cookieStore, cookie);
-      }
-    }
-    return true;
-  } catch (error) {
-    return false;
   }
 }
