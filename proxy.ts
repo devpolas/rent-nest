@@ -28,13 +28,13 @@ async function refreshTokens(request: NextRequest): Promise<string[] | null> {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API}/auth/refresh-token`,
       {
-        method: "GET",
-        headers: { Cookie: request.headers.get("cookie") ?? "" },
+        method: "POST",
+        headers: {
+          Cookie: request.headers.get("cookie") ?? "",
+        },
       },
     );
     if (!res.ok) return null;
-    // NOTE: fetch's Headers API collapses multiple Set-Cookie into one string
-    // in some runtimes — see caveat below.
     const setCookie = res.headers.getSetCookie?.() ?? [];
     return setCookie.length ? setCookie : null;
   } catch {
