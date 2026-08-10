@@ -145,6 +145,7 @@ export default function PropertyManagementPage({ propertyId }: Props) {
         {locationDialogMode === "create" ? (
           <CreateLocation
             type={"PROPERTY"}
+            propertyId={property.id}
             onClose={() => {
               handleLocationDialogChange(false);
             }}
