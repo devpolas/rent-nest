@@ -1,6 +1,6 @@
 "use client";
+import { deletePropertyImage } from "@/lib/actions/property-client.actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deletePropertyImage } from "@/lib/actions/property.actions";
 
 export function useDeletePropertyImage() {
   const queryClient = useQueryClient();

@@ -1,19 +1,37 @@
 "use server";
 
-import axiosInstance from "../axios/axios";
 import type { ApiResponse } from "@/types/response";
 import type { PaymentHistory } from "@/types/payment";
 import { handleApiError } from "@/utils/handle-api-error";
 import { errorResponse } from "@/utils/api-response";
-import { getServerAuthHeaders } from "../axios/server-headers";
+import axiosServerInstance from "../axios/axios-server";
+
+export async function makePayment({
+  rentRequestId,
+}: {
+  rentRequestId: string;
+}): Promise<ApiResponse<{ url: string } | null>> {
+  try {
+    if (!rentRequestId.trim()) {
+      return errorResponse("Rental request ID is required");
+    }
+
+    const response = await axiosServerInstance.post(
+      `/rentals/${rentRequestId}/payment`,
+      {},
+    );
+
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
 
 export async function getPaymentHistories(): Promise<
   ApiResponse<{ paymentHistory: PaymentHistory[] } | null>
 > {
   try {
-    const response = await axiosInstance.get("/payments", {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.get("/payments");
 
     return response.data;
   } catch (error) {
@@ -31,11 +49,8 @@ export async function getPaymentHistoryById({
       return errorResponse("Transaction ID is required");
     }
 
-    const response = await axiosInstance.get(
+    const response = await axiosServerInstance.get(
       `/payments/transaction/${transactionId}`,
-      {
-        headers: await getServerAuthHeaders(),
-      },
     );
 
     return response.data;
@@ -54,32 +69,8 @@ export async function getPaymentSession({
       return errorResponse("Session ID is required");
     }
 
-    const response = await axiosInstance.get(`/payments/session/${sessionId}`, {
-      headers: await getServerAuthHeaders(),
-    });
-
-    return response.data;
-  } catch (error) {
-    return handleApiError(error);
-  }
-}
-
-export async function makePayment({
-  rentRequestId,
-}: {
-  rentRequestId: string;
-}): Promise<ApiResponse<{ url: string } | null>> {
-  try {
-    if (!rentRequestId.trim()) {
-      return errorResponse("Rental request ID is required");
-    }
-
-    const response = await axiosInstance.post(
-      `/rentals/${rentRequestId}/payment`,
-      {},
-      {
-        headers: await getServerAuthHeaders(),
-      },
+    const response = await axiosServerInstance.get(
+      `/payments/session/${sessionId}`,
     );
 
     return response.data;

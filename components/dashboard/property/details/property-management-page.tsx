@@ -61,7 +61,6 @@ export default function PropertyManagementPage({ propertyId }: Props) {
   }
 
   const property = propertyResponse.data.property;
-  console.log(property);
 
   if (!property) {
     return (

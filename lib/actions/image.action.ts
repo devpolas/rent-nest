@@ -1,7 +1,6 @@
-"use server";
+"use client";
 
-import axiosInstance from "../axios/axios";
-import { getServerAuthHeaders } from "../axios/server-headers";
+import axiosClientInstance from "../axios/axios-client";
 
 type ImageUploadResponse = {
   url: string;
@@ -13,17 +12,16 @@ type UploadResponse = {
 };
 
 const uploadImages = async (images: File[]): Promise<ImageUploadResponse[]> => {
+  console.log(images);
   const formData = new FormData();
 
   images.forEach((image) => {
     formData.append("images", image);
   });
 
-  const { data } = await axiosInstance.post<{
+  const { data } = await axiosClientInstance.post<{
     data: UploadResponse;
-  }>("/images/upload", formData, {
-    headers: await getServerAuthHeaders(),
-  });
+  }>("/images/upload", formData, {});
 
   if (!data.data.images?.length) {
     throw new Error("Image upload failed");

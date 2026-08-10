@@ -2,8 +2,8 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { logout } from "@/lib/actions/auth.actions";
 import { getMe } from "@/lib/actions/user.actions";
+import { logout } from "@/lib/actions/account.actions";
 
 export const AUTH_QUERY_KEY = ["currentUser"];
 

@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormRhfInput } from "@/components/rhf-input/form-rhf-input";
-import { signin } from "@/lib/actions/auth.actions";
 import { SigninSchema } from "@/schemas/auth.schema";
 
 import {
@@ -18,6 +17,7 @@ import {
 import * as z from "zod";
 import ActionButton from "@/components/button/action-button";
 import useAuth from "@/hooks/auth/use-auth";
+import { signin } from "@/lib/actions/account.actions";
 
 type FormValues = z.infer<typeof SigninSchema>;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { getReviewsByPropertyId } from "@/lib/actions/review.actions";
+import { getReviewsByPropertyId } from "@/lib/actions/review-client.actions";
 import { useQuery } from "@tanstack/react-query";
 
 export function usePropertyReviews(propertyId: string) {

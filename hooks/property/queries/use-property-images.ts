@@ -1,6 +1,6 @@
 "use client";
+import { getPropertyImages } from "@/lib/actions/property-client.actions";
 import { useQuery } from "@tanstack/react-query";
-import { getPropertyImages } from "@/lib/actions/property.actions";
 
 export function usePropertyImages(propertyId?: string) {
   return useQuery({

@@ -9,7 +9,7 @@ import PropertyImageCard from "./property-image-card";
 import {
   deletePropertyImage,
   setPropertyThumbnail,
-} from "@/lib/actions/property.actions";
+} from "@/lib/actions/property-client.actions";
 
 type Props = {
   propertyId: string;

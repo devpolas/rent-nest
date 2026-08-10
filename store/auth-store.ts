@@ -2,10 +2,9 @@
 
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-
 import type { MeResponse } from "@/types/user";
-import { getSession, logout } from "@/lib/actions/auth.actions";
 import { getMe } from "@/lib/actions/user.actions";
+import { getSession, logout } from "@/lib/actions/account.actions";
 
 interface AuthState {
   user: MeResponse | null;

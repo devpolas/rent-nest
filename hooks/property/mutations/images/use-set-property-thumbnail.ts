@@ -1,6 +1,6 @@
 "use client";
+import { setPropertyThumbnail } from "@/lib/actions/property-client.actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { setPropertyThumbnail } from "@/lib/actions/property.actions";
 
 export function useSetPropertyThumbnail() {
   const queryClient = useQueryClient();

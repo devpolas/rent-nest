@@ -1,7 +1,6 @@
 "use server";
 
 import { RentalRequest } from "@/types/rental-request";
-import axiosInstance from "../axios/axios";
 import {
   RentalRequestAdminAndOwnerUpdateSchema,
   RentalRequestAdminAndOwnerUpdateType,
@@ -16,7 +15,7 @@ import type { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/handle-api-error";
 import { handleZodError } from "@/utils/handle-zod-errors";
 import { errorResponse } from "@/utils/api-response";
-import { getServerAuthHeaders } from "../axios/server-headers";
+import axiosServerInstance from "../axios/axios-server";
 
 export async function createRentalRequest({
   payload,
@@ -30,9 +29,10 @@ export async function createRentalRequest({
       return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
 
-    const response = await axiosInstance.post("/rental-requests", parsed.data, {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.post(
+      "/rental-requests",
+      parsed.data,
+    );
 
     return response.data;
   } catch (error) {
@@ -58,12 +58,9 @@ export async function updateRentalRequestByTenant({
       return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
 
-    const response = await axiosInstance.patch(
+    const response = await axiosServerInstance.patch(
       `/rental-requests/${id}`,
       parsed.data,
-      {
-        headers: await getServerAuthHeaders(),
-      },
     );
 
     return response.data;
@@ -90,12 +87,9 @@ export async function updateRentalRequestByOwnerOrAdmin({
       return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
 
-    const response = await axiosInstance.patch(
+    const response = await axiosServerInstance.patch(
       `/rental-requests/${id}`,
       parsed.data,
-      {
-        headers: await getServerAuthHeaders(),
-      },
     );
 
     return response.data;
@@ -108,9 +102,7 @@ export async function getRentalRequests(): Promise<
   ApiResponse<{ rents: RentalRequest[] } | null>
 > {
   try {
-    const response = await axiosInstance.get("/rental-requests", {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.get("/rental-requests");
 
     return response.data;
   } catch (error) {
@@ -128,9 +120,7 @@ export async function getRentalRequestById({
       return errorResponse("Rental request ID is required");
     }
 
-    const response = await axiosInstance.get(`/rental-requests/${id}`, {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.get(`/rental-requests/${id}`);
 
     return response.data;
   } catch (error) {
@@ -148,9 +138,7 @@ export async function deleteRentalRequest({
       return errorResponse("Rental request ID is required");
     }
 
-    const response = await axiosInstance.delete(`/rental-requests/${id}`, {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.delete(`/rental-requests/${id}`);
 
     return response.data;
   } catch (error) {

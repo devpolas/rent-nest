@@ -12,23 +12,20 @@ import {
   UserUpdateSchema,
 } from "@/schemas/user.schema";
 import { handleApiError } from "@/utils/handle-api-error";
-import axiosInstance from "../axios/axios";
 import { ApiResponse } from "@/types/response";
 import { MeResponse, UserWithProfile } from "@/types/user";
 import { errorResponse } from "@/utils/api-response";
 import { handleZodError } from "@/utils/handle-zod-errors";
 import { Profile } from "@/types/profile";
 import { SocialProfile } from "@/types/social-profile";
-import { getServerAuthHeaders } from "../axios/server-headers";
+import axiosServerInstance from "../axios/axios-server";
 
 // user itself
 export async function getMe(): Promise<
   ApiResponse<{ user: MeResponse } | null>
 > {
   try {
-    const response = await axiosInstance.get("/auth/me", {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.get("/auth/me");
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -45,9 +42,7 @@ export async function updateMe({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.patch("/users/me", parsed.data, {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.patch("/users/me", parsed.data);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -56,9 +51,7 @@ export async function updateMe({
 
 export async function deleteMe(): Promise<ApiResponse<null>> {
   try {
-    const response = await axiosInstance.delete("/users/me", {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.delete("/users/me");
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -78,9 +71,7 @@ export async function createOrUpdateProfile({
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
 
-    const response = await axiosInstance.post("/profiles", parsed.data, {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.post("/profiles", parsed.data);
 
     return response.data;
   } catch (error) {
@@ -99,9 +90,10 @@ export async function createSocialProfile({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.post("/social-profiles", parsed.data, {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.post(
+      "/social-profiles",
+      parsed.data,
+    );
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -120,12 +112,9 @@ export async function updateSocialProfile({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.patch(
+    const response = await axiosServerInstance.patch(
       `/social-profiles/${id}`,
       parsed.data,
-      {
-        headers: await getServerAuthHeaders(),
-      },
     );
     return response.data;
   } catch (error) {
@@ -139,9 +128,7 @@ export async function deleteSocialProfile({
   id: string;
 }): Promise<ApiResponse<null>> {
   try {
-    const response = await axiosInstance.delete(`/social-profiles/${id}`, {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.delete(`/social-profiles/${id}`);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -157,9 +144,7 @@ export async function getUserById({
     if (!id) {
       return errorResponse("User ID is required");
     }
-    const response = await axiosInstance.get(`/users/${id}`, {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.get(`/users/${id}`);
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -180,9 +165,10 @@ export async function updateUserById({
     if (parsed.error) {
       return errorResponse(handleZodError(parsed.error) || "Invalid Input");
     }
-    const response = await axiosInstance.patch(`/users/${id}`, parsed.data, {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.patch(
+      `/users/${id}`,
+      parsed.data,
+    );
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -193,9 +179,7 @@ export async function getAllUsers(): Promise<
   ApiResponse<{ users: UserWithProfile[] } | null>
 > {
   try {
-    const response = await axiosInstance.get("/users", {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.get("/users");
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -211,9 +195,7 @@ export async function deleteUserById({
     if (!id) {
       return errorResponse("User ID is required");
     }
-    const response = await axiosInstance.delete(`/users/${id}`, {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.delete(`/users/${id}`);
     return response.data;
   } catch (error) {
     return handleApiError(error);

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-
-import { getFreshToken, getSession, logout } from "@/lib/actions/auth.actions";
+import {
+  getFreshToken,
+  getSession,
+  logout,
+} from "./lib/actions/account.actions";
 
 const PUBLIC_ROUTES = [
   "/signin",

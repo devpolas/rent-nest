@@ -1,11 +1,9 @@
 "use server";
 
-import axiosInstance from "../axios/axios";
 import { handleApiError } from "@/utils/handle-api-error";
 import { handleZodError } from "@/utils/handle-zod-errors";
 import type { ApiResponse } from "@/types/response";
 import type { Review } from "@/types/review";
-
 import {
   ReviewInputType,
   ReviewSchema,
@@ -13,7 +11,7 @@ import {
   ReviewUpdateSchema,
 } from "@/schemas/review.schema";
 import { errorResponse } from "@/utils/api-response";
-import { getServerAuthHeaders } from "../axios/server-headers";
+import axiosServerInstance from "../axios/axios-server";
 
 export async function createReview({
   propertyId,
@@ -33,12 +31,9 @@ export async function createReview({
       return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
 
-    const response = await axiosInstance.post(
+    const response = await axiosServerInstance.post(
       `/properties/${propertyId}/reviews`,
       parsed.data,
-      {
-        headers: await getServerAuthHeaders(),
-      },
     );
 
     return response.data;
@@ -65,9 +60,10 @@ export async function updateReview({
       return errorResponse(handleZodError(parsed.error) || "Invalid input");
     }
 
-    const response = await axiosInstance.patch(`/reviews/${id}`, parsed.data, {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.patch(
+      `/reviews/${id}`,
+      parsed.data,
+    );
 
     return response.data;
   } catch (error) {
@@ -85,47 +81,7 @@ export async function deleteReview({
       return errorResponse("Review ID is required");
     }
 
-    const response = await axiosInstance.delete(`/reviews/${id}`, {
-      headers: await getServerAuthHeaders(),
-    });
-
-    return response.data;
-  } catch (error) {
-    return handleApiError(error);
-  }
-}
-
-export async function getReviewById({
-  id,
-}: {
-  id: string;
-}): Promise<ApiResponse<{ review: Review } | null>> {
-  try {
-    if (!id.trim()) {
-      return errorResponse("Review ID is required");
-    }
-
-    const response = await axiosInstance.get(`/reviews/${id}`);
-
-    return response.data;
-  } catch (error) {
-    return handleApiError(error);
-  }
-}
-
-export async function getReviewsByPropertyId({
-  propertyId,
-}: {
-  propertyId: string;
-}): Promise<ApiResponse<{ reviews: Review[] } | null>> {
-  try {
-    if (!propertyId.trim()) {
-      return errorResponse("Property ID is required");
-    }
-
-    const response = await axiosInstance.get(
-      `/properties/${propertyId}/reviews`,
-    );
+    const response = await axiosServerInstance.delete(`/reviews/${id}`);
 
     return response.data;
   } catch (error) {
@@ -137,9 +93,7 @@ export async function getAllReviews(): Promise<
   ApiResponse<{ reviews: Review[] } | null>
 > {
   try {
-    const response = await axiosInstance.get("/reviews/admin/all", {
-      headers: await getServerAuthHeaders(),
-    });
+    const response = await axiosServerInstance.get("/reviews/admin/all");
 
     return response.data;
   } catch (error) {
