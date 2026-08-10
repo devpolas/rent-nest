@@ -34,11 +34,7 @@ export function ReusableDialog({
       onOpenChange={isSubmitting ? undefined : onOpenChange}
     >
       <DialogContent
-        className={`
-          w-[calc(100%-2rem)]
-          max-w-none
-          sm:w-full
-          ${sizeClasses[size]}
+        className={`${sizeClasses[size]}
 
           max-h-[calc(100vh-2rem)]
           overflow-y-auto
