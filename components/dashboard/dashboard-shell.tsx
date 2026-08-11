@@ -29,7 +29,7 @@ export default function DashboardLayout({
         }
       >
         <AppSidebar menu={menu} user={user} variant='inset' />
-        <SidebarInset>
+        <SidebarInset className='w-full min-w-0'>
           <SiteHeader />
           {children}
         </SidebarInset>
