@@ -1,3 +1,5 @@
+import DashboardUserTable from "@/components/dashboard/data-table/user/page";
+
 export default function page() {
-  return <section></section>;
+  return <DashboardUserTable />;
 }
