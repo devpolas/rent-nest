@@ -26,7 +26,7 @@ export function UserTableFilter<TData extends RowData>({
         <Button
           type='button'
           size='sm'
-          variant={field === "name" ? "secondary" : "ghost"}
+          variant={field === "name" ? "brand" : "ghost"}
           onClick={() => handleFieldChange("name")}
         >
           Name
@@ -35,7 +35,7 @@ export function UserTableFilter<TData extends RowData>({
         <Button
           type='button'
           size='sm'
-          variant={field === "email" ? "secondary" : "ghost"}
+          variant={field === "email" ? "brand" : "ghost"}
           onClick={() => handleFieldChange("email")}
         >
           Email

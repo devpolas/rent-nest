@@ -11,7 +11,7 @@ export default function PropertyTableToolbar<TData extends RowData>({
   table,
 }: PropertyTableToolbar<TData>) {
   return (
-    <div className='flex justify-between p-4'>
+    <div className='flex justify-between bg-brand-surface p-2 rounded'>
       <PropertyTableFilter table={table} />
       <TableViewOptions table={table} />
     </div>
