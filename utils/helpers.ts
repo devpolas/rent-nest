@@ -1,6 +1,9 @@
-export function namePerfect(name: string) {
-  const correctName = name.charAt(0).toUpperCase() + name.slice(1);
-  return correctName;
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+
+export function namePerfect(name: string | null) {
+  if (!name?.trim()) return "—";
+  const value = name.trim();
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 export type Milliseconds = number & { readonly __brand: "Milliseconds" };
@@ -13,9 +16,12 @@ export const Time = {
   day: (n: number) => (n * 86_400_000) as Milliseconds,
 } as const;
 
-export function formatDate(date: Date) {
+export function formatDate(date: Date | string | null) {
+  if (!date) return "—";
+
   const d = new Date(date);
-  const result = new Intl.DateTimeFormat("en-US", {
+
+  return new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
     minute: "numeric",
     second: "numeric",
@@ -23,8 +29,6 @@ export function formatDate(date: Date) {
     month: "short",
     year: "numeric",
   }).format(d);
-
-  return result;
 }
 
 export function getInitials(name: string) {
@@ -35,6 +39,12 @@ export function getInitials(name: string) {
     .join("")
     .toUpperCase()
     .slice(0, 2);
+}
+
+export function formatPhone(phone: string | null) {
+  if (!phone) return "—";
+  const phoneNumber = parsePhoneNumberFromString(phone);
+  return phoneNumber?.isValid() ? phoneNumber.formatInternational() : phone;
 }
 
 export const CALLBACK_URL_KEY = "callbackUrl";
