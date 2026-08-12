@@ -1,9 +1,9 @@
 import { type ReactTable, type RowData } from "@tanstack/react-table";
-import { PropertyTableFeatures } from "./property-table-features";
+import { TableFeatures } from "../shared/table-features";
 import { Input } from "@/components/ui/input";
 
 interface PropertyTableFilter<TData extends RowData> {
-  table: ReactTable<PropertyTableFeatures, TData>;
+  table: ReactTable<TableFeatures, TData>;
 }
 
 export default function PropertyTableFilter<TData extends RowData>({

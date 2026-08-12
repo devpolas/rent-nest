@@ -1,10 +1,10 @@
 import { ReactTable, RowData } from "@tanstack/react-table";
-import { PropertyTableFeatures } from "./property-table-features";
+import { TableFeatures } from "../shared/table-features";
 import PropertyTableFilter from "./property-table-filter";
-import { PropertyTableViewOptions } from "./property-table-column-toggle";
+import { TableViewOptions } from "../shared/table-column-toggle";
 
 interface PropertyTableToolbar<TData extends RowData> {
-  table: ReactTable<PropertyTableFeatures, TData>;
+  table: ReactTable<TableFeatures, TData>;
 }
 
 export default function PropertyTableToolbar<TData extends RowData>({
@@ -13,7 +13,7 @@ export default function PropertyTableToolbar<TData extends RowData>({
   return (
     <div className='flex justify-between p-4'>
       <PropertyTableFilter table={table} />
-      <PropertyTableViewOptions table={table} />
+      <TableViewOptions table={table} />
     </div>
   );
 }

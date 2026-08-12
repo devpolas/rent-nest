@@ -9,9 +9,9 @@ import {
   useTable,
 } from "@tanstack/react-table";
 import {
-  propertyTableFeatures,
-  type PropertyTableFeatures,
-} from "./property-table-features";
+  dataTableFeatures,
+  type TableFeatures,
+} from "../shared/table-features";
 
 import {
   Table,
@@ -21,11 +21,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PropertyTablePagination } from "./property-table-pagination";
 import PropertyTableToolbar from "./property-table-toolbar";
+import { TablePagination } from "../shared/table-pagination";
 
 interface DataTableProps<TData extends RowData> {
-  columns: ColumnDef<PropertyTableFeatures, TData>[];
+  columns: ColumnDef<TableFeatures, TData>[];
   data: TData[];
 }
 export default function PropertyTable<TData extends RowData>({
@@ -43,7 +43,7 @@ export default function PropertyTable<TData extends RowData>({
   const table = useTable({
     data,
     columns,
-    features: propertyTableFeatures,
+    features: dataTableFeatures,
     atoms: {
       sorting: sortingAtom,
       cellSelection: cellSelectionAtom,
@@ -97,7 +97,7 @@ export default function PropertyTable<TData extends RowData>({
           )}
         </TableBody>
       </Table>
-      <PropertyTablePagination table={table} />
+      <TablePagination table={table} />
     </div>
   );
 }

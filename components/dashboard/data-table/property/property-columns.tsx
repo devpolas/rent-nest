@@ -1,17 +1,17 @@
 "use client";
 
 import { createColumnHelper } from "@tanstack/react-table";
-import { PropertyTableFeatures } from "./property-table-features";
+import { TableFeatures } from "../shared/table-features";
 import { type Category, type PropertyResponse } from "@/types/property";
 import { Checkbox } from "@/components/ui/checkbox";
-import { PropertyTableColumnHeader } from "./property-table-column-header";
+import { TableColumnHeader } from "../shared/table-column-header";
 import { AvailabilityStatus, PropertyStatus } from "@/types/enum";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/utils/helpers";
 import { PropertyDetailsList } from "./property-details-list";
-import { PropertyLocationView } from "./property-location-view";
+import { LocationView } from "../shared/location-view";
 
-const helper = createColumnHelper<PropertyTableFeatures, PropertyResponse>();
+const helper = createColumnHelper<TableFeatures, PropertyResponse>();
 
 const propertyColumns = helper.columns([
   helper.display({
@@ -39,15 +39,13 @@ const propertyColumns = helper.columns([
   }),
 
   helper.accessor("title", {
-    header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='Title' />
-    ),
+    header: ({ column }) => <TableColumnHeader column={column} title='Title' />,
     cell: ({ getValue }) => getValue(),
   }),
 
   helper.accessor("category", {
     header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='Category' />
+      <TableColumnHeader column={column} title='Category' />
     ),
     cell: ({ getValue }) => {
       const category: Category = getValue();
@@ -57,7 +55,7 @@ const propertyColumns = helper.columns([
 
   helper.accessor("rent", {
     header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='Rent/Day' />
+      <TableColumnHeader column={column} title='Rent/Day' />
     ),
     cell: ({ getValue }) => {
       const amount = Number(getValue());
@@ -71,7 +69,7 @@ const propertyColumns = helper.columns([
   }),
   helper.accessor("securityDeposit", {
     header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='Security Deposit' />
+      <TableColumnHeader column={column} title='Security Deposit' />
     ),
     cell: ({ getValue }) => {
       const amount = Number(getValue());
@@ -86,28 +84,28 @@ const propertyColumns = helper.columns([
 
   helper.accessor("area", {
     header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title={`Area (sqft)`} />
+      <TableColumnHeader column={column} title={`Area (sqft)`} />
     ),
     cell: ({ getValue }) => getValue(),
   }),
 
   helper.accessor("bedrooms", {
     header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='Bedrooms' />
+      <TableColumnHeader column={column} title='Bedrooms' />
     ),
     cell: ({ getValue }) => getValue(),
   }),
 
   helper.accessor("bathrooms", {
     header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='Bathrooms' />
+      <TableColumnHeader column={column} title='Bathrooms' />
     ),
     cell: ({ getValue }) => getValue(),
   }),
 
   helper.accessor("availability", {
     header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='Availability' />
+      <TableColumnHeader column={column} title='Availability' />
     ),
 
     cell: ({ getValue }) => {
@@ -129,7 +127,7 @@ const propertyColumns = helper.columns([
 
   helper.accessor("availableFrom", {
     header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='Available From' />
+      <TableColumnHeader column={column} title='Available From' />
     ),
     cell: ({ getValue }) => {
       const value = getValue();
@@ -140,7 +138,7 @@ const propertyColumns = helper.columns([
 
   helper.accessor("status", {
     header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='Status' />
+      <TableColumnHeader column={column} title='Status' />
     ),
     cell: ({ getValue }) => {
       const value: PropertyStatus = getValue();
@@ -160,7 +158,7 @@ const propertyColumns = helper.columns([
 
   helper.accessor("amenities", {
     header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='Amenities' />
+      <TableColumnHeader column={column} title='Amenities' />
     ),
     cell: ({ getValue }) => {
       const amenities = getValue();
@@ -177,7 +175,7 @@ const propertyColumns = helper.columns([
 
   helper.accessor("features", {
     header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='Features' />
+      <TableColumnHeader column={column} title='Features' />
     ),
     cell: ({ getValue }) => {
       const features = getValue();
@@ -192,9 +190,7 @@ const propertyColumns = helper.columns([
   }),
 
   helper.accessor("rules", {
-    header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='Rules' />
-    ),
+    header: ({ column }) => <TableColumnHeader column={column} title='Rules' />,
 
     cell: ({ getValue }) => {
       const rules = getValue();
@@ -210,19 +206,19 @@ const propertyColumns = helper.columns([
 
   helper.accessor("location", {
     header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='Location' />
+      <TableColumnHeader column={column} title='Location' />
     ),
 
     cell: ({ getValue }) => {
       const location = getValue();
 
-      return <PropertyLocationView location={location} />;
+      return <LocationView location={location} />;
     },
   }),
 
   helper.accessor("createdAt", {
     header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='Created At' />
+      <TableColumnHeader column={column} title='Created At' />
     ),
     cell: ({ getValue }) => {
       const value = getValue();
