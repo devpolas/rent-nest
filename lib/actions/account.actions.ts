@@ -8,6 +8,15 @@ import { Time } from "@/utils/helpers";
 import { SigninPayload, SigninSchema } from "@/schemas/auth.schema";
 import { errorResponse } from "@/utils/api-response";
 import { handleZodError } from "@/utils/handle-zod-errors";
+import { NextRequest } from "next/server";
+import Jwt from "jsonwebtoken";
+
+interface AccountSession {
+  userId: string;
+  role: string;
+  email: string;
+  sessionId: string;
+}
 
 // ================= save cookies =================
 function saveCookie(
@@ -103,5 +112,51 @@ export async function logoutFromOtherDevices(): Promise<ApiResponse<null>> {
     return response.data;
   } catch (error) {
     return handleApiError(error);
+  }
+}
+
+export async function isValidSession(request: NextRequest): Promise<boolean> {
+  const token = request.cookies.get("accessToken")?.value;
+  if (!token) return false;
+  try {
+    Jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function userSession(
+  request: NextRequest,
+): Promise<AccountSession | null> {
+  const token = request.cookies.get("accessToken")?.value;
+
+  if (!token) return null;
+
+  try {
+    return Jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as AccountSession;
+  } catch {
+    return null;
+  }
+}
+
+export async function refreshTokens(
+  request: NextRequest,
+): Promise<string[] | null> {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API}/auth/refresh-token`,
+      {
+        method: "POST",
+        headers: {
+          Cookie: request.headers.get("cookie") ?? "",
+        },
+      },
+    );
+    if (!res.ok) return null;
+    const setCookie = res.headers.getSetCookie?.() ?? [];
+    return setCookie.length ? setCookie : null;
+  } catch {
+    return null;
   }
 }

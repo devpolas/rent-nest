@@ -15,13 +15,6 @@ import { handleApiError } from "@/utils/handle-api-error";
 import { ApiResponse } from "../../types/response";
 import axiosClientInstance from "@/lib/axios/axios-client";
 
-interface AccountSession {
-  userId: string;
-  role: string;
-  email: string;
-  sessionId: string;
-}
-
 // ================= signup =================
 export async function signup(
   payload: SignupPayload,

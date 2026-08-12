@@ -1,6 +1,6 @@
 "use server";
 
-import axios from "axios";
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { cookies, headers } from "next/headers";
 
 const axiosServerInstance = axios.create({
@@ -8,70 +8,52 @@ const axiosServerInstance = axios.create({
   withCredentials: true,
 });
 
-axiosServerInstance.interceptors.request.use(async (config) => {
-  const cookieStore = await cookies();
-  const requestHeaders = await headers();
+type RetryConfig = InternalAxiosRequestConfig & {
+  _retry?: boolean;
+};
 
-  /**
-   * Forward authentication cookies
-   */
-  const cookieHeader = cookieStore
+async function getCookieHeader() {
+  const cookieStore = await cookies();
+
+  return cookieStore
     .getAll()
     .map(({ name, value }) => `${name}=${value}`)
     .join("; ");
+}
+
+axiosServerInstance.interceptors.request.use(async (config) => {
+  const cookieHeader = await getCookieHeader();
+  const requestHeaders = await headers();
 
   if (cookieHeader) {
     config.headers.set("Cookie", cookieHeader);
   }
 
-  /**
-   * Forward browser/client metadata
-   *
-   * If the original browser request already
-   * contains X-Client-Info, preserve it.
-   */
   const clientInfo = requestHeaders.get("x-client-info");
 
-  if (clientInfo) {
-    config.headers.set("X-Client-Info", clientInfo);
-  } else {
-    /**
-     * Fallback metadata available to Next.js.
-     */
-    const fallbackClientInfo = {
-      userAgent: requestHeaders.get("user-agent"),
+  config.headers.set(
+    "X-Client-Info",
+    clientInfo ??
+      JSON.stringify({
+        userAgent: requestHeaders.get("user-agent"),
+        language: requestHeaders.get("accept-language"),
+        referer: requestHeaders.get("referer"),
+        origin: requestHeaders.get("origin"),
+      }),
+  );
 
-      language: requestHeaders.get("accept-language"),
-
-      referer: requestHeaders.get("referer"),
-
-      origin: requestHeaders.get("origin"),
-    };
-
-    config.headers.set("X-Client-Info", JSON.stringify(fallbackClientInfo));
-  }
-
-  /**
-   * Forward User-Agent
-   */
   const userAgent = requestHeaders.get("user-agent");
 
   if (userAgent) {
     config.headers.set("User-Agent", userAgent);
   }
 
-  /**
-   * Forward Accept-Language
-   */
   const acceptLanguage = requestHeaders.get("accept-language");
 
   if (acceptLanguage) {
     config.headers.set("Accept-Language", acceptLanguage);
   }
 
-  /**
-   * Forward request ID if one exists
-   */
   const requestId = requestHeaders.get("x-request-id");
 
   if (requestId) {
@@ -80,5 +62,119 @@ axiosServerInstance.interceptors.request.use(async (config) => {
 
   return config;
 });
+
+async function refreshTokens() {
+  try {
+    const cookieHeader = await getCookieHeader();
+
+    if (!cookieHeader) {
+      return false;
+    }
+
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API}/auth/refresh-token`,
+      null,
+      {
+        headers: {
+          Cookie: cookieHeader,
+        },
+        withCredentials: true,
+      },
+    );
+
+    if (!response.headers["set-cookie"]) {
+      return false;
+    }
+
+    const cookieStore = await cookies();
+
+    for (const cookie of response.headers["set-cookie"]) {
+      const [nameValue, ...attributes] = cookie.split(";");
+
+      const [name, ...valueParts] = nameValue.split("=");
+
+      const value = valueParts.join("=");
+
+      if (!name || !value) continue;
+
+      const options: {
+        name: string;
+        value: string;
+        httpOnly?: boolean;
+        secure?: boolean;
+        sameSite?: "lax" | "strict" | "none";
+        path?: string;
+        maxAge?: number;
+      } = {
+        name: name.trim(),
+        value: value.trim(),
+      };
+
+      for (const attribute of attributes) {
+        const [key, attributeValue] = attribute.trim().split("=");
+
+        switch (key.toLowerCase()) {
+          case "httponly":
+            options.httpOnly = true;
+            break;
+
+          case "secure":
+            options.secure = true;
+            break;
+
+          case "path":
+            options.path = attributeValue;
+            break;
+
+          case "max-age":
+            options.maxAge = Number(attributeValue);
+            break;
+
+          case "samesite":
+            if (
+              attributeValue === "lax" ||
+              attributeValue === "strict" ||
+              attributeValue === "none"
+            ) {
+              options.sameSite = attributeValue;
+            }
+            break;
+        }
+      }
+
+      cookieStore.set(options);
+    }
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+axiosServerInstance.interceptors.response.use(
+  (response) => response,
+  async (error: AxiosError) => {
+    const request = error.config as RetryConfig | undefined;
+
+    if (
+      error.response?.status !== 401 ||
+      !request ||
+      request._retry ||
+      request.url?.includes("/auth/refresh-token")
+    ) {
+      return Promise.reject(error);
+    }
+
+    request._retry = true;
+
+    const refreshed = await refreshTokens();
+
+    if (!refreshed) {
+      return Promise.reject(error);
+    }
+
+    return axiosServerInstance.request(request);
+  },
+);
 
 export default axiosServerInstance;
