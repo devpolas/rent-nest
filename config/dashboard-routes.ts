@@ -12,5 +12,10 @@ export const dashboardRoutes: Record<UserRole, string[]> = Object.fromEntries(
   }),
 ) as Record<UserRole, string[]>;
 
-// user case
-// const routes = dashboardRoutes[user.role].includes(pathname);
+export function hasRouteAccess(role: UserRole, pathname: string): boolean {
+  const routes = dashboardRoutes[role] ?? [];
+
+  return routes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+}
