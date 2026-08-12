@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import Jwt from "jsonwebtoken";
+import { refreshTokens, userSession } from "./lib/actions/account.actions";
+import { dashboardRoutes } from "./config/dashboard-routes";
+import { UserRole } from "./types/enum";
 
 const PUBLIC_ROUTES = [
   "/signin",
@@ -12,75 +14,64 @@ const PUBLIC_ROUTES = [
 
 const PROTECTED_PREFIX = "/dashboard";
 
-function isValidSession(request: NextRequest): boolean {
-  const token = request.cookies.get("accessToken")?.value;
-  if (!token) return false;
-  try {
-    Jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function refreshTokens(request: NextRequest): Promise<string[] | null> {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API}/auth/refresh-token`,
-      {
-        method: "POST",
-        headers: {
-          Cookie: request.headers.get("cookie") ?? "",
-        },
-      },
-    );
-    if (!res.ok) return null;
-    const setCookie = res.headers.getSetCookie?.() ?? [];
-    return setCookie.length ? setCookie : null;
-  } catch {
-    return null;
-  }
-}
-
 export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
-  const isPublicRoute = PUBLIC_ROUTES.some(
+  const isPublic = PUBLIC_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
-  const isProtectedRoute =
+
+  const isProtected =
     pathname === PROTECTED_PREFIX ||
     pathname.startsWith(`${PROTECTED_PREFIX}/`);
 
-  if (isPublicRoute) {
-    if (isValidSession(request)) {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-    return NextResponse.next();
-  }
+  const session = await userSession(request);
 
-  if (isProtectedRoute) {
-    if (isValidSession(request)) {
-      return NextResponse.next();
-    }
-
+  if (!session) {
     const setCookies = await refreshTokens(request);
 
     if (setCookies) {
       const response = NextResponse.next();
+
       for (const cookie of setCookies) {
         response.headers.append("Set-Cookie", cookie);
       }
+
+      return response;
+    }
+  }
+
+  if (isPublic) {
+    if (session) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+
+    return NextResponse.next();
+  }
+
+  if (isProtected) {
+    if (!session) {
+      const callbackUrl = encodeURIComponent(`${pathname}${search}`);
+
+      const response = NextResponse.redirect(
+        new URL(`/signin?callbackUrl=${callbackUrl}`, request.url),
+      );
+
+      response.cookies.delete("accessToken");
+      response.cookies.delete("refreshToken");
+
       return response;
     }
 
-    const callbackUrl = encodeURIComponent(`${pathname}${search}`);
-    const redirectRes = NextResponse.redirect(
-      new URL(`/signin?callbackUrl=${callbackUrl}`, request.url),
+    const allowedRoutes = dashboardRoutes[session.role as UserRole];
+
+    const hasAccess = allowedRoutes.some(
+      (route) => pathname === route || pathname.startsWith(`${route}/`),
     );
-    redirectRes.cookies.delete("accessToken");
-    redirectRes.cookies.delete("refreshToken");
-    return redirectRes;
+
+    if (!hasAccess) {
+      return NextResponse.redirect(new URL("/403", request.url));
+    }
   }
 
   return NextResponse.next();
