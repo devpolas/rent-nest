@@ -16,31 +16,38 @@ import {
 } from "@/components/ui/select";
 import { TableFeatures } from "./table-features";
 
-interface TablePagination<TData extends RowData> {
+interface TablePaginationProps<TData extends RowData> {
   table: ReactTable<TableFeatures, TData>;
 }
 
 export function TablePagination<TData extends RowData>({
   table,
-}: TablePagination<TData>) {
+}: TablePaginationProps<TData>) {
+  const selectedRows = table.getFilteredSelectedRowModel().rows.length;
+  const totalRows = table.getFilteredRowModel().rows.length;
+  const page = table.state.pagination.pageIndex + 1;
+  const pageCount = table.getPageCount();
+
   return (
-    <div className='flex justify-between items-center bg-brand-surface p-2 rounded'>
-      <div className='flex-1 text-muted-foreground text-sm'>
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
+    <div className='flex sm:flex-row flex-col sm:justify-between sm:items-center gap-3 bg-brand-surface p-2 rounded'>
+      <div className='text-muted-foreground text-sm'>
+        {selectedRows} of {totalRows} row(s) selected.
       </div>
-      <div className='flex items-center space-x-6 lg:space-x-8'>
-        <div className='flex items-center space-x-2'>
-          <p className='font-medium text-sm'>Rows per page</p>
+
+      <div className='flex justify-between sm:justify-end items-center gap-3'>
+        <div className='flex items-center gap-2'>
+          <p className='hidden sm:block font-medium text-sm'>Rows per page</p>
+
           <Select
             value={`${table.state.pagination.pageSize}`}
             onValueChange={(value) => {
               table.setPageSize(Number(value));
             }}
           >
-            <SelectTrigger className='w-[70px] h-8'>
-              <SelectValue placeholder={table.state.pagination.pageSize} />
+            <SelectTrigger className='w-[60px] sm:w-[70px] h-8'>
+              <SelectValue />
             </SelectTrigger>
+
             <SelectContent side='top'>
               {[10, 20, 25, 30, 40, 50].map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
@@ -50,10 +57,12 @@ export function TablePagination<TData extends RowData>({
             </SelectContent>
           </Select>
         </div>
-        <div className='flex justify-center items-center w-[100px] font-medium text-sm'>
-          Page {table.state.pagination.pageIndex + 1} of {table.getPageCount()}
+
+        <div className='font-medium text-sm text-center whitespace-nowrap'>
+          {page} / {pageCount}
         </div>
-        <div className='flex items-center space-x-2'>
+
+        <div className='flex items-center gap-1'>
           <Button
             variant='outline'
             size='icon'
@@ -64,6 +73,7 @@ export function TablePagination<TData extends RowData>({
             <span className='sr-only'>Go to first page</span>
             <ChevronsLeft />
           </Button>
+
           <Button
             variant='outline'
             size='icon'
@@ -74,6 +84,7 @@ export function TablePagination<TData extends RowData>({
             <span className='sr-only'>Go to previous page</span>
             <ChevronLeft />
           </Button>
+
           <Button
             variant='outline'
             size='icon'
@@ -84,11 +95,12 @@ export function TablePagination<TData extends RowData>({
             <span className='sr-only'>Go to next page</span>
             <ChevronRight />
           </Button>
+
           <Button
             variant='outline'
             size='icon'
             className='hidden lg:flex size-8'
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            onClick={() => table.setPageIndex(pageCount - 1)}
             disabled={!table.getCanNextPage()}
           >
             <span className='sr-only'>Go to last page</span>
