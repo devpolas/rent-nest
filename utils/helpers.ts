@@ -22,9 +22,6 @@ export function formatDate(date: Date | string | null) {
   const d = new Date(date);
 
   return new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
     day: "numeric",
     month: "short",
     year: "numeric",
