@@ -28,7 +28,7 @@ export default function DashboardPropertyTable() {
 
   return (
     <div className='p-4'>
-      <PropertyTable data={properties} columns={propertyColumns} />;
+      <PropertyTable data={properties} columns={propertyColumns} />
     </div>
   );
 }

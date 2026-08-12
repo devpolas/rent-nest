@@ -21,6 +21,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { PropertyTablePagination } from "./property-table-pagination";
+import PropertyTableToolbar from "./property-table-toolbar";
 
 interface DataTableProps<TData extends RowData> {
   columns: ColumnDef<PropertyTableFeatures, TData>[];
@@ -52,6 +54,9 @@ export default function PropertyTable<TData extends RowData>({
 
   return (
     <div className='overflow-hidden'>
+      <div>
+        <PropertyTableToolbar table={table} />
+      </div>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -92,6 +97,7 @@ export default function PropertyTable<TData extends RowData>({
           )}
         </TableBody>
       </Table>
+      <PropertyTablePagination table={table} />
     </div>
   );
 }

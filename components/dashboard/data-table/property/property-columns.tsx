@@ -38,13 +38,6 @@ const propertyColumns = helper.columns([
     enableHiding: false,
   }),
 
-  helper.accessor("id", {
-    header: ({ column }) => (
-      <PropertyTableColumnHeader column={column} title='ID' />
-    ),
-    cell: ({ getValue }) => getValue(),
-  }),
-
   helper.accessor("title", {
     header: ({ column }) => (
       <PropertyTableColumnHeader column={column} title='Title' />
