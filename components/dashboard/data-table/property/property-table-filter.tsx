@@ -2,22 +2,22 @@ import { type ReactTable, type RowData } from "@tanstack/react-table";
 import { TableFeatures } from "../shared/table-features";
 import { Input } from "@/components/ui/input";
 
-interface PropertyTableFilter<TData extends RowData> {
+interface PropertyTableFilterProps<TData extends RowData> {
   table: ReactTable<TableFeatures, TData>;
 }
 
 export default function PropertyTableFilter<TData extends RowData>({
   table,
-}: PropertyTableFilter<TData>) {
+}: PropertyTableFilterProps<TData>) {
   return (
-    <div className='flex items-center py-4'>
+    <div className='w-full sm:w-auto'>
       <Input
         placeholder='Filter Titles...'
         value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
         onChange={(event) =>
           table.getColumn("title")?.setFilterValue(event.target.value)
         }
-        className='max-w-sm'
+        className='w-full sm:max-w-sm'
       />
     </div>
   );

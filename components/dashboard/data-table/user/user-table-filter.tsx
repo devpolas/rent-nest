@@ -21,8 +21,8 @@ export function UserTableFilter<TData extends RowData>({
   };
 
   return (
-    <div className='flex items-center gap-2'>
-      <div className='flex items-center'>
+    <div className='flex sm:flex-row flex-col sm:items-center gap-2 w-full sm:w-auto min-w-0'>
+      <div className='flex shrink-0'>
         <Button
           type='button'
           size='sm'
@@ -46,7 +46,7 @@ export function UserTableFilter<TData extends RowData>({
         value={table.state.globalFilter ?? ""}
         onChange={(event) => table.setGlobalFilter(event.target.value)}
         placeholder={`Search ${field}...`}
-        className='w-64'
+        className='w-full sm:w-64'
       />
     </div>
   );
