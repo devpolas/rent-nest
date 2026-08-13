@@ -1,3 +1,5 @@
+import DashboardPropertyDetailsTable from "@/components/dashboard/data-table/property-details/page";
+
 export default function page() {
-  return <section>amenities</section>;
+  return <DashboardPropertyDetailsTable detailsAction='amenities' />;
 }
