@@ -37,7 +37,7 @@ export default function PropertyTable<TData extends RowData>({
   const globalFilterAtom = useCreateAtom<string>("");
   const paginationAtom = useCreateAtom<PaginationState>({
     pageIndex: 0, // initial page index
-    pageSize: 10, // default page size
+    pageSize: 15, // default page size
   });
 
   const table = useTable({
