@@ -1,5 +1,5 @@
 import { RentalRequestStatus } from "./enums";
-import { ReviewTenantResponse } from "./review";
+import { PropertyReviewResponse, ReviewTenantResponse } from "./review";
 
 export interface RentalRequest {
   id: string;
@@ -21,4 +21,5 @@ export interface RentalRequest {
 
 export interface RentalRequestResponse extends RentalRequest {
   tenant: ReviewTenantResponse;
+  property: PropertyReviewResponse;
 }
