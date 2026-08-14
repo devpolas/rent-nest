@@ -1,6 +1,6 @@
 "use server";
 
-import { RentalRequest } from "@/types/rental-request";
+import { RentalRequest, RentalRequestResponse } from "@/types/rental-request";
 import {
   RentalRequestAdminAndOwnerUpdateSchema,
   RentalRequestAdminAndOwnerUpdateType,
@@ -99,7 +99,7 @@ export async function updateRentalRequestByOwnerOrAdmin({
 }
 
 export async function getRentalRequests(): Promise<
-  ApiResponse<{ rents: RentalRequest[] } | null>
+  ApiResponse<{ rents: RentalRequestResponse[] } | null>
 > {
   try {
     const response = await axiosServerInstance.get("/rental-requests");
@@ -114,7 +114,7 @@ export async function getRentalRequestById({
   id,
 }: {
   id: string;
-}): Promise<ApiResponse<{ rent: RentalRequest } | null>> {
+}): Promise<ApiResponse<{ rent: RentalRequestResponse } | null>> {
   try {
     if (!id.trim()) {
       return errorResponse("Rental request ID is required");
