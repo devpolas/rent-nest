@@ -62,7 +62,7 @@ export const dashboardMenu: Record<UserRole, DashboardSidebar> = {
     navMain: [
       {
         title: "Dashboard",
-        url: "/dashboard",
+        url: "/dashboard/tenant",
         icon: <LayoutDashboard />,
       },
 
@@ -74,37 +74,37 @@ export const dashboardMenu: Record<UserRole, DashboardSidebar> = {
 
       {
         title: "Favorites",
-        url: "/dashboard/favorites",
+        url: "/dashboard/tenant/favorites",
         icon: <Heart />,
       },
 
       {
         title: "Rental Requests",
-        url: "/dashboard/requests",
+        url: "/dashboard/tenant/requests",
         icon: <FileText />,
       },
 
       {
         title: "Payments",
-        url: "/dashboard/payments",
+        url: "/dashboard/tenant/payments",
         icon: <CreditCard />,
       },
 
       {
         title: "Reviews",
-        url: "/dashboard/reviews",
+        url: "/dashboard/tenant/reviews",
         icon: <Star />,
       },
 
       {
         title: "Messages",
-        url: "/dashboard/messages",
+        url: "/dashboard/tenant/messages",
         icon: <MessageCircle />,
       },
 
       {
         title: "Profile",
-        url: "/dashboard/profile",
+        url: "/dashboard/tenant/profile",
         icon: <User />,
       },
     ],
@@ -120,55 +120,55 @@ export const dashboardMenu: Record<UserRole, DashboardSidebar> = {
     navMain: [
       {
         title: "Dashboard",
-        url: "/dashboard",
+        url: "/dashboard/landlord",
         icon: <LayoutDashboard />,
       },
 
       {
         title: "My Properties",
-        url: "/dashboard/properties",
+        url: "/dashboard/landlord/properties",
         icon: <Home />,
       },
 
       {
         title: "Add Property",
-        url: "/dashboard/properties/create",
+        url: "/dashboard/landlord/properties/create",
         icon: <Plus />,
       },
 
       {
         title: "Rental Requests",
-        url: "/dashboard/requests",
+        url: "/dashboard/landlord/requests",
         icon: <FileText />,
       },
 
       {
         title: "Payments",
-        url: "/dashboard/payments",
+        url: "/dashboard/landlord/payments",
         icon: <Wallet />,
       },
 
       {
         title: "Analytics",
-        url: "/dashboard/analytics",
+        url: "/dashboard/landlord/analytics",
         icon: <ChartBar />,
       },
 
       {
         title: "Reviews",
-        url: "/dashboard/reviews",
+        url: "/dashboard/landlord/reviews",
         icon: <Star />,
       },
 
       {
         title: "Messages",
-        url: "/dashboard/messages",
+        url: "/dashboard/landlord/messages",
         icon: <MessageCircle />,
       },
 
       {
         title: "Profile",
-        url: "/dashboard/profile",
+        url: "/dashboard/landlord/profile",
         icon: <User />,
       },
     ],
@@ -184,62 +184,82 @@ export const dashboardMenu: Record<UserRole, DashboardSidebar> = {
     navMain: [
       {
         title: "Dashboard",
-        url: "/dashboard",
+        url: "/dashboard/admin",
         icon: <LayoutDashboard />,
       },
 
       {
+        title: "Analytics",
+        url: "/dashboard/landlord/analytics",
+        icon: <ChartBar />,
+      },
+
+      {
         title: "Users",
-        url: "/dashboard/users",
+        url: "/dashboard/admin/users",
         icon: <Users />,
       },
 
       {
         title: "Properties",
-        url: "/dashboard/properties",
+        url: "/dashboard/admin/properties",
         icon: <Home />,
       },
 
       {
         title: "Categories",
-        url: "/dashboard/categories",
+        url: "/dashboard/admin/categories",
         icon: <Layers />,
       },
 
       {
         title: "Amenities",
-        url: "/dashboard/amenities",
+        url: "/dashboard/admin/amenities",
         icon: <Sparkles />,
       },
 
       {
         title: "Features",
-        url: "/dashboard/features",
+        url: "/dashboard/admin/features",
         icon: <ShieldCheck />,
       },
 
       {
         title: "Rules",
-        url: "/dashboard/rules",
+        url: "/dashboard/admin/rules",
         icon: <FileText />,
       },
 
       {
         title: "Rental Requests",
-        url: "/dashboard/requests",
+        url: "/dashboard/admin/requests",
         icon: <FileText />,
       },
 
       {
         title: "Payments",
-        url: "/dashboard/payments",
+        url: "/dashboard/admin/payments",
         icon: <CreditCard />,
       },
-
+      {
+        title: "Reviews",
+        url: "/dashboard/admin/reviews",
+        icon: <Star />,
+      },
       {
         title: "Reports",
-        url: "/dashboard/reports",
+        url: "/dashboard/admin/reports",
         icon: <ChartBar />,
+      },
+      {
+        title: "Messages",
+        url: "/dashboard/admin/messages",
+        icon: <MessageCircle />,
+      },
+      {
+        title: "Profile",
+        url: "/dashboard/admin/profile",
+        icon: <User />,
       },
     ],
 
