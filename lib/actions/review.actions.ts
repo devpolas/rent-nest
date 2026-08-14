@@ -3,7 +3,7 @@
 import { handleApiError } from "@/utils/handle-api-error";
 import { handleZodError } from "@/utils/handle-zod-errors";
 import type { ApiResponse } from "@/types/response";
-import type { Review } from "@/types/review";
+import type { Review, ReviewResponse } from "@/types/review";
 import {
   ReviewInputType,
   ReviewSchema,
@@ -90,7 +90,7 @@ export async function deleteReview({
 }
 
 export async function getAllReviews(): Promise<
-  ApiResponse<{ reviews: Review[] } | null>
+  ApiResponse<{ reviews: ReviewResponse[] } | null>
 > {
   try {
     const response = await axiosServerInstance.get("/reviews/admin/all");
