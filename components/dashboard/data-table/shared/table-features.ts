@@ -14,6 +14,8 @@ import {
   sortFn_datetime,
   sortFn_text,
   rowExpandingFeature,
+  createGroupedRowModel,
+  columnGroupingFeature,
   tableFeatures,
 } from "@tanstack/react-table";
 
@@ -26,6 +28,8 @@ export const dataTableFeatures = tableFeatures({
   rowSelectionFeature,
   rowSortingFeature,
   rowExpandingFeature,
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
