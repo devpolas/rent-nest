@@ -1,3 +1,7 @@
 export default function page() {
-  return <section></section>;
+  return (
+    <section className='flex justify-center items-center w-full h-full'>
+      Under Development
+    </section>
+  );
 }
