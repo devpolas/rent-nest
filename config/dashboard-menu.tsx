@@ -155,12 +155,6 @@ export const dashboardMenu: Record<UserRole, DashboardSidebar> = {
       },
 
       {
-        title: "Reviews",
-        url: "/dashboard/landlord/reviews",
-        icon: <Star />,
-      },
-
-      {
         title: "Messages",
         url: "/dashboard/landlord/messages",
         icon: <MessageCircle />,
