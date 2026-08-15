@@ -25,8 +25,14 @@ export async function proxy(request: NextRequest) {
     pathname === PROTECTED_PREFIX ||
     pathname.startsWith(`${PROTECTED_PREFIX}/`);
 
+  // Public routes don't need authentication checks
+  if (!isPublic && !isProtected) {
+    return NextResponse.next();
+  }
+
   const session = await userSession(request);
 
+  // Try refreshing only when authentication is actually needed
   if (!session) {
     const setCookies = await refreshTokens(request);
 
@@ -70,7 +76,7 @@ export async function proxy(request: NextRequest) {
     );
 
     if (!hasAccess) {
-      return NextResponse.redirect(new URL("/403", request.url));
+      return NextResponse.redirect(new URL("/404", request.url));
     }
   }
 

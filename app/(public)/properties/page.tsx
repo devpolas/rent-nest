@@ -1,3 +1,5 @@
+import Properties from "@/components/properties/properties";
+
 export default function page() {
-  return <section>properties</section>;
+  return <Properties />;
 }

@@ -59,7 +59,7 @@ export default function PropertyCard({ property }: Props) {
         <div className='flex justify-between items-center'>
           <div className='flex items-center gap-1 bg-brand/10 px-3 py-1 rounded-full font-medium text-brand text-sm'>
             <Star className='fill-current size-4' />
-            {property.averageRating.toFixed(1)}
+            {Number(property.averageRating).toFixed(1)}
           </div>
 
           <Muted>{property.reviews} reviews</Muted>

@@ -4,7 +4,7 @@ import { ApiResponse } from "@/types/response";
 import axiosClientInstance from "../axios/axios-client";
 import { errorResponse } from "@/utils/api-response";
 import { handleApiError } from "@/utils/handle-api-error";
-import { Review } from "@/types/review";
+import { Review, ReviewResponse } from "@/types/review";
 
 export async function getReviewById({
   id,
@@ -28,7 +28,7 @@ export async function getReviewsByPropertyId({
   propertyId,
 }: {
   propertyId: string;
-}): Promise<ApiResponse<{ reviews: Review[] } | null>> {
+}): Promise<ApiResponse<{ reviews: ReviewResponse[] } | null>> {
   try {
     if (!propertyId.trim()) {
       return errorResponse("Property ID is required");
