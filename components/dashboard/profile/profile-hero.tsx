@@ -12,9 +12,9 @@ import { Button } from "@/components/ui/button";
 
 import { Heading2, Muted } from "@/components/typography/typography";
 
-import { ReusableDialog } from "../dialog/dialog";
 import UpdateAccount from "./update-account";
 import ProfileSocial from "./social-profiles";
+import { ReusableDialog } from "@/components/dialog/dialog";
 
 type Props = {
   user: MeResponse;

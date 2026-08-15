@@ -29,8 +29,8 @@ import {
   SocialProfileCreateInput,
   SocialProfileCreateSchema,
 } from "@/schemas/user.schema";
-import { FormRhfSelect } from "../rhf-input/form-rfh-select";
-import { FormRhfInput } from "../rhf-input/form-rhf-input";
+import { FormRhfSelect } from "@/components/rhf-input/form-rfh-select";
+import { FormRhfInput } from "@/components/rhf-input/form-rhf-input";
 
 type Props = {
   user: MeResponse;

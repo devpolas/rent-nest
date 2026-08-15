@@ -1,4 +1,4 @@
-import { Heading3, Muted } from "../typography/typography";
+import { Heading3, Muted } from "@/components/typography/typography";
 
 export default function StatCard({
   label,

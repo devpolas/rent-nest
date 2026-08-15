@@ -7,17 +7,14 @@ import ProfileHero from "./profile-hero";
 import ProfileAbout from "./profile-about";
 import ProfileInformation from "./profile-information";
 import ProfileSidebar from "./profile-sidebar";
-
-import Location from "../location/location";
-import CreateLocation from "../location/create-location";
-import UpdateLocation from "../location/update-location";
-import { ReusableDialog } from "../dialog/dialog";
-
 import { useMe } from "@/hooks";
 import Loading from "@/app/loading";
 import { Button } from "@/components/ui/button";
-
 import type { Location as LocationType } from "@/types/location";
+import { ReusableDialog } from "@/components/dialog/dialog";
+import Location from "@/components/location/location";
+import CreateLocation from "@/components/location/create-location";
+import UpdateLocation from "@/components/location/update-location";
 
 type LocationFormType = "HOME" | "CURRENT" | "WORK";
 

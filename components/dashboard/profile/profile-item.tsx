@@ -1,4 +1,4 @@
-import { Large, Muted } from "../typography/typography";
+import { Large, Muted } from "@/components/typography/typography";
 
 export default function ProfileItem({
   icon: Icon,

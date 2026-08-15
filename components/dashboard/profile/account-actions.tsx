@@ -3,12 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLogout } from "@/hooks/auth/mutations/use-logout";
 import { toast } from "sonner";
-import ActionButton from "../button/action-button";
 import { useRouter } from "next/navigation";
-import { ReusableDialog } from "../dialog/dialog";
 import UpdateProfile from "./update-profile";
 import { useState } from "react";
 import { MeResponse } from "@/types/user";
+import ActionButton from "@/components/button/action-button";
+import { ReusableDialog } from "@/components/dialog/dialog";
 
 export default function AccountActions({ user }: { user: MeResponse }) {
   const [isEdit, setIsEdit] = useState(false);
