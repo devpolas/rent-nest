@@ -1,3 +1,5 @@
+import DashboardRentalTable from "@/components/dashboard/data-table/rental-request/page";
+
 export default function page() {
-  return <section></section>;
+  return <DashboardRentalTable />;
 }

@@ -93,7 +93,7 @@ export async function getAllReviews(): Promise<
   ApiResponse<{ reviews: ReviewResponse[] } | null>
 > {
   try {
-    const response = await axiosServerInstance.get("/reviews/admin/all");
+    const response = await axiosServerInstance.get("/reviews");
 
     return response.data;
   } catch (error) {
