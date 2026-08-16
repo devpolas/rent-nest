@@ -43,7 +43,7 @@ const propertyColumns = helper.columns([
     cell: ({ getValue, row }) => {
       const value = getValue();
       return (
-        <Link href={`/dashboard/properties/${row.original.id}/edit`}>
+        <Link href={`/dashboard/landlord/properties/${row.original.id}/edit`}>
           {value}
         </Link>
       );

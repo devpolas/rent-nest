@@ -35,7 +35,9 @@ export default function CreateProperty() {
         return;
       }
       toast.success(response.message);
-      router.push(`/dashboard/properties/${response.data?.property.id}/edit`);
+      router.push(
+        `/dashboard/landlord/properties/${response.data?.property.id}/edit`,
+      );
     } catch {
       toast.error("Something went wrong");
     }
