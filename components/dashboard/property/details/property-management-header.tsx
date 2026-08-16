@@ -20,8 +20,6 @@ export default function PropertyManagementHeader({
   onManageLocation,
   onBack,
 }: Props) {
-  const router = useRouter();
-
   return (
     <header className='space-y-5'>
       <Button variant='ghost' size='sm' className='-ml-2' onClick={onBack}>

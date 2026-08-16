@@ -24,7 +24,7 @@ export default function PropertyManagementActions({
   onManageLocation,
 }: Props) {
   const router = useRouter();
-  const propertyBasePath = `/dashboard/properties/${property.id}`;
+  const propertyBasePath = `/dashboard/landlord/properties/${property.id}`;
 
   return (
     <div className='flex items-center gap-2'>
