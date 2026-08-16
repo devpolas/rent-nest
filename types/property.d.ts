@@ -66,27 +66,15 @@ export interface Rule extends PropertyDetail {
 
 interface PropertyAminity {
   id: string;
-  propertyId: string;
-  amenityId: string;
-  createdAt: string;
-  updatedAt: string;
   amenity: Amenity;
 }
 interface PropertyFeature {
   id: string;
-  propertyId: string;
-  amenityId: string;
-  createdAt: string;
-  updatedAt: string;
   feature: Feature;
 }
 
 interface PropertyRule {
   id: string;
-  propertyId: string;
-  amenityId: string;
-  createdAt: string;
-  updatedAt: string;
   rule: Rule;
 }
 
