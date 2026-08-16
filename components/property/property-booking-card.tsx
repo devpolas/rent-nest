@@ -21,7 +21,7 @@ export default function PropertyBookingCard({ property }: Props) {
               ৳{Number(property.rent).toLocaleString()}
             </Heading3>
 
-            <Muted>/month</Muted>
+            <Muted>/day</Muted>
           </div>
         </div>
 

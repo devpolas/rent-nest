@@ -92,7 +92,7 @@ export default function PropertyOverviewCard({ property }: Props) {
           <InformationItem
             icon={<Ruler className='size-4 text-muted-foreground' />}
             label='Area'
-            value={`${property.area} sq ft`}
+            value={`${property.area} sqft`}
           />
 
           <InformationItem

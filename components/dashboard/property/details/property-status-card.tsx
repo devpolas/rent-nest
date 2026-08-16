@@ -42,7 +42,7 @@ export default function PropertyStatusCard({ property }: Props) {
             label='Rating'
             value={
               property.reviewCount > 0
-                ? `${property.averageRating.toFixed(1)} / 5`
+                ? `${property.averageRating.toFixed(1)}`
                 : "No reviews"
             }
           />

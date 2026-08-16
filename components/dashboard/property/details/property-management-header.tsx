@@ -1,7 +1,6 @@
 "use client";
 
 import { ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 import type { PropertyManagementResponse } from "@/types/property";
 
