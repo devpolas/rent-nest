@@ -68,7 +68,9 @@ export default function PropertyImagesCard({ property }: Props) {
               <Button
                 variant='outline'
                 onClick={() =>
-                  router.push(`/dashboard/properties/${property.id}/images`)
+                  router.push(
+                    `/dashboard/properties/landlord/${property.id}/images`,
+                  )
                 }
               >
                 <Images className='mr-2 size-4' />

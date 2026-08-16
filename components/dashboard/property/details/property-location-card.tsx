@@ -1,7 +1,6 @@
 "use client";
 
 import { Edit, MapPin, Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 import type { PropertyManagementResponse } from "@/types/property";
 
@@ -20,7 +19,6 @@ export default function PropertyLocationCard({
   onEditLocation,
   onAddLocation,
 }: Props) {
-  const router = useRouter();
   const location = property.location;
 
   return (
