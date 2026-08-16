@@ -9,6 +9,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { ReusableDialog } from "../dialog/dialog";
 import RentalRequest from "./rental-request/rental-request";
+import ActionButton from "../button/action-button";
 
 type Props = {
   property: PropertyResponse;
@@ -73,9 +74,17 @@ export default function PropertyBookingCard({ property }: Props) {
 
           {/* Action */}
           <div className='space-y-3'>
-            <Button size='lg' variant='outline' className='w-full'>
+            <ActionButton
+              disabled={isLoading || property.availability !== "AVAILABLE"}
+              isLoading={isLoading}
+              onClick={handleRentalRequest}
+              variant='outline'
+              size='lg'
+              className='flex-1'
+              loadingText='Requesting...'
+            >
               Request Rental
-            </Button>
+            </ActionButton>
 
             <Button size='lg' variant='outline' className='w-full'>
               <Heart className='mr-2 size-4' />
