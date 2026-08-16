@@ -6,13 +6,14 @@ import { ThemeSwitcher } from "../theme/theme-switcher";
 import AuthButtons from "./auth-buttons";
 import LoadingSpinner from "../spinner/loading-spinner";
 import useAuth from "@/hooks/auth/use-auth";
-import DashboardButton from "./dashboard-button";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 export default function Navbar() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   return (
     <header className='top-0 z-50 sticky w-full'>
-      <div className='glass bg-brand/5 supports-[backdrop-filter]:bg-brand/5 border-x-0 border-t-0 border-b border-brand/15'>
+      <div className='bg-brand/5 supports-[backdrop-filter]:bg-brand/5 border-brand/15 border-x-0 border-t-0 border-b glass'>
         <div className='flex justify-between items-center gap-2 mx-auto px-4 sm:px-6 w-full h-14 sm:h-16 container'>
           {/* Logo */}
           <Logo />
@@ -24,7 +25,11 @@ export default function Navbar() {
               {isLoading ? (
                 <LoadingSpinner />
               ) : isAuthenticated ? (
-                <DashboardButton />
+                <Button variant='brand' asChild>
+                  <Link href={`/dashboard/${user?.role.toLocaleLowerCase()}`}>
+                    Go to Dashboard
+                  </Link>
+                </Button>
               ) : (
                 <AuthButtons />
               )}

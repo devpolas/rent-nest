@@ -18,7 +18,7 @@ import LoadingSpinner from "../spinner/loading-spinner";
 import useAuth from "@/hooks/auth/use-auth";
 
 export default function MobileNavbar() {
-  const { isLoading, isAuthenticated } = useAuth();
+  const { isLoading, isAuthenticated, user } = useAuth();
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -61,7 +61,9 @@ export default function MobileNavbar() {
               {isLoading ? (
                 <LoadingSpinner />
               ) : isAuthenticated ? (
-                <Link href='/dashboard'>Go to Dashboard</Link>
+                <Link href={`/dashboard/${user?.role.toLocaleLowerCase()}`}>
+                  Go to Dashboard
+                </Link>
               ) : (
                 <Link href='/signup'>Get Started</Link>
               )}
