@@ -42,7 +42,9 @@ const propertyColumns = helper.columns([
     header: ({ column }) => <TableColumnHeader column={column} title='Title' />,
     cell: ({ getValue, row }) => {
       const value = getValue();
-      <Link href={`/dashboard/properties/${row.original.id}`}>{value}</Link>;
+      return (
+        <Link href={`/dashboard/properties/${row.original.id}`}>{value}</Link>
+      );
     },
   }),
 
