@@ -36,7 +36,7 @@ export type RentalRequestTenantUpdateType = z.infer<
   typeof RentalRequestTenantUpdateSchema
 >;
 
-export type RentalRequestType = z.infer<typeof RentalRequestSchema>;
+export type RentalRequestType = z.input<typeof RentalRequestSchema>;
 
 export type RentalRequestAdminAndOwnerUpdateType = z.infer<
   typeof RentalRequestAdminAndOwnerUpdateSchema
