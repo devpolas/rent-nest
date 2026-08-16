@@ -30,7 +30,7 @@ export default function PropertyDetails({ property, reviews }: Props) {
     <div className='space-y-10'>
       <PropertyGallery images={property.images} status={property.status} />
 
-      <div className='gap-10 grid lg:grid-cols-3'>
+      <div className='items-start gap-10 grid lg:grid-cols-3'>
         <main className='space-y-10 lg:col-span-2 min-w-0'>
           <PropertyHeader property={property} />
           <PropertyPriceCard property={property} />
@@ -43,7 +43,7 @@ export default function PropertyDetails({ property, reviews }: Props) {
           <PropertyReviews reviews={reviews} />
         </main>
 
-        <aside className='min-w-0'>
+        <aside className='top-24 sticky space-y-6 min-w-0'>
           <PropertySidebar property={property} />
         </aside>
       </div>

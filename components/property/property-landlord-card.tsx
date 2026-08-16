@@ -28,18 +28,10 @@ export default function PropertyLandlordCard({ property }: Props) {
 
               <BadgeCheck className='size-4 text-brand-success' />
             </div>
-
             <Muted>Property Owner</Muted>
+            <Muted className='text-center'>{landlord.email}</Muted>
           </div>
         </div>
-
-        <Button variant='outline' className='w-full' size='lg'>
-          Request Rental
-        </Button>
-
-        <Muted className='text-center'>
-          Contact information will be available after approval.
-        </Muted>
       </CardContent>
     </Card>
   );

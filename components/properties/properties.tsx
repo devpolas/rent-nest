@@ -5,7 +5,10 @@ import { useProperties } from "@/hooks";
 import PropertyCard from "../property/property-card";
 
 export default function Properties() {
-  const { data, isLoading } = useProperties({ status: "APPROVED" });
+  const { data, isLoading } = useProperties({
+    status: "APPROVED",
+    availability: "AVAILABLE",
+  });
 
   if (isLoading) {
     return <Loading />;
@@ -22,9 +25,10 @@ export default function Properties() {
   }
 
   const properties = data?.data?.properties ?? [];
+  console.log(properties);
 
   return (
-    <section className='p-4 container'>
+    <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto p-4 container'>
       {properties.map((property) => (
         <PropertyCard key={property.id} property={property} />
       ))}

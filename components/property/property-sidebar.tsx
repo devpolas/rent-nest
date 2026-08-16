@@ -10,7 +10,7 @@ type Props = {
 export default function PropertySidebar({ property }: Props) {
   return (
     <aside>
-      <div className='top-24 sticky space-y-6'>
+      <div className='space-y-6'>
         <PropertyBookingCard property={property} />
         <PropertyLandlordCard property={property} />
       </div>

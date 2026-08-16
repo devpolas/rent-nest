@@ -80,7 +80,7 @@ export default function PropertyCard({ property }: Props) {
                 ৳{property.rent.toLocaleString()}
               </Large>
 
-              <Caption>/month</Caption>
+              <Caption>/day</Caption>
             </div>
           </div>
 

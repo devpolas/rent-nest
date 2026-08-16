@@ -25,7 +25,7 @@ export default function PropertyAmenities({ property }: Props) {
       ) : (
         <div className='gap-4 grid sm:grid-cols-2 xl:grid-cols-3'>
           {property.amenities.map((amenity) => (
-            <AmenityCard key={amenity.id} name={amenity.amenity.name} />
+            <AmenityCard key={amenity.amenity.id} name={amenity.amenity.name} />
           ))}
         </div>
       )}

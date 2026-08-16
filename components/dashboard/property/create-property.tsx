@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import PropertyForm from "./property-form";
 import { useCreateProperty } from "@/hooks";
 import { PropertyInputType } from "../../../schemas/property.schema";
+import { useRouter } from "next/navigation";
 
 const DEFAULT_VALUES: Partial<PropertyInputType> = {
   title: "",
@@ -22,6 +23,7 @@ const DEFAULT_VALUES: Partial<PropertyInputType> = {
 };
 
 export default function CreateProperty() {
+  const router = useRouter();
   const { mutateAsync: createProperty, isPending } = useCreateProperty();
   async function handleCreate(data: PropertyInputType) {
     try {
@@ -33,6 +35,7 @@ export default function CreateProperty() {
         return;
       }
       toast.success(response.message);
+      router.push(`/dashboard/properties/${response.data?.property.id}`);
     } catch {
       toast.error("Something went wrong");
     }

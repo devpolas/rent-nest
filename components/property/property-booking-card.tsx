@@ -14,7 +14,7 @@ export default function PropertyBookingCard({ property }: Props) {
       <CardContent className='space-y-6 p-6'>
         {/* Price */}
         <div>
-          <Muted>Monthly Rent</Muted>
+          <Muted>Daily Rent</Muted>
 
           <div className='flex items-end gap-2 mt-1'>
             <Heading3 className='text-brand'>

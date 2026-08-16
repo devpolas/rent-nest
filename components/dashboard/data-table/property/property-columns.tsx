@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/utils/helpers";
 import { PropertyDetailsList } from "./property-details-list";
 import { LocationView } from "../shared/location-view";
+import Link from "next/link";
 
 const helper = createColumnHelper<TableFeatures, PropertyResponse>();
 
@@ -39,7 +40,10 @@ const propertyColumns = helper.columns([
 
   helper.accessor("title", {
     header: ({ column }) => <TableColumnHeader column={column} title='Title' />,
-    cell: ({ getValue }) => getValue(),
+    cell: ({ getValue, row }) => {
+      const value = getValue();
+      <Link href={`/dashboard/properties/${row.original.id}`}>{value}</Link>;
+    },
   }),
 
   helper.accessor("category", {
