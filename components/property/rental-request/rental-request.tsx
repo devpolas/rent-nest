@@ -25,12 +25,14 @@ interface RentalRequestProps {
   propertyId: string;
   propertyTitle: string;
   rent: number;
+  handleClose?: () => void;
 }
 
 export default function RentalRequest({
   propertyId,
   propertyTitle,
   rent,
+  handleClose,
 }: RentalRequestProps) {
   const { control, handleSubmit, watch } = useForm<RentalRequestType>({
     resolver: zodResolver(RentalRequestSchema),
@@ -58,6 +60,7 @@ export default function RentalRequest({
       }
 
       toast.success(response.message);
+      handleClose?.();
     } catch {
       toast.error("Something went wrong. Please try again.");
     }

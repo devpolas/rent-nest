@@ -143,7 +143,7 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
       {isAdmin && (
         <ReusableDialog
           isOpen={isStatusDialogOpen}
-          onOpenChange={setIsStatusDialogOpen}
+          onOpenChange={() => setIsStatusDialogOpen(false)}
           isSubmitting={adminUpdateMutation.isPending}
         >
           <UpdatePropertyStatusForm
@@ -158,7 +158,7 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
       {isLandlord && (
         <ReusableDialog
           isOpen={isDeleteDialogOpen}
-          onOpenChange={setIsDeleteDialogOpen}
+          onOpenChange={() => setIsStatusDialogOpen(false)}
           isSubmitting={deleteMutation.isPending}
         >
           <form

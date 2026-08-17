@@ -116,11 +116,12 @@ export default function PropertyPriceCard({ property }: Props) {
         </CardContent>
       </Card>
 
-      <ReusableDialog isOpen={dialog} onOpenChange={handleCloseDialog}>
+      <ReusableDialog isOpen={dialog} onOpenChange={() => handleCloseDialog()}>
         <RentalRequest
           propertyId={property.id}
           propertyTitle={property.title}
           rent={Number(property.rent)}
+          handleClose={handleCloseDialog}
         />
       </ReusableDialog>
     </>
