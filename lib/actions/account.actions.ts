@@ -115,14 +115,13 @@ export async function logoutFromOtherDevices(): Promise<ApiResponse<null>> {
   }
 }
 
-export async function isValidSession(request: NextRequest): Promise<boolean> {
-  const token = request.cookies.get("accessToken")?.value;
-  if (!token) return false;
+export async function verifyAccessToken(
+  token: string,
+): Promise<AccountSession | null> {
   try {
-    Jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
-    return true;
+    return Jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as AccountSession;
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -133,11 +132,7 @@ export async function userSession(
 
   if (!token) return null;
 
-  try {
-    return Jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as AccountSession;
-  } catch {
-    return null;
-  }
+  return verifyAccessToken(token);
 }
 
 export async function refreshTokens(

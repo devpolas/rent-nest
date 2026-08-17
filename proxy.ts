@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { refreshTokens, userSession } from "./lib/actions/account.actions";
-import { dashboardRoutes } from "./config/dashboard-routes";
+
+import { getDashboardPath, hasRouteAccess } from "./config/dashboard-routes";
+
 import { UserRole } from "./types/enum";
+import {
+  refreshTokens,
+  userSession,
+  verifyAccessToken,
+} from "./lib/actions/account.actions";
 
 const PUBLIC_ROUTES = [
   "/signin",
@@ -14,53 +20,88 @@ const PUBLIC_ROUTES = [
 
 const PROTECTED_PREFIX = "/dashboard";
 
+function isRouteMatch(pathname: string, route: string): boolean {
+  return pathname === route || pathname.startsWith(`${route}/`);
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
-  const isPublic = PUBLIC_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`),
-  );
+  const isPublic = PUBLIC_ROUTES.some((route) => isRouteMatch(pathname, route));
 
   const isProtected =
     pathname === PROTECTED_PREFIX ||
     pathname.startsWith(`${PROTECTED_PREFIX}/`);
 
-  // Public routes don't need authentication checks
+  /**
+   * Routes outside authentication-related routes
+   * don't need any session check.
+   */
   if (!isPublic && !isProtected) {
     return NextResponse.next();
   }
 
-  const session = await userSession(request);
+  /**
+   * First try the existing access token.
+   */
+  let session = await userSession(request);
 
-  // Try refreshing only when authentication is actually needed
+  /**
+   * If the access token is expired/invalid,
+   * try refreshing it.
+   */
+  let refreshedCookies: string[] | null = null;
+
   if (!session) {
-    const setCookies = await refreshTokens(request);
+    refreshedCookies = await refreshTokens(request);
 
-    if (setCookies) {
-      const response = NextResponse.next();
+    if (refreshedCookies) {
+      const accessToken = refreshedCookies
+        .find((cookie) => cookie.startsWith("accessToken="))
+        ?.split(";")[0]
+        ?.split("=")[1];
 
-      for (const cookie of setCookies) {
-        response.headers.append("Set-Cookie", cookie);
+      if (accessToken) {
+        session = await verifyAccessToken(accessToken);
       }
-
-      return response;
     }
   }
 
+  /**
+   * PUBLIC ROUTES
+   */
   if (isPublic) {
     if (session) {
-      return NextResponse.redirect(new URL("/", request.url));
+      const response = NextResponse.redirect(new URL("/", request.url));
+
+      if (refreshedCookies) {
+        for (const cookie of refreshedCookies) {
+          response.headers.append("Set-Cookie", cookie);
+        }
+      }
+
+      return response;
     }
 
     return NextResponse.next();
   }
 
+  /**
+   * PROTECTED DASHBOARD ROUTES
+   */
   if (isProtected) {
+    /**
+     * User is not authenticated even after
+     * attempting token refresh.
+     */
     if (!session) {
-      const callbackUrl = encodeURIComponent(`${pathname}${search}`);
+      const callbackUrl = `${pathname}${search}`;
 
       const response = NextResponse.redirect(
-        new URL(`/signin?callbackUrl=${callbackUrl}`, request.url),
+        new URL(
+          `/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          request.url,
+        ),
       );
 
       response.cookies.delete("accessToken");
@@ -69,18 +110,61 @@ export async function proxy(request: NextRequest) {
       return response;
     }
 
-    const allowedRoutes = dashboardRoutes[session.role as UserRole];
+    const role = session.role as UserRole;
 
-    const hasAccess = allowedRoutes.some(
-      (route) => pathname === route || pathname.startsWith(`${route}/`),
-    );
+    /**
+     * /dashboard
+     *
+     * Redirect the user to their own dashboard.
+     */
+    if (pathname === PROTECTED_PREFIX) {
+      const response = NextResponse.redirect(
+        new URL(getDashboardPath(role), request.url),
+      );
 
-    if (!hasAccess) {
-      return NextResponse.redirect(new URL("/404", request.url));
+      if (refreshedCookies) {
+        for (const cookie of refreshedCookies) {
+          response.headers.append("Set-Cookie", cookie);
+        }
+      }
+
+      return response;
+    }
+
+    /**
+     * Check whether the authenticated user's
+     * role is allowed to access this dashboard.
+     */
+    if (!hasRouteAccess(role, pathname)) {
+      const response = NextResponse.redirect(
+        new URL(getDashboardPath(role), request.url),
+      );
+
+      if (refreshedCookies) {
+        for (const cookie of refreshedCookies) {
+          response.headers.append("Set-Cookie", cookie);
+        }
+      }
+
+      return response;
     }
   }
 
-  return NextResponse.next();
+  /**
+   * Continue with the request.
+   *
+   * If the access token was refreshed, forward
+   * the new cookies to the browser.
+   */
+  const response = NextResponse.next();
+
+  if (refreshedCookies) {
+    for (const cookie of refreshedCookies) {
+      response.headers.append("Set-Cookie", cookie);
+    }
+  }
+
+  return response;
 }
 
 export const config = {

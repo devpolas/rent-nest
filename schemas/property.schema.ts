@@ -1,5 +1,13 @@
 import * as z from "zod";
 
+const PropertyStatusSchema = z.enum([
+  "PENDING",
+  "APPROVED",
+  "REJECTED",
+  "RENTED",
+  "ARCHIVED",
+]);
+
 export const PropertySchema = z.object({
   title: z.string().min(10),
   description: z.string().min(15),
@@ -41,6 +49,7 @@ export const PropertyUpdateSchema = PropertySchema.partial();
 
 export const PropertyAdminUpdateSchema = z.object({
   landlordId: z.uuid().optional(),
+  status: PropertyStatusSchema.optional(),
 });
 
 export const PropertyQuerySchema = z.object({
@@ -97,7 +106,7 @@ export const PropertyDetailsUpdateSchema = z.object({
 
 export type PropertyInputType = z.input<typeof PropertySchema>;
 export type PropertyUpdateInputType = z.input<typeof PropertyUpdateSchema>;
-export type PropertyUpdateAdminInputType = z.infer<
+export type PropertyUpdateAdminInputType = z.input<
   typeof PropertyAdminUpdateSchema
 >;
 

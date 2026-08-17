@@ -11,6 +11,17 @@ import { formatDate } from "@/utils/helpers";
 import { PropertyDetailsList } from "./property-details-list";
 import { LocationView } from "../shared/location-view";
 import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal } from "lucide-react";
+import { PropertyActions } from "./property-actions";
 
 const helper = createColumnHelper<TableFeatures, PropertyResponse>();
 
@@ -231,6 +242,15 @@ const propertyColumns = helper.columns([
       const value = getValue();
       const formattedDate = formatDate(new Date(value));
       return formattedDate;
+    },
+  }),
+
+  helper.display({
+    id: "actions",
+    cell: ({ row }) => {
+      const property = row.original;
+
+      return <PropertyActions propertyId={property.id} />;
     },
   }),
 ]);

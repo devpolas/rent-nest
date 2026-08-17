@@ -1,21 +1,21 @@
 import { UserRole } from "@/types/enum";
-import { dashboardMenu } from "./dashboard-menu";
 
-export const dashboardRoutes: Record<UserRole, string[]> = Object.fromEntries(
-  Object.entries(dashboardMenu).map(([role, menu]) => {
-    const urls = [
-      ...menu.navMain.map((item) => item.url),
-      ...menu.navSecondary.map((item) => item.url),
-    ];
+export const dashboardRoutes: Record<UserRole, string> = {
+  [UserRole.TENANT]: "/dashboard/tenant",
+  [UserRole.LANDLORD]: "/dashboard/landlord",
+  [UserRole.ADMIN]: "/dashboard/admin",
+};
 
-    return [role, urls];
-  }),
-) as Record<UserRole, string[]>;
+export function getDashboardPath(role: UserRole): string {
+  return dashboardRoutes[role];
+}
 
 export function hasRouteAccess(role: UserRole, pathname: string): boolean {
-  const routes = dashboardRoutes[role] ?? [];
+  const dashboardPath = dashboardRoutes[role];
 
-  return routes.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`),
-  );
+  if (!dashboardPath) {
+    return false;
+  }
+
+  return pathname === dashboardPath || pathname.startsWith(`${dashboardPath}/`);
 }
