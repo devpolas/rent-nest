@@ -64,7 +64,7 @@ export default function RentalRequest({
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='p-4'>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Card className='px-4'>
         <CardHeader>
           <CardTitle>Make a rental request for {propertyTitle}</CardTitle>
@@ -81,7 +81,7 @@ export default function RentalRequest({
               loadingText='Requesting...'
             >
               Confirm $
-              {Number(Number(totalLeaseDays) * Number(rent)).toFixed(2)}
+              {Number(Number(totalLeaseDays) * Number(rent)).toFixed(2) ?? 0}
             </ActionButton>
           </CardAction>
         </CardHeader>
