@@ -35,18 +35,20 @@ export default function PropertyHeader({ property }: Props) {
       </div>
 
       {/* Title */}
-      <Heading1 className='text-3xl md:text-5xl'>{property.title}</Heading1>
+      <Heading1 className='text-2xl md:text-3xl lg:text-4xl'>
+        {property.title}
+      </Heading1>
 
       {/* Meta */}
       <div className='flex flex-wrap items-center gap-x-6 gap-y-3'>
         <div className='flex items-center gap-2'>
-          <MapPin className='size-4 text-brand' />
+          <MapPin className='block size-4 text-brand' />
 
           <Paragraph className='mt-0'>{shortLocation}</Paragraph>
         </div>
 
         <div className='flex justify-center items-center gap-2'>
-          <Star className='fill-yellow-400 size-4 text-yellow-400' />
+          <Star className='block fill-yellow-400 size-4 text-yellow-400' />
 
           <Paragraph className='mt-0'>
             {rating}
@@ -58,7 +60,7 @@ export default function PropertyHeader({ property }: Props) {
         </div>
 
         <div className='flex items-center gap-2'>
-          <CalendarDays className='size-4 text-brand' />
+          <CalendarDays className='block size-4 text-brand' />
           <Paragraph className='mt-0'>
             Listed {new Date(property.createdAt).toLocaleDateString()}
           </Paragraph>
