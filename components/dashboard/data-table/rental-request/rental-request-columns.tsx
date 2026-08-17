@@ -7,6 +7,7 @@ import { RentalRequestResponse } from "@/types/rental-request";
 import { TableFeatures } from "../shared/table-features";
 import { TableColumnHeader } from "../shared/table-column-header";
 import { formatDate } from "@/utils/helpers";
+import RentalRequestActions from "./rental-request-actions";
 
 const helper = createColumnHelper<TableFeatures, RentalRequestResponse>();
 
@@ -149,5 +150,15 @@ export const rentalRequestColumns = helper.columns([
     ),
 
     cell: ({ getValue }) => formatDate(getValue()),
+  }),
+  helper.display({
+    id: "actions",
+
+    header: "Actions",
+
+    cell: ({ row }) => <RentalRequestActions rentalRequest={row.original} />,
+
+    enableSorting: false,
+    enableHiding: false,
   }),
 ]);

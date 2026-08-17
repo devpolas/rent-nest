@@ -32,12 +32,12 @@ export const RentalRequestAdminAndOwnerUpdateSchema =
     ...AdminAndOwnerUpdateSchema.shape,
   });
 
-export type RentalRequestTenantUpdateType = z.infer<
+export type RentalRequestTenantUpdateType = z.input<
   typeof RentalRequestTenantUpdateSchema
 >;
 
 export type RentalRequestType = z.input<typeof RentalRequestSchema>;
 
-export type RentalRequestAdminAndOwnerUpdateType = z.infer<
+export type RentalRequestAdminAndOwnerUpdateType = z.input<
   typeof RentalRequestAdminAndOwnerUpdateSchema
 >;

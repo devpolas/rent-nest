@@ -1,4 +1,6 @@
-import { CalendarCheck, Heart, ShieldCheck } from "lucide-react";
+"use client";
+
+import { CalendarCheck, CheckCircle2, Heart, ShieldCheck } from "lucide-react";
 import type { PropertyResponse } from "@/types/property";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,15 +12,45 @@ import { toast } from "sonner";
 import { ReusableDialog } from "../dialog/dialog";
 import RentalRequest from "./rental-request/rental-request";
 import ActionButton from "../button/action-button";
+import { useRentalRequests } from "@/hooks";
+import { RentalRequestStatus } from "@/types/enum";
 
 type Props = {
   property: PropertyResponse;
 };
 
+const BLOCKING_RENTAL_STATUSES: RentalRequestStatus[] = [
+  RentalRequestStatus.PENDING,
+  RentalRequestStatus.APPROVED,
+  RentalRequestStatus.PAYMENT_PENDING,
+  RentalRequestStatus.ACTIVE,
+];
+
 export default function PropertyBookingCard({ property }: Props) {
   const router = useRouter();
-  const { isAuthenticated, isLoading, user } = useAuth();
+
+  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
+
   const [dialog, setDialog] = useState(false);
+
+  const { data: rentalRequestsResponse, isLoading: rentalsLoading } =
+    useRentalRequests();
+
+  const rentalRequests = rentalRequestsResponse?.data?.rents ?? [];
+
+  const existingRentalRequest = rentalRequests.find(
+    (request) =>
+      request.propertyId === property.id &&
+      BLOCKING_RENTAL_STATUSES.includes(request.status),
+  );
+
+  const hasExistingRequest = Boolean(existingRentalRequest);
+  const isRented = property.availability === "RENTED";
+  const isAvailable = property.availability === "AVAILABLE";
+
+  const canRequestRental = isAvailable && !isRented && !hasExistingRequest;
+
+  const isCheckingStatus = authLoading || rentalsLoading;
 
   function handleRentalRequest() {
     if (!isAuthenticated) {
@@ -35,6 +67,23 @@ export default function PropertyBookingCard({ property }: Props) {
       return;
     }
 
+    if (isRented) {
+      toast.error("This property has already been rented.");
+      return;
+    }
+
+    if (hasExistingRequest) {
+      toast.info(
+        "You already have an active rental request for this property.",
+      );
+      return;
+    }
+
+    if (!isAvailable) {
+      toast.error("This property is currently unavailable.");
+      return;
+    }
+
     setDialog(true);
   }
 
@@ -42,11 +91,20 @@ export default function PropertyBookingCard({ property }: Props) {
     setDialog(false);
   }
 
+  let requestButtonText = "Request Rental";
+
+  if (isRented) {
+    requestButtonText = "Already Rented";
+  } else if (hasExistingRequest) {
+    requestButtonText = "Request Already Sent";
+  } else if (!isAvailable) {
+    requestButtonText = "Currently Unavailable";
+  }
+
   return (
     <>
       <Card className='glass-card'>
         <CardContent className='space-y-6 p-6'>
-          {/* Price */}
           <div>
             <Muted>Daily Rent</Muted>
 
@@ -59,31 +117,60 @@ export default function PropertyBookingCard({ property }: Props) {
             </div>
           </div>
 
-          {/* Availability */}
           <div className='flex items-center gap-3 p-4 rounded-xl glass'>
-            <div className='bg-brand-success/10 p-2 rounded-lg'>
-              <CalendarCheck className='size-5 text-brand-success' />
+            <div
+              className={
+                isAvailable
+                  ? "bg-brand-success/10 p-2 rounded-lg"
+                  : "bg-muted p-2 rounded-lg"
+              }
+            >
+              <CalendarCheck
+                className={
+                  isAvailable
+                    ? "size-5 text-brand-success"
+                    : "size-5 text-muted-foreground"
+                }
+              />
             </div>
 
             <div>
               <Muted>Availability</Muted>
-
               <Label>{property.availability}</Label>
             </div>
           </div>
 
-          {/* Action */}
+          {hasExistingRequest && existingRentalRequest && (
+            <div className='flex items-start gap-3 bg-brand/5 p-4 rounded-xl'>
+              <CheckCircle2 className='mt-0.5 size-5 text-brand' />
+
+              <div>
+                <Label>Rental Request Exists</Label>
+
+                <Muted className='mt-1'>
+                  Your request is currently{" "}
+                  <span className='font-medium text-foreground'>
+                    {existingRentalRequest.status
+                      .toLowerCase()
+                      .replaceAll("_", " ")}
+                  </span>
+                  .
+                </Muted>
+              </div>
+            </div>
+          )}
+
           <div className='space-y-3'>
             <ActionButton
-              disabled={isLoading || property.availability !== "AVAILABLE"}
-              isLoading={isLoading}
+              disabled={!canRequestRental || isCheckingStatus}
+              isLoading={isCheckingStatus}
               onClick={handleRentalRequest}
               variant='outline'
               size='lg'
-              className='flex-1'
-              loadingText='Requesting...'
+              className='w-full'
+              loadingText='Checking...'
             >
-              Request Rental
+              {requestButtonText}
             </ActionButton>
 
             <Button size='lg' variant='outline' className='w-full'>
@@ -92,7 +179,6 @@ export default function PropertyBookingCard({ property }: Props) {
             </Button>
           </div>
 
-          {/* Trust */}
           <div className='flex items-start gap-3 bg-brand/5 p-4 rounded-xl'>
             <ShieldCheck className='mt-0.5 size-5 text-brand' />
 
@@ -104,7 +190,7 @@ export default function PropertyBookingCard({ property }: Props) {
         </CardContent>
       </Card>
 
-      <ReusableDialog isOpen={dialog} onOpenChange={() => handleCloseDialog()}>
+      <ReusableDialog isOpen={dialog} onOpenChange={setDialog}>
         <RentalRequest
           propertyId={property.id}
           propertyTitle={property.title}
