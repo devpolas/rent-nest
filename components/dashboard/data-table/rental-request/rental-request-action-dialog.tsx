@@ -141,7 +141,7 @@ export default function RentalRequestActionDialog({
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
               <Trash2 className='size-5 text-destructive' />
-              Delete Rental Request
+              Delete
             </CardTitle>
 
             <CardDescription>

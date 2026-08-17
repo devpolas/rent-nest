@@ -152,7 +152,7 @@ export default function RentalRequestActions({
         return;
       }
 
-      toast.success(response.message || "Rental request deleted.");
+      toast.success("Rental request deleted.");
 
       setDeleteDialog(false);
     } catch {
@@ -180,15 +180,6 @@ export default function RentalRequestActions({
         <DropdownMenuContent align='end'>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          {/* VIEW */}
-
-          <DropdownMenuItem asChild>
-            <Link href={rentalPath}>
-              <Eye className='mr-2 size-4 text-muted-foreground' />
-              View request
-            </Link>
-          </DropdownMenuItem>
-
           {/* =================================================
               TENANT ACTIONS
           ================================================= */}
@@ -202,7 +193,7 @@ export default function RentalRequestActions({
                 onClick={() => setUpdateDialog(true)}
               >
                 <Edit className='mr-2 size-4 text-brand' />
-                Edit request
+                Edit
               </DropdownMenuItem>
 
               {canDelete && (
@@ -211,7 +202,7 @@ export default function RentalRequestActions({
                   onClick={() => setDeleteDialog(true)}
                 >
                   <Trash2 className='mr-2 size-4' />
-                  Delete request
+                  Delete
                 </DropdownMenuItem>
               )}
             </>
@@ -231,7 +222,7 @@ export default function RentalRequestActions({
                 ) : (
                   <Edit className='mr-2 size-4 text-brand' />
                 )}
-                Update status
+                Update
               </DropdownMenuItem>
 
               {canDelete && (
@@ -240,7 +231,7 @@ export default function RentalRequestActions({
                   onClick={() => setDeleteDialog(true)}
                 >
                   <Trash2 className='mr-2 size-4' />
-                  Delete request
+                  Delete
                 </DropdownMenuItem>
               )}
             </>
@@ -308,7 +299,7 @@ export default function RentalRequestActions({
               <CardHeader>
                 <CardTitle className='flex items-center gap-2'>
                   <Trash2 className='size-5 text-destructive' />
-                  Delete Rental Request
+                  Delete
                 </CardTitle>
 
                 <CardDescription>
@@ -324,7 +315,7 @@ export default function RentalRequestActions({
                     isLoading={deleteMutation.isPending}
                     loadingText='Deleting...'
                   >
-                    Delete Request
+                    Delete
                   </ActionButton>
                 </CardAction>
               </CardHeader>
