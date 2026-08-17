@@ -108,6 +108,7 @@ export default function PropertyBookingCard({ property }: Props) {
         <RentalRequest
           propertyId={property.id}
           propertyTitle={property.title}
+          rent={Number(property.rent)}
         />
       </ReusableDialog>
     </>

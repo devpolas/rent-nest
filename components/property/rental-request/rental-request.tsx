@@ -24,13 +24,15 @@ import { toast } from "sonner";
 interface RentalRequestProps {
   propertyId: string;
   propertyTitle: string;
+  rent: number;
 }
 
 export default function RentalRequest({
   propertyId,
   propertyTitle,
+  rent,
 }: RentalRequestProps) {
-  const { control, handleSubmit } = useForm<RentalRequestType>({
+  const { control, handleSubmit, watch } = useForm<RentalRequestType>({
     resolver: zodResolver(RentalRequestSchema),
     defaultValues: {
       propertyId,
@@ -39,6 +41,8 @@ export default function RentalRequest({
       message: "",
     },
   });
+
+  const totalLeaseDays = watch("leaseDays");
 
   const { mutateAsync, isPending } = useCreateRentalRequest();
 
@@ -76,7 +80,8 @@ export default function RentalRequest({
               isLoading={isPending}
               loadingText='Requesting...'
             >
-              Confirm Rental Request
+              Confirm $
+              {Number(Number(totalLeaseDays) * Number(rent)).toFixed(2)}
             </ActionButton>
           </CardAction>
         </CardHeader>
