@@ -2,7 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { MoreHorizontal } from "lucide-react";
+import {
+  MoreHorizontal,
+  Eye,
+  Pencil,
+  Settings2,
+  RefreshCw,
+  Star,
+  Trash2,
+} from "lucide-react";
 
 import { UserRole, type PropertyStatus } from "@/types/enum";
 import { Button } from "@/components/ui/button";
@@ -28,6 +36,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import { useAdminUpdateProperty, useDeleteProperty } from "@/hooks";
 import UpdatePropertyStatusForm from "./property-status-form";
 
@@ -95,16 +104,22 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
         <DropdownMenuContent align='end'>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          {/* Common */}
+          {/* COMMON */}
           <DropdownMenuItem asChild>
-            <Link href={propertyPath}>View details</Link>
+            <Link href={propertyPath}>
+              <Eye className='size-4 text-muted-foreground' />
+              <span>Details</span>
+            </Link>
           </DropdownMenuItem>
 
           {/* LANDLORD */}
           {isLandlord && (
             <>
               <DropdownMenuItem asChild>
-                <Link href={`${propertyPath}/edit`}>Edit property</Link>
+                <Link href={`${propertyPath}/edit`}>
+                  <Pencil className='size-4 text-blue-500' />
+                  <span>Edit</span>
+                </Link>
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />
@@ -113,7 +128,8 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
                 variant='destructive'
                 onClick={() => setIsDeleteDialogOpen(true)}
               >
-                Delete property
+                <Trash2 className='size-4' />
+                <span>Delete</span>
               </DropdownMenuItem>
             </>
           )}
@@ -122,17 +138,24 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
           {isAdmin && (
             <>
               <DropdownMenuItem onClick={() => setIsStatusDialogOpen(true)}>
-                Change status
+                <RefreshCw className='size-4 text-amber-500' />
+                <span>Change status</span>
               </DropdownMenuItem>
 
               <DropdownMenuItem asChild>
-                <Link href={`${propertyPath}/edit`}>Manage property</Link>
+                <Link href={`${propertyPath}/edit`}>
+                  <Settings2 className='size-4 text-blue-500' />
+                  <span>Manage</span>
+                </Link>
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />
 
               <DropdownMenuItem asChild>
-                <Link href={`${propertyPath}/reviews`}>View reviews</Link>
+                <Link href={`${propertyPath}/reviews`}>
+                  <Star className='size-4 text-yellow-500' />
+                  <span>Reviews</span>
+                </Link>
               </DropdownMenuItem>
             </>
           )}
@@ -143,7 +166,7 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
       {isAdmin && (
         <ReusableDialog
           isOpen={isStatusDialogOpen}
-          onOpenChange={() => setIsStatusDialogOpen(false)}
+          onOpenChange={setIsStatusDialogOpen}
           isSubmitting={adminUpdateMutation.isPending}
         >
           <UpdatePropertyStatusForm
@@ -158,7 +181,7 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
       {isLandlord && (
         <ReusableDialog
           isOpen={isDeleteDialogOpen}
-          onOpenChange={() => setIsStatusDialogOpen(false)}
+          onOpenChange={setIsDeleteDialogOpen}
           isSubmitting={deleteMutation.isPending}
         >
           <form
@@ -169,7 +192,7 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
           >
             <Card className='border-destructive/20'>
               <CardHeader>
-                <CardTitle>Delete Property</CardTitle>
+                <CardTitle>Delete</CardTitle>
 
                 <CardDescription>
                   Are you sure you want to delete this property? This action
