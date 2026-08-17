@@ -81,7 +81,9 @@ export default function RentalRequest({
               loadingText='Requesting...'
             >
               Confirm $
-              {Number(Number(totalLeaseDays) * Number(rent)).toFixed(2) ?? 0}
+              {totalLeaseDays
+                ? Number(Number(totalLeaseDays) * Number(rent)).toFixed(2)
+                : 0}
             </ActionButton>
           </CardAction>
         </CardHeader>

@@ -3,7 +3,7 @@
 import { CalendarDays, MapPin, Star } from "lucide-react";
 import type { PropertyResponse } from "@/types/property";
 import { Badge } from "@/components/ui/badge";
-import { Heading1, Muted, Paragraph } from "@/components/typography/typography";
+import { Heading1, Muted } from "@/components/typography/typography";
 
 type Props = {
   property: PropertyResponse;
@@ -42,28 +42,26 @@ export default function PropertyHeader({ property }: Props) {
       {/* Meta */}
       <div className='flex flex-wrap items-center gap-x-6 gap-y-3'>
         <div className='flex items-center gap-2'>
-          <MapPin className='block size-4 text-brand' />
+          <MapPin className='size-4 text-brand' />
 
-          <Paragraph className='mt-0'>{shortLocation}</Paragraph>
+          <p>{shortLocation}</p>
         </div>
 
         <div className='flex justify-center items-center gap-2'>
-          <Star className='block fill-yellow-400 size-4 text-yellow-400' />
+          <Star className='fill-yellow-400 size-4 text-yellow-400' />
 
-          <Paragraph className='mt-0'>
+          <p>
             {rating}
 
             {property.reviewCount > 0 && (
               <Muted className='inline'>({property.reviewCount} reviews)</Muted>
             )}
-          </Paragraph>
+          </p>
         </div>
 
         <div className='flex items-center gap-2'>
-          <CalendarDays className='block size-4 text-brand' />
-          <Paragraph className='mt-0'>
-            Listed {new Date(property.createdAt).toLocaleDateString()}
-          </Paragraph>
+          <CalendarDays className='size-4 text-brand' />
+          <p>Listed {new Date(property.createdAt).toLocaleDateString()}</p>
         </div>
       </div>
     </section>
