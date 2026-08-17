@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { MoreHorizontal } from "lucide-react";
 
-import { UserRole } from "@/types/enum";
+import { UserRole, type PropertyStatus } from "@/types/enum";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -19,26 +19,31 @@ import {
 import useAuth from "@/hooks/auth/use-auth";
 import { ReusableDialog } from "@/components/dialog/dialog";
 
-import type { PropertyStatus } from "@/types/enum";
-import { useAdminUpdateProperty } from "@/hooks";
+import ActionButton from "@/components/button/action-button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useAdminUpdateProperty, useDeleteProperty } from "@/hooks";
 import UpdatePropertyStatusForm from "./property-status-form";
 
 interface PropertyActionsProps {
   propertyId: string;
   status?: PropertyStatus;
-  onDelete?: (propertyId: string) => void;
 }
 
-export function PropertyActions({
-  propertyId,
-  status,
-  onDelete,
-}: PropertyActionsProps) {
+export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
   const { user, isLoading } = useAuth();
 
   const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const adminUpdateMutation = useAdminUpdateProperty();
+  const deleteMutation = useDeleteProperty();
 
   if (isLoading || !user) {
     return null;
@@ -53,22 +58,25 @@ export function PropertyActions({
     ? `/dashboard/admin/properties/${propertyId}`
     : `/dashboard/landlord/properties/${propertyId}`;
 
-  async function handleStatusUpdate(data: {
-    status?: PropertyStatus;
-    landlordId?: string;
-  }) {
-    if (!data.status) {
-      return;
-    }
+  async function handleStatusUpdate({ status }: { status?: PropertyStatus }) {
+    if (!status) return;
 
     await adminUpdateMutation.mutateAsync({
       id: propertyId,
       payload: {
-        status: data.status,
+        status,
       },
     });
 
     setIsStatusDialogOpen(false);
+  }
+
+  async function handleDelete() {
+    await deleteMutation.mutateAsync({
+      id: propertyId,
+    });
+
+    setIsDeleteDialogOpen(false);
   }
 
   return (
@@ -103,7 +111,7 @@ export function PropertyActions({
 
               <DropdownMenuItem
                 variant='destructive'
-                onClick={() => onDelete?.(propertyId)}
+                onClick={() => setIsDeleteDialogOpen(true)}
               >
                 Delete property
               </DropdownMenuItem>
@@ -131,7 +139,7 @@ export function PropertyActions({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* ADMIN STATUS DIALOG */}
+      {/* ADMIN — CHANGE STATUS */}
       {isAdmin && (
         <ReusableDialog
           isOpen={isStatusDialogOpen}
@@ -143,6 +151,51 @@ export function PropertyActions({
             isPending={adminUpdateMutation.isPending}
             onSubmit={handleStatusUpdate}
           />
+        </ReusableDialog>
+      )}
+
+      {/* LANDLORD — DELETE */}
+      {isLandlord && (
+        <ReusableDialog
+          isOpen={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteDialogOpen}
+          isSubmitting={deleteMutation.isPending}
+        >
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void handleDelete();
+            }}
+          >
+            <Card className='border-destructive/20'>
+              <CardHeader>
+                <CardTitle>Delete Property</CardTitle>
+
+                <CardDescription>
+                  Are you sure you want to delete this property? This action
+                  cannot be undone.
+                </CardDescription>
+
+                <CardAction>
+                  <ActionButton
+                    type='submit'
+                    variant='destructive'
+                    disabled={deleteMutation.isPending}
+                    isLoading={deleteMutation.isPending}
+                    loadingText='Deleting...'
+                  >
+                    Delete Property
+                  </ActionButton>
+                </CardAction>
+              </CardHeader>
+
+              <CardContent>
+                <p className='text-muted-foreground text-sm'>
+                  All property-related data may be affected by this action.
+                </p>
+              </CardContent>
+            </Card>
+          </form>
         </ReusableDialog>
       )}
     </>
