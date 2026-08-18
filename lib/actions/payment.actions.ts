@@ -63,7 +63,7 @@ export async function getPaymentSession({
   sessionId,
 }: {
   sessionId: string;
-}): Promise<ApiResponse<{ session: unknown } | null>> {
+}): Promise<ApiResponse<{ session: PaymentHistory } | null>> {
   try {
     if (!sessionId.trim()) {
       return errorResponse("Session ID is required");
