@@ -4,6 +4,7 @@ import { CalendarDays, MapPin, Star } from "lucide-react";
 import type { PropertyResponse } from "@/types/property";
 import { Badge } from "@/components/ui/badge";
 import { Heading1, Muted } from "@/components/typography/typography";
+import { formatDate } from "@/utils/helpers";
 
 type Props = {
   property: PropertyResponse;
@@ -61,7 +62,7 @@ export default function PropertyHeader({ property }: Props) {
 
         <div className='flex items-center gap-2'>
           <CalendarDays className='size-4 text-brand' />
-          <p>Listed {new Date(property.createdAt).toLocaleDateString()}</p>
+          <p>Listed {formatDate(property.createdAt)}</p>
         </div>
       </div>
     </section>
