@@ -9,7 +9,6 @@ import { UserRole } from "@/types/enum";
 import type { RentalRequestResponse } from "@/types/rental-request";
 
 import useAuth from "@/hooks/auth/use-auth";
-
 import {
   useDeleteRentalRequest,
   useUpdateRentalRequestByOwner,
@@ -70,15 +69,11 @@ export default function RentalRequestActions({
 
   const canManageStatus = isLandlord || isAdmin;
 
-  /*
-   * Once the rental becomes ACTIVE, the tenant should not
-   * be able to edit it and nobody should delete it.
-   */
   const isActive = rentalRequest.status === "ACTIVE";
+  const isCompleted = rentalRequest.status === "COMPLETED";
 
-  const canEdit = isTenant && !isActive;
-
-  const canDelete = !isActive;
+  const canEdit = isTenant && !isActive && !isCompleted;
+  const canDelete = !isActive && !isCompleted;
 
   const rentalPath = isAdmin
     ? `/dashboard/admin/rental-requests/${rentalRequest.id}`
@@ -86,10 +81,6 @@ export default function RentalRequestActions({
       ? `/dashboard/landlord/rental-requests/${rentalRequest.id}`
       : `/dashboard/tenant/rental-requests/${rentalRequest.id}`;
 
-  /**
-   * TENANT
-   * Update message, move-in date and lease days.
-   */
   async function handleTenantUpdate(
     data: Parameters<typeof tenantUpdateMutation.mutateAsync>[0]["payload"],
   ) {
@@ -100,22 +91,17 @@ export default function RentalRequestActions({
       });
 
       if (!response.success) {
-        toast.error(response.message);
+        toast.error(response.message || "Failed to update rental request.");
         return;
       }
 
       toast.success(response.message || "Rental request updated.");
-
       setUpdateDialog(false);
     } catch {
       toast.error("Failed to update rental request.");
     }
   }
 
-  /**
-   * LANDLORD / ADMIN
-   * Update only the rental request status.
-   */
   async function handleStatusUpdate(
     data: Parameters<typeof ownerUpdateMutation.mutateAsync>[0]["payload"],
   ) {
@@ -126,21 +112,17 @@ export default function RentalRequestActions({
       });
 
       if (!response.success) {
-        toast.error(response.message);
+        toast.error(response.message || "Failed to update rental status.");
         return;
       }
 
       toast.success(response.message || "Rental status updated.");
-
       setStatusDialog(false);
     } catch {
       toast.error("Failed to update rental status.");
     }
   }
 
-  /**
-   * TENANT / LANDLORD / ADMIN
-   */
   async function handleDelete() {
     try {
       const response = await deleteMutation.mutateAsync({
@@ -148,11 +130,11 @@ export default function RentalRequestActions({
       });
 
       if (!response.success) {
-        toast.error(response.message);
+        toast.error(response.message || "Failed to delete rental request.");
         return;
       }
 
-      toast.success("Rental request deleted.");
+      toast.success(response.message || "Rental request deleted.");
 
       setDeleteDialog(false);
     } catch {
@@ -162,10 +144,6 @@ export default function RentalRequestActions({
 
   return (
     <>
-      {/* =====================================================
-          ACTION MENU
-      ===================================================== */}
-
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -177,62 +155,62 @@ export default function RentalRequestActions({
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align='end' className='w-44'>
+        <DropdownMenuContent align='end' className='w-48'>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          {/* =================================================
-      TENANT ACTIONS
-  ================================================= */}
+          <DropdownMenuItem asChild>
+            <Link href={rentalPath}>
+              <Eye className='size-4 text-muted-foreground' />
+              <span>View</span>
+            </Link>
+          </DropdownMenuItem>
 
           {isTenant && (
             <>
-              <DropdownMenuSeparator />
+              {(canEdit || canDelete) && <DropdownMenuSeparator />}
 
-              <DropdownMenuItem
-                disabled={!canEdit}
-                onClick={() => setUpdateDialog(true)}
-              >
-                <Edit className='size-4 text-brand shrink-0' />
-                <span>Edit</span>
-              </DropdownMenuItem>
+              {canEdit && (
+                <DropdownMenuItem onClick={() => setUpdateDialog(true)}>
+                  <Edit className='size-4 text-brand' />
+                  <span>Edit request</span>
+                </DropdownMenuItem>
+              )}
 
               {canDelete && (
                 <DropdownMenuItem
                   variant='destructive'
                   onClick={() => setDeleteDialog(true)}
                 >
-                  <Trash2 className='size-4 shrink-0' />
-                  <span>Delete</span>
+                  <Trash2 className='size-4' />
+                  <span>Delete request</span>
                 </DropdownMenuItem>
               )}
             </>
           )}
 
-          {/* =================================================
-      LANDLORD / ADMIN ACTIONS
-  ================================================= */}
-
           {canManageStatus && (
             <>
-              <DropdownMenuSeparator />
+              {(canDelete || !isCompleted) && <DropdownMenuSeparator />}
 
-              <DropdownMenuItem onClick={() => setStatusDialog(true)}>
-                {rentalRequest.status === "APPROVED" ? (
-                  <CheckCircle2 className='size-4 text-brand-success shrink-0' />
-                ) : (
-                  <Edit className='size-4 text-brand shrink-0' />
-                )}
+              {!isCompleted && (
+                <DropdownMenuItem onClick={() => setStatusDialog(true)}>
+                  {rentalRequest.status === "APPROVED" ? (
+                    <CheckCircle2 className='size-4 text-brand-success' />
+                  ) : (
+                    <Edit className='size-4 text-brand' />
+                  )}
 
-                <span>Update</span>
-              </DropdownMenuItem>
+                  <span>Update status</span>
+                </DropdownMenuItem>
+              )}
 
               {canDelete && (
                 <DropdownMenuItem
                   variant='destructive'
                   onClick={() => setDeleteDialog(true)}
                 >
-                  <Trash2 className='size-4 shrink-0' />
-                  <span>Delete</span>
+                  <Trash2 className='size-4' />
+                  <span>Delete request</span>
                 </DropdownMenuItem>
               )}
             </>
@@ -240,11 +218,7 @@ export default function RentalRequestActions({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* =====================================================
-          TENANT — UPDATE REQUEST
-      ===================================================== */}
-
-      {isTenant && (
+      {isTenant && canEdit && (
         <ReusableDialog
           isOpen={updateDialog}
           onOpenChange={setUpdateDialog}
@@ -262,11 +236,7 @@ export default function RentalRequestActions({
         </ReusableDialog>
       )}
 
-      {/* =====================================================
-          LANDLORD / ADMIN — UPDATE STATUS
-      ===================================================== */}
-
-      {canManageStatus && (
+      {canManageStatus && !isCompleted && (
         <ReusableDialog
           isOpen={statusDialog}
           onOpenChange={setStatusDialog}
@@ -279,10 +249,6 @@ export default function RentalRequestActions({
           />
         </ReusableDialog>
       )}
-
-      {/* =====================================================
-          DELETE CONFIRMATION
-      ===================================================== */}
 
       {canDelete && (
         <ReusableDialog
@@ -300,7 +266,7 @@ export default function RentalRequestActions({
               <CardHeader>
                 <CardTitle className='flex items-center gap-2'>
                   <Trash2 className='size-5 text-destructive' />
-                  Delete
+                  Delete Rental Request
                 </CardTitle>
 
                 <CardDescription>
@@ -316,7 +282,7 @@ export default function RentalRequestActions({
                     isLoading={deleteMutation.isPending}
                     loadingText='Deleting...'
                   >
-                    Delete
+                    Delete Request
                   </ActionButton>
                 </CardAction>
               </CardHeader>
