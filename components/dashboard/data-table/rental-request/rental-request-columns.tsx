@@ -7,7 +7,9 @@ import { RentalRequestResponse } from "@/types/rental-request";
 import { TableFeatures } from "../shared/table-features";
 import { TableColumnHeader } from "../shared/table-column-header";
 import { formatDate } from "@/utils/helpers";
+
 import RentalRequestActions from "./rental-request-actions";
+import RentalRequestPaymentCell from "./rental-request-payment-cell";
 
 const helper = createColumnHelper<TableFeatures, RentalRequestResponse>();
 
@@ -132,6 +134,19 @@ export const rentalRequestColumns = helper.columns([
     },
   }),
 
+  helper.display({
+    id: "payment",
+
+    header: "Payment",
+
+    cell: ({ row }) => (
+      <RentalRequestPaymentCell rentalRequest={row.original} />
+    ),
+
+    enableSorting: false,
+    enableHiding: false,
+  }),
+
   helper.accessor("createdAt", {
     id: "createdAt",
 
@@ -151,6 +166,7 @@ export const rentalRequestColumns = helper.columns([
 
     cell: ({ getValue }) => formatDate(getValue()),
   }),
+
   helper.display({
     id: "actions",
 
