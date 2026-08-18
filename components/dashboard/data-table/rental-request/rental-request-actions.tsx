@@ -177,12 +177,12 @@ export default function RentalRequestActions({
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align='end'>
+        <DropdownMenuContent align='end' className='w-44'>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           {/* =================================================
-              TENANT ACTIONS
-          ================================================= */}
+      TENANT ACTIONS
+  ================================================= */}
 
           {isTenant && (
             <>
@@ -192,8 +192,8 @@ export default function RentalRequestActions({
                 disabled={!canEdit}
                 onClick={() => setUpdateDialog(true)}
               >
-                <Edit className='mr-2 size-4 text-brand' />
-                Edit
+                <Edit className='size-4 text-brand shrink-0' />
+                <span>Edit</span>
               </DropdownMenuItem>
 
               {canDelete && (
@@ -201,16 +201,16 @@ export default function RentalRequestActions({
                   variant='destructive'
                   onClick={() => setDeleteDialog(true)}
                 >
-                  <Trash2 className='mr-2 size-4' />
-                  Delete
+                  <Trash2 className='size-4 shrink-0' />
+                  <span>Delete</span>
                 </DropdownMenuItem>
               )}
             </>
           )}
 
           {/* =================================================
-              LANDLORD / ADMIN ACTIONS
-          ================================================= */}
+      LANDLORD / ADMIN ACTIONS
+  ================================================= */}
 
           {canManageStatus && (
             <>
@@ -218,11 +218,12 @@ export default function RentalRequestActions({
 
               <DropdownMenuItem onClick={() => setStatusDialog(true)}>
                 {rentalRequest.status === "APPROVED" ? (
-                  <CheckCircle2 className='mr-2 size-4 text-brand-success' />
+                  <CheckCircle2 className='size-4 text-brand-success shrink-0' />
                 ) : (
-                  <Edit className='mr-2 size-4 text-brand' />
+                  <Edit className='size-4 text-brand shrink-0' />
                 )}
-                Update
+
+                <span>Update</span>
               </DropdownMenuItem>
 
               {canDelete && (
@@ -230,8 +231,8 @@ export default function RentalRequestActions({
                   variant='destructive'
                   onClick={() => setDeleteDialog(true)}
                 >
-                  <Trash2 className='mr-2 size-4' />
-                  Delete
+                  <Trash2 className='size-4 shrink-0' />
+                  <span>Delete</span>
                 </DropdownMenuItem>
               )}
             </>

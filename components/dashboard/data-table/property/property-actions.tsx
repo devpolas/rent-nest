@@ -101,13 +101,13 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align='end'>
+        <DropdownMenuContent align='end' className='w-48'>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           {/* COMMON */}
           <DropdownMenuItem asChild>
-            <Link href={propertyPath}>
-              <Eye className='size-4 text-muted-foreground' />
+            <Link href={propertyPath} className='w-full'>
+              <Eye className='size-4 text-muted-foreground shrink-0' />
               <span>Details</span>
             </Link>
           </DropdownMenuItem>
@@ -116,8 +116,8 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
           {isLandlord && (
             <>
               <DropdownMenuItem asChild>
-                <Link href={`${propertyPath}/edit`}>
-                  <Pencil className='size-4 text-blue-500' />
+                <Link href={`${propertyPath}/edit`} className='w-full'>
+                  <Pencil className='size-4 text-blue-500 shrink-0' />
                   <span>Edit</span>
                 </Link>
               </DropdownMenuItem>
@@ -127,8 +127,9 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
               <DropdownMenuItem
                 variant='destructive'
                 onClick={() => setIsDeleteDialogOpen(true)}
+                className='w-full'
               >
-                <Trash2 className='size-4' />
+                <Trash2 className='size-4 shrink-0' />
                 <span>Delete</span>
               </DropdownMenuItem>
             </>
@@ -137,14 +138,17 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
           {/* ADMIN */}
           {isAdmin && (
             <>
-              <DropdownMenuItem onClick={() => setIsStatusDialogOpen(true)}>
-                <RefreshCw className='text-amber-500' />
+              <DropdownMenuItem
+                onClick={() => setIsStatusDialogOpen(true)}
+                className='w-full'
+              >
+                <RefreshCw className='size-4 text-amber-500 shrink-0' />
                 <span>Change status</span>
               </DropdownMenuItem>
 
               <DropdownMenuItem asChild>
-                <Link href={`${propertyPath}/edit`}>
-                  <Settings2 className='size-4 text-blue-500' />
+                <Link href={`${propertyPath}/edit`} className='w-full'>
+                  <Settings2 className='size-4 text-blue-500 shrink-0' />
                   <span>Manage</span>
                 </Link>
               </DropdownMenuItem>
@@ -152,8 +156,8 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
               <DropdownMenuSeparator />
 
               <DropdownMenuItem asChild>
-                <Link href={`${propertyPath}/reviews`}>
-                  <Star className='size-4 text-yellow-500' />
+                <Link href={`${propertyPath}/reviews`} className='w-full'>
+                  <Star className='size-4 text-yellow-500 shrink-0' />
                   <span>Reviews</span>
                 </Link>
               </DropdownMenuItem>
@@ -192,7 +196,7 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
           >
             <Card className='border-destructive/20'>
               <CardHeader>
-                <CardTitle>Delete</CardTitle>
+                <CardTitle>Delete Property</CardTitle>
 
                 <CardDescription>
                   Are you sure you want to delete this property? This action
@@ -207,7 +211,7 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
                     isLoading={deleteMutation.isPending}
                     loadingText='Deleting...'
                   >
-                    Delete Property
+                    Delete
                   </ActionButton>
                 </CardAction>
               </CardHeader>
