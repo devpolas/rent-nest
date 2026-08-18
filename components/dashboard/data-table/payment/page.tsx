@@ -19,7 +19,11 @@ export default function DashboardPaymentHistoryTable() {
   // ============================================================
 
   if (status === "success" && sessionId) {
-    return <PaymentSuccess sessionId={sessionId} />;
+    return (
+      <div className='flex justify-center items-center p-4 w-full h-full'>
+        <PaymentSuccess sessionId={sessionId} />;
+      </div>
+    );
   }
 
   // ============================================================
@@ -43,7 +47,7 @@ function PaymentHistoryTable() {
 
   if (isError || !paymentResponse?.success) {
     return (
-      <div className='flex justify-center items-center min-h-[400px]'>
+      <div className='flex justify-center items-center h-full min-h-[400px]'>
         <p className='text-muted-foreground'>
           {error instanceof Error
             ? error.message
@@ -57,7 +61,7 @@ function PaymentHistoryTable() {
 
   if (paymentHistory.length === 0) {
     return (
-      <div className='flex justify-center items-center min-h-[400px]'>
+      <div className='flex justify-center items-center h-full min-h-[400px]'>
         <div className='text-center'>
           <h2 className='font-semibold text-lg'>No payment history</h2>
 
