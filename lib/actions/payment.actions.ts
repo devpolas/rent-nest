@@ -17,7 +17,7 @@ export async function makePayment({
     }
 
     const response = await axiosServerInstance.post(
-      `/rentals/${rentRequestId}/payment`,
+      `/rental-requests/${rentRequestId}/payment`,
       {},
     );
 
