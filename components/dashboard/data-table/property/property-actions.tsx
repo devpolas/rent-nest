@@ -138,7 +138,7 @@ export function PropertyActions({ propertyId, status }: PropertyActionsProps) {
           {isAdmin && (
             <>
               <DropdownMenuItem onClick={() => setIsStatusDialogOpen(true)}>
-                <RefreshCw className='size-4 text-amber-500' />
+                <RefreshCw className='text-amber-500' />
                 <span>Change status</span>
               </DropdownMenuItem>
 
