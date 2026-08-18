@@ -66,6 +66,9 @@ export * from "./rental/mutations/use-update-rental-request-by-tenant";
 export * from "./rental/mutations/use-update-rental-request-by-owner";
 export * from "./rental/mutations/use-delete-rental-request";
 
+// Payment mutations
+export * from "./payment//mutations/use-make-payment";
+
 // Payment queries
 export * from "./payment/queries/use-payment-histories";
 export * from "./payment/queries/use-payment-history";

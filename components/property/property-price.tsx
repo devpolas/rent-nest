@@ -1,106 +1,34 @@
 "use client";
 
 import { CalendarDays, CheckCircle2, CreditCard } from "lucide-react";
+
 import type { PropertyResponse } from "@/types/property";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+
 import { Heading3, Label, Muted } from "@/components/typography/typography";
-import useAuth from "@/hooks/auth/use-auth";
-import ActionButton from "../button/action-button";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { ReusableDialog } from "../dialog/dialog";
-import RentalRequest from "./rental-request/rental-request";
-import { toast } from "sonner";
-import { useRentalRequests } from "@/hooks";
-import { RentalRequestStatus } from "@/types/enum";
+
+import { usePropertyRentalRequest } from "@/hooks/use-property-rental-request";
+import PropertyRentalRequestButton from "./rental-request/rental-request-button";
+import PropertyRentalRequestDialog from "./rental-request/rental-request-dialog";
 
 type Props = {
   property: PropertyResponse;
 };
 
-const BLOCKING_RENTAL_STATUSES: RentalRequestStatus[] = [
-  RentalRequestStatus.PENDING,
-  RentalRequestStatus.APPROVED,
-  RentalRequestStatus.PAYMENT_PENDING,
-  RentalRequestStatus.ACTIVE,
-];
-
 export default function PropertyPriceCard({ property }: Props) {
-  const router = useRouter();
+  const {
+    existingRentalRequest,
+    hasExistingRequest,
+    isCheckingStatus,
+    dialogOpen,
+    setDialogOpen,
+    handleRentalRequest,
+  } = usePropertyRentalRequest(property.id);
 
-  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
-
-  const [dialog, setDialog] = useState(false);
-
-  const { data: rentalRequestsResponse, isLoading: rentalsLoading } =
-    useRentalRequests();
-
-  const rentalRequests = rentalRequestsResponse?.data?.rents ?? [];
-
-  const existingRentalRequest = rentalRequests.find(
-    (request) =>
-      request.propertyId === property.id &&
-      BLOCKING_RENTAL_STATUSES.includes(request.status),
-  );
-
-  const hasExistingRequest = Boolean(existingRentalRequest);
-  const isRented = property.availability === "RENTED";
   const isAvailable = property.availability === "AVAILABLE";
-
-  const canRequestRental = isAvailable && !isRented && !hasExistingRequest;
-
-  const isCheckingStatus = authLoading || rentalsLoading;
-
-  function handleRentalRequest() {
-    if (!isAuthenticated) {
-      const callbackUrl = encodeURIComponent(
-        `/properties/property/${property.id}`,
-      );
-
-      router.push(`/signin?callbackUrl=${callbackUrl}`);
-      return;
-    }
-
-    if (user?.role !== "TENANT") {
-      toast.error("Only tenant accounts can request a rental property.");
-      return;
-    }
-
-    if (isRented) {
-      toast.error("This property has already been rented.");
-      return;
-    }
-
-    if (hasExistingRequest) {
-      toast.info(
-        "You already have an active rental request for this property.",
-      );
-      return;
-    }
-
-    if (!isAvailable) {
-      toast.error("This property is currently unavailable.");
-      return;
-    }
-
-    setDialog(true);
-  }
-
-  function handleCloseDialog() {
-    setDialog(false);
-  }
-
-  let requestButtonText = "Request Rental";
-
-  if (isRented) {
-    requestButtonText = "Already Rented";
-  } else if (hasExistingRequest) {
-    requestButtonText = "Request Already Sent";
-  } else if (!isAvailable) {
-    requestButtonText = "Currently Unavailable";
-  }
 
   return (
     <>
@@ -177,17 +105,14 @@ export default function PropertyPriceCard({ property }: Props) {
           <Separator />
 
           <div className='flex sm:flex-row flex-col gap-3'>
-            <ActionButton
-              disabled={!canRequestRental || isCheckingStatus}
-              isLoading={isCheckingStatus}
-              onClick={handleRentalRequest}
-              variant='outline'
-              size='lg'
+            <PropertyRentalRequestButton
+              availability={property.availability}
+              rentalRequestId={existingRentalRequest?.id}
+              rentalRequestStatus={existingRentalRequest?.status}
+              isCheckingStatus={isCheckingStatus}
+              onRequest={() => handleRentalRequest(property.availability)}
               className='flex-1'
-              loadingText='Checking...'
-            >
-              {requestButtonText}
-            </ActionButton>
+            />
 
             <Button variant='outline' size='lg' className='flex-1'>
               Save Property
@@ -200,14 +125,13 @@ export default function PropertyPriceCard({ property }: Props) {
         </CardContent>
       </Card>
 
-      <ReusableDialog isOpen={dialog} onOpenChange={setDialog}>
-        <RentalRequest
-          propertyId={property.id}
-          propertyTitle={property.title}
-          rent={Number(property.rent)}
-          handleClose={handleCloseDialog}
-        />
-      </ReusableDialog>
+      <PropertyRentalRequestDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        propertyId={property.id}
+        propertyTitle={property.title}
+        rent={Number(property.rent)}
+      />
     </>
   );
 }
