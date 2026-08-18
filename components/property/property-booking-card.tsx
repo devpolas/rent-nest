@@ -90,6 +90,11 @@ export default function PropertyBookingCard({ property }: Props) {
           <div className='space-y-3'>
             <PropertyRentalRequestButton
               availability={property.availability}
+              leaseDays={Number(existingRentalRequest?.leaseDays)}
+              rent={Number(existingRentalRequest?.property.rent)}
+              securityDeposit={Number(
+                existingRentalRequest?.property.securityDeposit,
+              )}
               rentalRequestId={existingRentalRequest?.id}
               rentalRequestStatus={existingRentalRequest?.status}
               isCheckingStatus={isCheckingStatus}

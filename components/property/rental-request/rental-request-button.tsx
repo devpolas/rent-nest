@@ -11,6 +11,9 @@ import RentalRequestPaymentButton from "./rental-request-payment-button";
 interface PropertyRentalRequestButtonProps {
   availability: string;
   rentalRequestId?: string;
+  leaseDays?: number;
+  rent?: number;
+  securityDeposit?: number;
   rentalRequestStatus?: RentalRequestStatus;
   isCheckingStatus: boolean;
   onRequest: () => void;
@@ -19,6 +22,9 @@ interface PropertyRentalRequestButtonProps {
 
 export default function PropertyRentalRequestButton({
   availability,
+  leaseDays,
+  rent,
+  securityDeposit,
   rentalRequestId,
   rentalRequestStatus,
   isCheckingStatus,
@@ -121,6 +127,9 @@ export default function PropertyRentalRequestButton({
         variant='action'
         size='lg'
         className={className}
+        leaseDays={Number(leaseDays)}
+        rent={Number(rent)}
+        securityDeposit={Number(securityDeposit)}
       />
     );
   }

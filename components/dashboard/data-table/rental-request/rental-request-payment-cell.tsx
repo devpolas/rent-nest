@@ -16,6 +16,9 @@ export default function RentalRequestPaymentCell({
       return (
         <RentalRequestPaymentButton
           rentRequestId={rentalRequest.id}
+          leaseDays={Number(rentalRequest.leaseDays)}
+          rent={Number(rentalRequest.property.rent)}
+          securityDeposit={Number(rentalRequest.property.securityDeposit)}
           variant='action'
           size='sm'
         />

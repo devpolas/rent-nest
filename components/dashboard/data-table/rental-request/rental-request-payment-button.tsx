@@ -9,6 +9,9 @@ import { useMakePayment } from "@/hooks";
 
 interface RentalRequestPaymentButtonProps {
   rentRequestId: string;
+  leaseDays: number;
+  rent: number;
+  securityDeposit: number;
   variant?: "action" | "button";
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;
@@ -16,11 +19,17 @@ interface RentalRequestPaymentButtonProps {
 
 export default function RentalRequestPaymentButton({
   rentRequestId,
+  leaseDays,
+  rent,
+  securityDeposit,
   variant = "action",
   size = "lg",
   className,
 }: RentalRequestPaymentButtonProps) {
   const paymentMutation = useMakePayment();
+
+  const totalRent = Number(leaseDays) * Number(rent);
+  const totalWithSecurityDeposit = Number(totalRent) + Number(securityDeposit);
 
   async function handlePayment() {
     const id = rentRequestId.trim();
@@ -84,8 +93,8 @@ export default function RentalRequestPaymentButton({
       loadingText='Processing...'
       onClick={handlePayment}
     >
-      <CreditCard className='mr-2 size-4' />
-      Pay Now
+      <CreditCard className='size-4' />
+      Pay ${totalWithSecurityDeposit.toFixed(2)}
     </ActionButton>
   );
 }

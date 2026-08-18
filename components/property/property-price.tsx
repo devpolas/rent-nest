@@ -107,6 +107,11 @@ export default function PropertyPriceCard({ property }: Props) {
           <div className='flex sm:flex-row flex-col gap-3'>
             <PropertyRentalRequestButton
               availability={property.availability}
+              leaseDays={Number(existingRentalRequest?.leaseDays)}
+              rent={Number(existingRentalRequest?.property.rent)}
+              securityDeposit={Number(
+                existingRentalRequest?.property.securityDeposit,
+              )}
               rentalRequestId={existingRentalRequest?.id}
               rentalRequestStatus={existingRentalRequest?.status}
               isCheckingStatus={isCheckingStatus}
