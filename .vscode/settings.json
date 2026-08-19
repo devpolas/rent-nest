@@ -1,3 +1,9 @@
 {
-  "cSpell.words": ["addressdetails", "jsonv", "neighbourhood", "Nominatim"]
+  "cSpell.words": [
+    "addressdetails",
+    "googleusercontent",
+    "jsonv",
+    "neighbourhood",
+    "Nominatim"
+  ]
 }
