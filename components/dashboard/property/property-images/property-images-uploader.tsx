@@ -1,18 +1,23 @@
 "use client";
 
-import { ChangeEvent, useRef, useState } from "react";
+import { type ChangeEvent, useRef, useState } from "react";
 import { ImagePlus, Loader2, Pencil, Trash2, UploadCloud } from "lucide-react";
 import { toast } from "sonner";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import PropertyImagesProgress from "./property-images-progress";
-import PropertyImageEditor from "./property-image-editor";
-import { uploadImagesToBackend } from "@/lib/actions/image.action";
+
 import { useCreatePropertyImages } from "@/hooks";
-export const MAX_PROPERTY_IMAGES = 10;
-const MAX_FILE_SIZE = 2 * 1024 * 1024;
-const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
+import { uploadImagesToBackend } from "@/lib/actions/image.action";
+
+import PropertyImageEditor from "./property-image-editor";
+import PropertyImagesProgress from "./property-images-progress";
+import {
+  ACCEPTED_PROPERTY_IMAGE_TYPES,
+  MAX_PROPERTY_IMAGE_SIZE,
+  MAX_PROPERTY_IMAGES,
+} from "./property-images.constants";
 
 type Props = {
   propertyId: string;
@@ -32,13 +37,21 @@ export default function PropertyImagesUploader({
   onUploaded,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
+
   const { mutateAsync, isPending } = useCreatePropertyImages();
+
   const [images, setImages] = useState<EditableImage[]>([]);
-  const [editorOpen, setEditorOpen] = useState(false);
-  const [editingImage, setEditingImage] = useState<EditableImage | null>(null);
+  const [editingImageId, setEditingImageId] = useState<string | null>(null);
+
   const [uploading, setUploading] = useState(false);
+
   const [completed, setCompleted] = useState(0);
   const [total, setTotal] = useState(0);
+
+  const editingImage =
+    images.find((image) => image.id === editingImageId) ?? null;
+
+  const editorOpen = editingImageId !== null;
 
   const remainingSlots = Math.max(
     MAX_PROPERTY_IMAGES - currentImageCount - images.length,
@@ -50,7 +63,7 @@ export default function PropertyImagesUploader({
   const canUpload = remainingSlots > 0 && !isBusy;
 
   /**
-   * Open file picker.
+   * Open native file picker.
    */
   const openFilePicker = () => {
     if (!canUpload) {
@@ -81,11 +94,23 @@ export default function PropertyImagesUploader({
     }
 
     const invalidType = files.find(
-      (file) => !ACCEPTED_TYPES.includes(file.type),
+      (file) =>
+        !ACCEPTED_PROPERTY_IMAGE_TYPES.includes(
+          file.type as (typeof ACCEPTED_PROPERTY_IMAGE_TYPES)[number],
+        ),
     );
 
     if (invalidType) {
       toast.error(`${invalidType.name} is not a supported image type.`);
+      return false;
+    }
+
+    const oversized = files.find((file) => file.size > MAX_PROPERTY_IMAGE_SIZE);
+
+    if (oversized) {
+      toast.error(
+        `${oversized.name} is larger than 2MB. Please choose a smaller image.`,
+      );
 
       return false;
     }
@@ -94,26 +119,19 @@ export default function PropertyImagesUploader({
   };
 
   /**
-   * Handle file selection.
+   * Add selected files to the local editing queue.
    */
-  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files ?? []);
 
+    // Allow selecting the same file again.
     event.target.value = "";
 
-    if (!files.length) {
+    if (!files.length || !validateFiles(files)) {
       return;
     }
 
-    if (!validateFiles(files)) {
-      return;
-    }
-
-    /**
-     * Add all selected files
-     * to editor queue.
-     */
-    const editableImages = files.map((file) => ({
+    const editableImages: EditableImage[] = files.map((file) => ({
       id: crypto.randomUUID(),
       file,
       preview: URL.createObjectURL(file),
@@ -121,32 +139,40 @@ export default function PropertyImagesUploader({
 
     setImages((current) => [...current, ...editableImages]);
 
-    /**
-     * Open first selected image
-     * automatically.
-     */
+    // Start editing the first newly selected image.
     const firstImage = editableImages[0];
 
     if (firstImage) {
-      setEditingImage(firstImage);
-
-      setEditorOpen(true);
+      setEditingImageId(firstImage.id);
     }
   };
 
   /**
-   * Open editor for an image.
+   * Open editor for an existing image.
    */
-  const handleEdit = (image: EditableImage) => {
-    setEditingImage(image);
-    setEditorOpen(true);
+  const handleEdit = (imageId: string) => {
+    if (isBusy) {
+      return;
+    }
+
+    setEditingImageId(imageId);
   };
 
   /**
-   * Save edited image.
+   * Save the edited image.
+   *
+   * After saving, automatically open the next image.
    */
   const handleEditorSave = (editedFile: File) => {
     if (!editingImage) {
+      return;
+    }
+
+    const currentIndex = images.findIndex(
+      (image) => image.id === editingImage.id,
+    );
+
+    if (currentIndex === -1) {
       return;
     }
 
@@ -170,29 +196,36 @@ export default function PropertyImagesUploader({
 
     toast.success("Image edited successfully.");
 
-    /**
-     * Automatically open
-     * next unedited image.
-     */
-    const currentIndex = images.findIndex(
-      (image) => image.id === editingImage.id,
-    );
-
     const nextImage = images[currentIndex + 1];
 
     if (nextImage) {
-      setTimeout(() => {
-        setEditingImage(nextImage);
-
-        setEditorOpen(true);
-      }, 150);
+      setEditingImageId(nextImage.id);
+    } else {
+      setEditingImageId(null);
     }
   };
 
   /**
-   * Remove selected image.
+   * Close editor.
+   */
+  const handleEditorOpenChange = (open: boolean) => {
+    if (isBusy) {
+      return;
+    }
+
+    if (!open) {
+      setEditingImageId(null);
+    }
+  };
+
+  /**
+   * Remove an image from the local queue.
    */
   const handleRemove = (imageId: string) => {
+    if (isBusy) {
+      return;
+    }
+
     setImages((current) => {
       const image = current.find((item) => item.id === imageId);
 
@@ -202,6 +235,10 @@ export default function PropertyImagesUploader({
 
       return current.filter((item) => item.id !== imageId);
     });
+
+    if (editingImageId === imageId) {
+      setEditingImageId(null);
+    }
   };
 
   /**
@@ -210,14 +247,12 @@ export default function PropertyImagesUploader({
   const handleUpload = async () => {
     if (!images.length) {
       toast.error("Please select at least one image.");
-
       return;
     }
 
-    /**
-     * Check final edited files.
-     */
-    const oversized = images.find((image) => image.file.size > MAX_FILE_SIZE);
+    const oversized = images.find(
+      (image) => image.file.size > MAX_PROPERTY_IMAGE_SIZE,
+    );
 
     if (oversized) {
       toast.error(
@@ -233,10 +268,7 @@ export default function PropertyImagesUploader({
 
     try {
       /**
-       * STEP 1
-       *
-       * Upload edited images
-       * to Cloudinary.
+       * Upload files to Cloudinary.
        */
       const uploadedImages = await uploadImagesToBackend({
         images: images.map((image) => image.file),
@@ -249,8 +281,6 @@ export default function PropertyImagesUploader({
       setCompleted(uploadedImages.length);
 
       /**
-       * STEP 2
-       *
        * Save PropertyImage records.
        */
       const response = await mutateAsync({
@@ -274,11 +304,14 @@ export default function PropertyImagesUploader({
       );
 
       /**
-       * Clean object URLs.
+       * Clean local object URLs.
        */
-      images.forEach((image) => URL.revokeObjectURL(image.preview));
+      images.forEach((image) => {
+        URL.revokeObjectURL(image.preview);
+      });
 
       setImages([]);
+      setEditingImageId(null);
       setCompleted(0);
       setTotal(0);
 
@@ -308,10 +341,12 @@ export default function PropertyImagesUploader({
           <PropertyImagesProgress
             total={total}
             completed={completed}
-            uploading={isBusy}
+            processing={isBusy}
           />
 
-          {/* Selected image previews */}
+          {/* =====================================================
+              SELECTED IMAGES
+          ===================================================== */}
           {images.length > 0 && (
             <div className='gap-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'>
               {images.map((image) => (
@@ -325,14 +360,13 @@ export default function PropertyImagesUploader({
                     className='w-full object-cover aspect-[4/3]'
                   />
 
-                  {/* Actions */}
                   <div className='bottom-0 absolute inset-x-0 flex gap-2 bg-gradient-to-t from-black/80 to-transparent p-3 pt-8'>
                     <Button
                       type='button'
                       size='sm'
                       variant='secondary'
                       disabled={isBusy}
-                      onClick={() => handleEdit(image)}
+                      onClick={() => handleEdit(image.id)}
                     >
                       <Pencil className='mr-1.5 size-4' />
                       Edit
@@ -353,11 +387,13 @@ export default function PropertyImagesUploader({
             </div>
           )}
 
-          {/* Upload area */}
+          {/* =====================================================
+              UPLOAD AREA
+          ===================================================== */}
           <Button
             type='button'
-            disabled={!canUpload}
             variant='outline'
+            disabled={!canUpload}
             onClick={openFilePicker}
             className='flex flex-col justify-center items-center hover:bg-muted/50 disabled:opacity-50 p-8 border border-dashed rounded-xl w-full min-h-64 text-center transition-colors disabled:pointer-events-none'
           >
@@ -386,25 +422,21 @@ export default function PropertyImagesUploader({
             </p>
 
             {!isBusy && remainingSlots > 0 && (
-              <Badge
-                role='button'
-                className='mt-5'
-                onClick={(event) => {
-                  event.stopPropagation();
-                  openFilePicker();
-                }}
-              >
+              <Badge className='mt-5 pointer-events-none'>
                 <ImagePlus className='mr-2 size-4' />
                 Choose Photos
               </Badge>
             )}
 
             <p className='mt-4 text-muted-foreground text-xs'>
-              JPG, PNG, WEBP or AVIF · Maximum 2MB per image · Up to 10 photos
+              JPG, PNG, WEBP or AVIF · Maximum 2MB per image · Up to{" "}
+              {MAX_PROPERTY_IMAGES} photos
             </p>
           </Button>
 
-          {/* Upload button */}
+          {/* =====================================================
+              UPLOAD BUTTON
+          ===================================================== */}
           {images.length > 0 && (
             <Button
               type='button'
@@ -430,7 +462,7 @@ export default function PropertyImagesUploader({
           <input
             ref={inputRef}
             type='file'
-            accept={ACCEPTED_TYPES.join(",")}
+            accept={ACCEPTED_PROPERTY_IMAGE_TYPES.join(",")}
             multiple
             className='hidden'
             onChange={handleFileChange}
@@ -439,11 +471,13 @@ export default function PropertyImagesUploader({
         </CardContent>
       </Card>
 
-      {/* Image editor */}
+      {/* =========================================================
+          IMAGE EDITOR
+      ========================================================= */}
       <PropertyImageEditor
         open={editorOpen}
         file={editingImage?.file ?? null}
-        onOpenChange={setEditorOpen}
+        onOpenChange={handleEditorOpenChange}
         onSave={handleEditorSave}
       />
     </>

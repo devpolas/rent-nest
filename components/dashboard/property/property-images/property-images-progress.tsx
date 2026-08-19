@@ -1,31 +1,34 @@
 "use client";
 
 import { CheckCircle2, Loader2 } from "lucide-react";
+
 import { Progress } from "@/components/ui/progress";
 
 type Props = {
   total: number;
   completed: number;
-  uploading: boolean;
+  processing: boolean;
 };
 
 export default function PropertyImagesProgress({
   total,
   completed,
-  uploading,
+  processing,
 }: Props) {
-  if (total === 0) {
+  if (total <= 0) {
     return null;
   }
 
-  const progress = total > 0 ? Math.min((completed / total) * 100, 100) : 0;
+  const safeCompleted = Math.max(0, Math.min(completed, total));
 
-  const finished = !uploading && completed === total;
+  const progress = (safeCompleted / total) * 100;
+
+  const finished = !processing && safeCompleted === total;
 
   return (
     <div className='bg-muted/30 p-4 border rounded-lg'>
       <div className='flex items-center gap-3'>
-        {uploading ? (
+        {processing ? (
           <Loader2 className='size-5 text-primary animate-spin shrink-0' />
         ) : finished ? (
           <CheckCircle2 className='size-5 text-green-600 shrink-0' />
@@ -34,15 +37,15 @@ export default function PropertyImagesProgress({
         <div className='flex-1 min-w-0'>
           <div className='flex justify-between items-center gap-4'>
             <p className='font-medium text-sm'>
-              {uploading
-                ? "Uploading photos..."
+              {processing
+                ? "Processing photos..."
                 : finished
-                  ? "Photos uploaded successfully"
+                  ? "Photos processed successfully"
                   : "Processing photos..."}
             </p>
 
             <span className='text-muted-foreground text-xs shrink-0'>
-              {completed} / {total}
+              {safeCompleted} / {total}
             </span>
           </div>
 

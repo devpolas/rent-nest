@@ -1,8 +1,7 @@
 import { ImageIcon } from "lucide-react";
 
 import { Progress } from "@/components/ui/progress";
-
-export const MAX_PROPERTY_IMAGES = 10;
+import { MAX_PROPERTY_IMAGES } from "./property-images.constants";
 
 type Props = {
   count: number;
@@ -14,6 +13,8 @@ export default function PropertyImagesLimit({ count }: Props) {
   const remaining = MAX_PROPERTY_IMAGES - safeCount;
 
   const progress = (safeCount / MAX_PROPERTY_IMAGES) * 100;
+
+  const hasReachedLimit = remaining === 0;
 
   return (
     <div className='space-y-3'>
@@ -32,11 +33,11 @@ export default function PropertyImagesLimit({ count }: Props) {
       <Progress value={progress} />
 
       <p className='text-muted-foreground text-xs'>
-        {remaining > 0
-          ? `You can add ${remaining} more ${
+        {hasReachedLimit
+          ? `You've reached the maximum of ${MAX_PROPERTY_IMAGES} photos.`
+          : `You can add ${remaining} more ${
               remaining === 1 ? "photo" : "photos"
-            }.`
-          : `You've reached the maximum of ${MAX_PROPERTY_IMAGES} photos.`}
+            }.`}
       </p>
     </div>
   );

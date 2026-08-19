@@ -1,10 +1,6 @@
-import { ImageIcon, UploadCloud } from "lucide-react";
+import { ImageIcon } from "lucide-react";
 
-type Props = {
-  onUpload?: () => void;
-};
-
-export default function PropertyImagesEmpty({ onUpload }: Props) {
+export default function PropertyImagesEmpty() {
   return (
     <div className='flex flex-col justify-center items-center p-10 border border-dashed rounded-xl min-h-64 text-center'>
       <div className='bg-muted mb-4 p-4 rounded-full'>

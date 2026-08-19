@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
 import type { PropertyImage } from "@/types/property-image";
 
 import PropertyImageCard from "./property-image-card";
+
 import {
   deletePropertyImage,
   setPropertyThumbnail,
@@ -24,65 +25,81 @@ export default function PropertyImagesGrid({
 }: Props) {
   const [processingId, setProcessingId] = useState<string | null>(null);
 
-  const handleSetCover = async (imageId: string) => {
-    setProcessingId(imageId);
-
-    try {
-      const response = await setPropertyThumbnail({
-        propertyId,
-        imageId,
-      });
-
-      if (!response.success) {
-        throw new Error(response.message || "Failed to set cover photo.");
+  const handleSetCover = useCallback(
+    async (imageId: string) => {
+      if (processingId) {
+        return;
       }
 
-      toast.success("Cover photo updated.");
+      setProcessingId(imageId);
 
-      onChanged?.();
-    } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Failed to update cover photo.",
-      );
-    } finally {
-      setProcessingId(null);
-    }
-  };
+      try {
+        const response = await setPropertyThumbnail({
+          propertyId,
+          imageId,
+        });
 
-  const handleDelete = async (imageId: string) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this photo?",
-    );
+        if (!response.success) {
+          throw new Error(response.message || "Failed to set cover photo.");
+        }
 
-    if (!confirmed) {
-      return;
-    }
+        toast.success("Cover photo updated.");
+        onChanged?.();
+      } catch (error) {
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : "Failed to update cover photo.",
+        );
+      } finally {
+        setProcessingId(null);
+      }
+    },
+    [propertyId, processingId, onChanged],
+  );
 
-    setProcessingId(imageId);
-
-    try {
-      const response = await deletePropertyImage({
-        propertyId,
-        imageId,
-      });
-
-      if (!response.success) {
-        throw new Error(response.message || "Failed to delete photo.");
+  const handleDelete = useCallback(
+    async (imageId: string) => {
+      if (processingId) {
+        return;
       }
 
-      toast.success("Photo deleted.");
-
-      onChanged?.();
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to delete photo.",
+      const confirmed = window.confirm(
+        "Are you sure you want to delete this photo?",
       );
-    } finally {
-      setProcessingId(null);
-    }
-  };
+
+      if (!confirmed) {
+        return;
+      }
+
+      setProcessingId(imageId);
+
+      try {
+        const response = await deletePropertyImage({
+          propertyId,
+          imageId,
+        });
+
+        if (!response.success) {
+          throw new Error(response.message || "Failed to delete photo.");
+        }
+
+        toast.success("Photo deleted.");
+        onChanged?.();
+      } catch (error) {
+        toast.error(
+          error instanceof Error ? error.message : "Failed to delete photo.",
+        );
+      } finally {
+        setProcessingId(null);
+      }
+    },
+    [propertyId, processingId, onChanged],
+  );
+
+  if (!images.length) {
+    return null;
+  }
 
   return (
     <div className='gap-5 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>

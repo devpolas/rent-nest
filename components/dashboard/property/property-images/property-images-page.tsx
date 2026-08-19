@@ -2,60 +2,54 @@
 
 import { useRouter } from "next/navigation";
 
-import PropertyImagesHeader from "./property-images-header";
-import PropertyImagesLimit from "./property-images-limit";
-import PropertyImagesUploader from "./property-images-uploader";
-import PropertyImagesEmpty from "./property-images-empty";
-import PropertyImagesGrid from "./property-images-grid";
 import Loading from "@/app/loading";
 import { useProperty } from "@/hooks";
 
-export default function PropertyImagesPage({
-  propertyId,
-}: {
+import PropertyImagesEmpty from "./property-images-empty";
+import PropertyImagesGrid from "./property-images-grid";
+import PropertyImagesHeader from "./property-images-header";
+import PropertyImagesLimit from "./property-images-limit";
+import PropertyImagesUploader from "./property-images-uploader";
+
+type Props = {
   propertyId: string;
-}) {
+};
+
+export default function PropertyImagesPage({ propertyId }: Props) {
   const router = useRouter();
+
   const { data: propertyResponse, isLoading } = useProperty(propertyId);
 
   if (isLoading) {
     return <Loading />;
   }
 
-  if (
-    !propertyResponse ||
-    !propertyResponse.success ||
-    !propertyResponse.data
-  ) {
+  if (!propertyResponse?.success || !propertyResponse.data?.property) {
     return (
       <div className='flex justify-center items-center p-4 min-h-[400px]'>
         <p className='text-muted-foreground'>
-          {propertyResponse?.message ?? "User not found"}
+          {propertyResponse?.message ?? "Property not found."}
         </p>
       </div>
     );
   }
 
   const property = propertyResponse.data.property;
+  const images = property.images;
+  const imageCount = images.length;
 
-  if (!property) {
-    return (
-      <div className='flex justify-center items-center min-h-[400px]'>
-        <p className='text-muted-foreground'>Profile not found</p>
-      </div>
-    );
-  }
+  const handleBack = () => {
+    router.back();
+  };
 
-  const refresh = () => {
+  const handleChanged = () => {
     router.refresh();
   };
 
-  const imageCount = property.images.length;
-
   return (
     <div className='space-y-8 p-4'>
-      {/* Page header */}
-      <PropertyImagesHeader property={property} onBack={() => router.back()} />
+      {/* Header */}
+      <PropertyImagesHeader property={property} onBack={handleBack} />
 
       {/* Image limit */}
       <PropertyImagesLimit count={imageCount} />
@@ -64,7 +58,7 @@ export default function PropertyImagesPage({
       <PropertyImagesUploader
         propertyId={property.id}
         currentImageCount={imageCount}
-        onUploaded={refresh}
+        onUploaded={handleChanged}
       />
 
       {/* Gallery */}
@@ -77,11 +71,11 @@ export default function PropertyImagesPage({
           </p>
         </div>
 
-        {imageCount > 0 ? (
+        {images.length > 0 ? (
           <PropertyImagesGrid
             propertyId={property.id}
-            images={property.images}
-            onChanged={refresh}
+            images={images}
+            onChanged={handleChanged}
           />
         ) : (
           <PropertyImagesEmpty />

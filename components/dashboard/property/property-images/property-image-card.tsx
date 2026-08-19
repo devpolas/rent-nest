@@ -1,9 +1,9 @@
 "use client";
 
-import { MoreVertical, Star, Trash2 } from "lucide-react";
+import { Star, Trash2 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 import type { PropertyImage } from "@/types/property-image";
@@ -21,12 +21,25 @@ export default function PropertyImageCard({
   onDelete,
   disabled = false,
 }: Props) {
+  const handleSetCover = () => {
+    if (!disabled && !image.isThumbnail) {
+      onSetCover(image.id);
+    }
+  };
+
+  const handleDelete = () => {
+    if (!disabled) {
+      onDelete(image.id);
+    }
+  };
+
   return (
     <Card className='group overflow-hidden'>
-      <div className='relative bg-muted aspect-4/3 overflow-hidden'>
+      <div className='relative bg-muted aspect-[4/3] overflow-hidden'>
         <img
           src={image.url}
           alt='Property photo'
+          loading='lazy'
           className='size-full object-cover group-hover:scale-105 transition-transform duration-300'
         />
 
@@ -36,18 +49,6 @@ export default function PropertyImageCard({
             Cover photo
           </Badge>
         )}
-
-        <div className='top-3 right-3 absolute'>
-          <Button
-            type='button'
-            variant='secondary'
-            size='icon'
-            className='shadow-sm size-8'
-            disabled={disabled}
-          >
-            <MoreVertical className='size-4' />
-          </Button>
-        </div>
       </div>
 
       <CardContent className='flex justify-between items-center gap-2 p-3'>
@@ -61,7 +62,7 @@ export default function PropertyImageCard({
             variant='ghost'
             size='sm'
             disabled={disabled}
-            onClick={() => onSetCover(image.id)}
+            onClick={handleSetCover}
           >
             <Star className='mr-2 size-4' />
             Set as cover
@@ -72,9 +73,10 @@ export default function PropertyImageCard({
           type='button'
           variant='ghost'
           size='icon'
-          className='text-destructive hover:text-destructive'
           disabled={disabled}
-          onClick={() => onDelete(image.id)}
+          onClick={handleDelete}
+          className='text-destructive hover:text-destructive'
+          aria-label='Delete property photo'
         >
           <Trash2 className='size-4' />
         </Button>

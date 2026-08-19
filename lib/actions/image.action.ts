@@ -1,6 +1,6 @@
 "use client";
 
-import axiosClientInstance from "../axios/axios-client";
+import axios from "axios";
 
 type ImageUploadResponse = {
   url: string;
@@ -12,30 +12,67 @@ type UploadResponse = {
 };
 
 const uploadImages = async (images: File[]): Promise<ImageUploadResponse[]> => {
-  console.log(images);
-  const formData = new FormData();
-
-  images.forEach((image) => {
-    formData.append("images", image);
-  });
-
-  const { data } = await axiosClientInstance.post<{
-    data: UploadResponse;
-  }>("/images/upload", formData, {});
-
-  if (!data.data.images?.length) {
-    throw new Error("Image upload failed");
+  if (images.length === 0) {
+    throw new Error("No images selected.");
   }
 
-  return data.data.images;
+  const formData = new FormData();
+
+  for (const image of images) {
+    formData.append("images", image, image.name);
+  }
+
+  try {
+    const response = await axios.post<{ data: UploadResponse }>(
+      `${process.env.NEXT_PUBLIC_API}/images/upload`,
+      formData,
+    );
+
+    const uploadedImages = response.data.data?.images;
+
+    if (!uploadedImages?.length) {
+      throw new Error("Image upload failed.");
+    }
+
+    return uploadedImages;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Image upload failed.";
+
+      console.error("Image upload failed:", {
+        status: error.response?.status,
+        message,
+        response: error.response?.data,
+      });
+
+      throw new Error(message);
+    }
+
+    throw error;
+  }
 };
 
-export const uploadImageToBackend = async ({ image }: { image: File }) => {
-  const result = await uploadImages([image]);
+export const uploadImageToBackend = async ({
+  image,
+}: {
+  image: File;
+}): Promise<ImageUploadResponse> => {
+  const [uploadedImage] = await uploadImages([image]);
 
-  return result[0];
+  if (!uploadedImage) {
+    throw new Error("Image upload failed.");
+  }
+
+  return uploadedImage;
 };
 
-export const uploadImagesToBackend = async ({ images }: { images: File[] }) => {
+export const uploadImagesToBackend = async ({
+  images,
+}: {
+  images: File[];
+}): Promise<ImageUploadResponse[]> => {
   return uploadImages(images);
 };
