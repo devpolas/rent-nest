@@ -8,6 +8,8 @@ import {
   PropertyResponse,
 } from "@/types/property";
 import {
+  CreatePropertyImageInput,
+  CreatePropertyImageSchema,
   PropertyAdminUpdateSchema,
   PropertyDetailsSchema,
   PropertyDetailsType,
@@ -21,6 +23,7 @@ import {
 } from "@/schemas/property.schema";
 import { errorResponse } from "@/utils/api-response";
 import { handleZodError } from "@/utils/handle-zod-errors";
+import { PropertyImage } from "@/types/property-image";
 
 export async function getMyAllProperties(): Promise<
   ApiResponse<{ properties: PropertyResponse[] } | null>
@@ -186,6 +189,64 @@ export async function deletePropertyDetails<
     const response = await axiosServerInstance.delete(
       `/${detailsAction}/${id}`,
     );
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function createPropertyImages({
+  propertyId,
+  payload,
+}: {
+  propertyId: string;
+  payload: CreatePropertyImageInput;
+}): Promise<ApiResponse<{ images: PropertyImage[] } | null>> {
+  try {
+    const parsed = CreatePropertyImageSchema.safeParse(payload);
+    if (!parsed.success) {
+      return errorResponse(handleZodError(parsed.error) || "Invalid Input");
+    }
+    const response = await axiosServerInstance.post(
+      `/properties/${propertyId}/images`,
+      parsed.data,
+    );
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function setPropertyThumbnail({
+  propertyId,
+  imageId,
+}: {
+  propertyId: string;
+  imageId: string;
+}): Promise<ApiResponse<{ image: PropertyImage } | null>> {
+  try {
+    const response = await axiosServerInstance.patch(
+      `/properties/${propertyId}/images/${imageId}/thumbnail`,
+    );
+
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function deletePropertyImage({
+  propertyId,
+  imageId,
+}: {
+  propertyId: string;
+  imageId: string;
+}): Promise<ApiResponse<null>> {
+  try {
+    const response = await axiosServerInstance.delete(
+      `/properties/${propertyId}/images/${imageId}`,
+    );
+
     return response.data;
   } catch (error) {
     return handleApiError(error);

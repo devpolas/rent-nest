@@ -1,5 +1,6 @@
 "use client";
-import { createPropertyImages } from "@/lib/actions/property-client.actions";
+
+import { createPropertyImages } from "@/lib/actions/property.actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useCreatePropertyImages() {

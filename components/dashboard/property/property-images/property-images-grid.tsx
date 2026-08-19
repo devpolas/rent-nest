@@ -1,66 +1,56 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { toast } from "sonner";
 
+import { useDeletePropertyImage, useSetPropertyThumbnail } from "@/hooks";
 import type { PropertyImage } from "@/types/property-image";
 
 import PropertyImageCard from "./property-image-card";
 
-import {
-  deletePropertyImage,
-  setPropertyThumbnail,
-} from "@/lib/actions/property-client.actions";
-
 type Props = {
   propertyId: string;
   images: PropertyImage[];
-  onChanged?: () => void;
 };
 
-export default function PropertyImagesGrid({
-  propertyId,
-  images,
-  onChanged,
-}: Props) {
-  const [processingId, setProcessingId] = useState<string | null>(null);
+export default function PropertyImagesGrid({ propertyId, images }: Props) {
+  const setThumbnailMutation = useSetPropertyThumbnail();
+  const deleteImageMutation = useDeletePropertyImage();
+
+  const isProcessing =
+    setThumbnailMutation.isPending || deleteImageMutation.isPending;
 
   const handleSetCover = useCallback(
-    async (imageId: string) => {
-      if (processingId) {
+    (imageId: string) => {
+      if (isProcessing) {
         return;
       }
 
-      setProcessingId(imageId);
-
-      try {
-        const response = await setPropertyThumbnail({
+      setThumbnailMutation.mutate(
+        {
           propertyId,
           imageId,
-        });
-
-        if (!response.success) {
-          throw new Error(response.message || "Failed to set cover photo.");
-        }
-
-        toast.success("Cover photo updated.");
-        onChanged?.();
-      } catch (error) {
-        toast.error(
-          error instanceof Error
-            ? error.message
-            : "Failed to update cover photo.",
-        );
-      } finally {
-        setProcessingId(null);
-      }
+        },
+        {
+          onSuccess: () => {
+            toast.success("Cover photo updated.");
+          },
+          onError: (error) => {
+            toast.error(
+              error instanceof Error
+                ? error.message
+                : "Failed to update cover photo.",
+            );
+          },
+        },
+      );
     },
-    [propertyId, processingId, onChanged],
+    [propertyId, isProcessing, setThumbnailMutation],
   );
 
   const handleDelete = useCallback(
-    async (imageId: string) => {
-      if (processingId) {
+    (imageId: string) => {
+      if (isProcessing) {
         return;
       }
 
@@ -72,29 +62,26 @@ export default function PropertyImagesGrid({
         return;
       }
 
-      setProcessingId(imageId);
-
-      try {
-        const response = await deletePropertyImage({
+      deleteImageMutation.mutate(
+        {
           propertyId,
           imageId,
-        });
-
-        if (!response.success) {
-          throw new Error(response.message || "Failed to delete photo.");
-        }
-
-        toast.success("Photo deleted.");
-        onChanged?.();
-      } catch (error) {
-        toast.error(
-          error instanceof Error ? error.message : "Failed to delete photo.",
-        );
-      } finally {
-        setProcessingId(null);
-      }
+        },
+        {
+          onSuccess: () => {
+            toast.success("Photo deleted.");
+          },
+          onError: (error) => {
+            toast.error(
+              error instanceof Error
+                ? error.message
+                : "Failed to delete photo.",
+            );
+          },
+        },
+      );
     },
-    [propertyId, processingId, onChanged],
+    [propertyId, isProcessing, deleteImageMutation],
   );
 
   if (!images.length) {
@@ -107,7 +94,7 @@ export default function PropertyImagesGrid({
         <PropertyImageCard
           key={image.id}
           image={image}
-          disabled={processingId !== null}
+          disabled={isProcessing}
           onSetCover={handleSetCover}
           onDelete={handleDelete}
         />

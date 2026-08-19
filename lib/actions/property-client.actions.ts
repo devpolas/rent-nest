@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  CreatePropertyImageInput,
-  CreatePropertyImageSchema,
-  PropertyQuery,
-  PropertyQuerySchema,
-} from "@/schemas/property.schema";
+import { PropertyQuery, PropertyQuerySchema } from "@/schemas/property.schema";
 import {
   AllPropertyDetailsMap,
   PropertyDetailsMap,
@@ -86,46 +81,6 @@ export async function getPropertyImages({
   }
 }
 
-export async function createPropertyImages({
-  propertyId,
-  payload,
-}: {
-  propertyId: string;
-  payload: CreatePropertyImageInput;
-}): Promise<ApiResponse<{ images: PropertyImage[] } | null>> {
-  try {
-    const parsed = CreatePropertyImageSchema.safeParse(payload);
-    if (!parsed.success) {
-      return errorResponse(handleZodError(parsed.error) || "Invalid Input");
-    }
-    const response = await axiosClientInstance.post(
-      `/properties/${propertyId}/images`,
-      parsed.data,
-    );
-    return response.data;
-  } catch (error) {
-    return handleApiError(error);
-  }
-}
-
-export async function setPropertyThumbnail({
-  propertyId,
-  imageId,
-}: {
-  propertyId: string;
-  imageId: string;
-}): Promise<ApiResponse<{ image: PropertyImage } | null>> {
-  try {
-    const response = await axiosClientInstance.patch(
-      `/properties/${propertyId}/images/${imageId}/thumbnail`,
-    );
-
-    return response.data;
-  } catch (error) {
-    return handleApiError(error);
-  }
-}
-
 export async function getAllPropertyDetails<
   T extends keyof AllPropertyDetailsMap,
 >({
@@ -153,24 +108,6 @@ export async function getPropertyDetails<T extends keyof PropertyDetailsMap>({
       return errorResponse("Details ID is required");
     }
     const response = await axiosClientInstance.get(`/${detailsAction}/${id}`);
-    return response.data;
-  } catch (error) {
-    return handleApiError(error);
-  }
-}
-
-export async function deletePropertyImage({
-  propertyId,
-  imageId,
-}: {
-  propertyId: string;
-  imageId: string;
-}): Promise<ApiResponse<null>> {
-  try {
-    const response = await axiosClientInstance.delete(
-      `/properties/${propertyId}/images/${imageId}`,
-    );
-
     return response.data;
   } catch (error) {
     return handleApiError(error);

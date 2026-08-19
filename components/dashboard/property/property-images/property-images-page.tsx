@@ -18,13 +18,21 @@ type Props = {
 export default function PropertyImagesPage({ propertyId }: Props) {
   const router = useRouter();
 
-  const { data: propertyResponse, isLoading } = useProperty(propertyId);
+  const {
+    data: propertyResponse,
+    isLoading,
+    isError,
+  } = useProperty(propertyId);
 
   if (isLoading) {
     return <Loading />;
   }
 
-  if (!propertyResponse?.success || !propertyResponse.data?.property) {
+  if (
+    isError ||
+    !propertyResponse?.success ||
+    !propertyResponse.data?.property
+  ) {
     return (
       <div className='flex justify-center items-center p-4 min-h-[400px]'>
         <p className='text-muted-foreground'>
@@ -38,30 +46,17 @@ export default function PropertyImagesPage({ propertyId }: Props) {
   const images = property.images;
   const imageCount = images.length;
 
-  const handleBack = () => {
-    router.back();
-  };
-
-  const handleChanged = () => {
-    router.refresh();
-  };
-
   return (
     <div className='space-y-8 p-4'>
-      {/* Header */}
-      <PropertyImagesHeader property={property} onBack={handleBack} />
+      <PropertyImagesHeader property={property} onBack={() => router.back()} />
 
-      {/* Image limit */}
       <PropertyImagesLimit count={imageCount} />
 
-      {/* Upload */}
       <PropertyImagesUploader
         propertyId={property.id}
         currentImageCount={imageCount}
-        onUploaded={handleChanged}
       />
 
-      {/* Gallery */}
       <section className='space-y-5'>
         <div>
           <h2 className='font-semibold text-lg'>Your Photos</h2>
@@ -72,11 +67,7 @@ export default function PropertyImagesPage({ propertyId }: Props) {
         </div>
 
         {images.length > 0 ? (
-          <PropertyImagesGrid
-            propertyId={property.id}
-            images={images}
-            onChanged={handleChanged}
-          />
+          <PropertyImagesGrid propertyId={property.id} images={images} />
         ) : (
           <PropertyImagesEmpty />
         )}
