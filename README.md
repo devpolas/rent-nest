@@ -47,11 +47,11 @@ The project is built with **Next.js, React, TypeScript, Tailwind CSS, shadcn/ui,
 
 Supported roles:
 
-| Role | Responsibilities |
-|---|---|
-| `TENANT` | Browse properties, submit rental requests, make payments |
+| Role       | Responsibilities                                             |
+| ---------- | ------------------------------------------------------------ |
+| `TENANT`   | Browse properties, submit rental requests, make payments     |
 | `LANDLORD` | Create properties, manage properties, manage rental requests |
-| `ADMIN` | Manage users, properties, and system resources |
+| `ADMIN`    | Manage users, properties, and system resources               |
 
 ---
 
@@ -167,57 +167,57 @@ The review system maintains:
 
 ## Frontend
 
-| Technology | Purpose |
-|---|---|
-| **Next.js 16** | React framework and application routing |
-| **React 19** | UI library |
-| **TypeScript** | Type-safe development |
-| **Tailwind CSS 4** | Styling |
-| **shadcn/ui** | UI components |
-| **Radix UI** | Accessible UI primitives |
-| **Lucide React** | Icons |
-| **React Icons** | Additional icons |
+| Technology         | Purpose                                 |
+| ------------------ | --------------------------------------- |
+| **Next.js 16**     | React framework and application routing |
+| **React 19**       | UI library                              |
+| **TypeScript**     | Type-safe development                   |
+| **Tailwind CSS 4** | Styling                                 |
+| **shadcn/ui**      | UI components                           |
+| **Radix UI**       | Accessible UI primitives                |
+| **Lucide React**   | Icons                                   |
+| **React Icons**    | Additional icons                        |
 
 ## State & Data Management
 
-| Technology | Purpose |
-|---|---|
+| Technology         | Purpose                   |
+| ------------------ | ------------------------- |
 | **TanStack Query** | Server state and API data |
-| **TanStack Table** | Advanced data tables |
-| **TanStack Store** | Reactive state utilities |
-| **Zustand** | Client/application state |
-| **Immer** | Immutable state updates |
+| **TanStack Table** | Advanced data tables      |
+| **TanStack Store** | Reactive state utilities  |
+| **Zustand**        | Client/application state  |
+| **Immer**          | Immutable state updates   |
 
 ## Forms & Validation
 
-| Technology | Purpose |
-|---|---|
-| **React Hook Form** | Form management |
-| **Zod** | Schema validation |
+| Technology              | Purpose                 |
+| ----------------------- | ----------------------- |
+| **React Hook Form**     | Form management         |
+| **Zod**                 | Schema validation       |
 | **@hookform/resolvers** | Form/schema integration |
-| **libphonenumber-js** | Phone number validation |
+| **libphonenumber-js**   | Phone number validation |
 
 ## API & Authentication
 
-| Technology | Purpose |
-|---|---|
-| **Axios** | HTTP client |
-| **JWT** | Authentication tokens |
-| **Nodemailer** | Email functionality |
-| **dotenv** | Environment configuration |
+| Technology     | Purpose                   |
+| -------------- | ------------------------- |
+| **Axios**      | HTTP client               |
+| **JWT**        | Authentication tokens     |
+| **Nodemailer** | Email functionality       |
+| **dotenv**     | Environment configuration |
 
 ## Media & UI
 
-| Technology | Purpose |
-|---|---|
-| **Cloudinary** | Image storage and optimization |
-| **next-cloudinary** | Cloudinary integration |
-| **react-easy-crop** | Image cropping |
-| **Embla Carousel** | Image/content carousels |
-| **Recharts** | Data visualization |
-| **Sonner** | Toast notifications |
-| **next-themes** | Theme management |
-| **date-fns** | Date manipulation |
+| Technology          | Purpose                        |
+| ------------------- | ------------------------------ |
+| **Cloudinary**      | Image storage and optimization |
+| **next-cloudinary** | Cloudinary integration         |
+| **react-easy-crop** | Image cropping                 |
+| **Embla Carousel**  | Image/content carousels        |
+| **Recharts**        | Data visualization             |
+| **Sonner**          | Toast notifications            |
+| **next-themes**     | Theme management               |
+| **date-fns**        | Date manipulation              |
 
 ---
 
@@ -595,12 +595,12 @@ npm run lint
 
 # 📜 Available Scripts
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start the development server |
-| `npm run build` | Create a production build |
-| `npm start` | Start the production server |
-| `npm run lint` | Run ESLint |
+| Command         | Description                  |
+| --------------- | ---------------------------- |
+| `npm run dev`   | Start the development server |
+| `npm run build` | Create a production build    |
+| `npm start`     | Start the production server  |
+| `npm run lint`  | Run ESLint                   |
 
 ---
 
@@ -877,7 +877,7 @@ Add an appropriate open-source license here if the repository becomes public for
 
 # 👨‍💻 Author
 
-**Junior Polas**
+**Polas Chandra Barmon**
 
 Full-stack developer building **Rent Nest** with modern TypeScript technologies.
 
