@@ -35,6 +35,7 @@ import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import HeroBackground from "../home/hero/hero-background";
 import SupportItem from "./support-item";
+import Link from "next/link";
 
 export default function Contact() {
   return (
@@ -137,7 +138,7 @@ export default function Contact() {
                 <Button
                   size='lg'
                   variant='brand'
-                  className='w-full rounded-2xl'
+                  className='rounded-2xl w-full'
                 >
                   <Send className='mr-2 size-4' />
                   Send Message
@@ -170,10 +171,7 @@ export default function Contact() {
                     icon={MessageCircle}
                     text='Live chat available'
                   />
-                  <SupportItem
-                    icon={ShieldCheck}
-                    text='Secure communication'
-                  />
+                  <SupportItem icon={ShieldCheck} text='Secure communication' />
                 </div>
               </CardContent>
             </Card>
@@ -199,7 +197,7 @@ export default function Contact() {
 
       {/* Map / Location */}
       <section className='mx-auto px-4 container'>
-        <Card className='glass-card overflow-hidden'>
+        <Card className='overflow-hidden glass-card'>
           <div className='relative flex justify-center items-center bg-brand-surface h-80'>
             <div className='top-0 left-1/4 absolute bg-brand/15 blur-[120px] rounded-full size-72' />
 
@@ -231,7 +229,7 @@ export default function Contact() {
             </Lead>
 
             <Button size='lg' variant='secondary' className='mt-2 rounded-2xl'>
-              Browse Properties
+              <Link href={"/properties"}>Browse Properties</Link>
               <ArrowRight className='ml-2 size-5' />
             </Button>
           </div>

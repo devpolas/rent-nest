@@ -26,6 +26,7 @@ import StepCard from "./step-card";
 import FeatureCard from "./feature-card";
 import Stat from "./stat";
 import RoleCard from "./role-card";
+import Link from "next/link";
 
 export default function About() {
   return (
@@ -52,18 +53,19 @@ export default function About() {
             </Heading1>
 
             <Lead className='mx-auto max-w-2xl text-white/80'>
-              Rent Nest connects tenants with verified landlords, making property
-              discovery, rental requests, and communication easier than ever.
+              Rent Nest connects tenants with verified landlords, making
+              property discovery, rental requests, and communication easier than
+              ever.
             </Lead>
 
             <div className='flex flex-wrap justify-center gap-4 pt-4'>
               <Button size='lg' variant='brand' className='rounded-2xl'>
-                Explore Properties
+                <Link href={"/properties"}>Explore Properties</Link>
                 <ArrowRight className='ml-2 size-5' />
               </Button>
 
               <Button size='lg' variant='glass' className='rounded-2xl'>
-                Become a Landlord
+                <Link href={"/landlord/signup"}>Become a Landlord</Link>
               </Button>
             </div>
           </div>
@@ -271,7 +273,7 @@ export default function About() {
       {/* CTA */}
       <section className='mx-auto px-4 container'>
         <div className='relative flex lg:flex-row flex-col items-center gap-10 bg-brand-surface p-10 md:p-14 rounded-3xl overflow-hidden'>
-          <div className='flex-1 space-y-4 text-center lg:text-left'>
+          <div className='flex-1 space-y-4 lg:text-left text-center'>
             <Heading2 className='border-0'>
               Ready to find your next home?
             </Heading2>
@@ -282,7 +284,7 @@ export default function About() {
             </Lead>
 
             <Button size='lg' variant='brand' className='mt-2 rounded-2xl'>
-              Get Started
+              <Link href={"/signup"}>Get Started</Link>
               <ArrowRight className='ml-2 size-5' />
             </Button>
           </div>
