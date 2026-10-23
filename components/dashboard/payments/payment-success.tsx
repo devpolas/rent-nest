@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { usePaymentSession } from "@/hooks";
+import { useRouter } from "next/navigation";
 
 interface PaymentSuccessProps {
   sessionId: string;
@@ -14,6 +15,8 @@ interface PaymentSuccessProps {
 
 export default function PaymentSuccess({ sessionId }: PaymentSuccessProps) {
   const { data, isLoading, isError, error } = usePaymentSession(sessionId);
+
+  const router = useRouter();
 
   // ============================================================
   // LOADING
@@ -180,12 +183,19 @@ export default function PaymentSuccess({ sessionId }: PaymentSuccessProps) {
         ====================================================== */}
 
         <div className='flex sm:flex-row flex-col gap-2'>
-          <Button className='flex-1' asChild>
-            <Link href='/dashboard/tenant/payments'>View Payment History</Link>
+          <Button
+            onClick={() => router.replace("/dashboard/tenant/payments")}
+            className='flex-1'
+          >
+            View Payment History
           </Button>
 
-          <Button variant='outline' className='flex-1' asChild>
-            <Link href='/dashboard/tenant'>Go to Dashboard</Link>
+          <Button
+            onClick={() => router.replace("/dashboard/tenant")}
+            variant='outline'
+            className='flex-1'
+          >
+            Go to Dashboard
           </Button>
         </div>
       </CardContent>
